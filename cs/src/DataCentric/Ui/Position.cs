@@ -16,7 +16,6 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
-using CsvHelper.Configuration.Attributes;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace DataCentric
@@ -31,34 +30,34 @@ namespace DataCentric
         /// Specifies the type of positioning method used for an element.
         /// </summary>
         [BsonRequired]
-        public PositionType? PositionType { get; set; }
+        public PositionType? Type { get; set; }
 
         /// <summary>
         /// Specify vertical position of the control counting from the top.
         ///
         /// Only one of Top or Bottom properties can be specified.
         /// </summary>
-        public Length Top { get; set; }
+        public double Top { get; set; }
 
         /// <summary>
         /// Specify vertical position of the control counting from the bottom.
         ///
         /// Only one of Top or Bottom properties can be specified.
         /// </summary>
-        public Length Bottom { get; set; }
+        public double Bottom { get; set; }
 
         /// <summary>
         /// Specify horizontal position of the control counting from the left.
         ///
         /// Only one of Left or Right properties can be specified.
         /// </summary>
-        public Length Left { get; set; }
+        public double Left { get; set; }
 
         /// <summary>
         /// Specify horizontal position of the control counting from the right.
         ///
         /// Only one of Left or Right properties can be specified.
         /// </summary>
-        public Length Right { get; set; }
+        public double Right { get; set; }
     }
 }

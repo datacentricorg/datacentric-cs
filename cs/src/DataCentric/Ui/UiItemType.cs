@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright (C) 2013-present The DataCentric Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,24 +16,40 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
-using MongoDB.Bson.Serialization.Attributes;
+using System.Text;
 
 namespace DataCentric
 {
     /// <summary>
-    /// Data representation of a user interface screen.
+    /// Specifies the type of the layout item.
     /// </summary>
-    public abstract class Screen : TypedRecord<ScreenKey, Screen>
+    public enum UiItemType
     {
         /// <summary>
-        /// Unique screen name.
+        /// The controls inside are arranged vertically 
+        /// and separated by resizers.
         /// </summary>
-        [BsonRequired]
-        public string ScreenName { get; set; }
+        Column,
 
         /// <summary>
-        /// UI items located on the screen.
+        /// Leaf layout item. Container for relatve and absolute controls. 
         /// </summary>
-        public List<UiItem> Content { get; set; }
+        Container,
+
+        /// <summary>
+        /// Leaf layout item. Container for relatve and absolute controls. 
+        /// </summary>
+        Control,
+
+        /// <summary>
+        /// Root layout item.
+        /// </summary>
+        Root,
+
+        /// <summary>
+        /// The controls inside are arranged horizontally  
+        /// and separated by resizers.
+        /// </summary>
+        Row
     }
 }

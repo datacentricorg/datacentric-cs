@@ -24,36 +24,36 @@ namespace DataCentric
     /// <summary>
     /// Data representation of a user interface items.
     /// </summary>
-    public class LayoutItemData
+    public class UiItem : Data
     {
         /// <summary>
         /// The type of the layout item.
         /// </summary>
         [BsonRequired]
-        public LayoutItemType Type { get; set; }
-
-        /// <summary>
-        /// Provides information for positioning the control within its
-        /// parent container.
-        /// </summary>
-        [BsonRequired]
-        public Position Position { get; set; }
+        public UiItemType Type { get; set; }
 
         /// <summary>
         /// The height of this item, relative to the other children of its parent in percent.
         /// </summary>
         [BsonRequired]
-        public Length Height { get; set; }
+        public double? Height { get; set; }
 
         /// <summary>
         /// The width of this item, relative to the other children of its parent in percent.
         /// </summary>
         [BsonRequired]
-        public Length Width { get; set; }
+        public double? Width { get; set; }
+
+        /// <summary>
+        /// Flag indicating that the resizer is present between 
+        /// child layout items.
+        /// </summary>
+        [BsonRequired]
+        public bool Resizable { get; set; }
 
         /// <summary>
         /// An array of layout items that will be created as children of this item.
         /// </summary>
-        public List<LayoutItemData> Content { get; set; }
+        public List<UiItem> Content { get; set; }
     }
 }
