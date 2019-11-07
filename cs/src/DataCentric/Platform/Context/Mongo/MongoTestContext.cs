@@ -88,11 +88,11 @@ namespace DataCentric
                 MongoServer = mongoServerKey
             };
 
-            // Create common dataset and assign it to DataSet property of this context
-            DataSet = DataSource.CreateCommon();
-
             // Delete (drop) the database to clear the existing data
             DataSource.DeleteDb();
+
+            // Create common dataset and assign it to DataSet property of this context
+            DataSet = DataSource.CreateCommon();
         }
 
         //--- METHODS
