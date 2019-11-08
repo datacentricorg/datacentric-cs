@@ -140,6 +140,8 @@ namespace DataCentric.Cli
                 // Overriden methods are marked with ovveride
                 else if(method.GetBaseDefinition() != method)
                 {
+                    // TODO: Temp adding declare to avoid signature search in bases.
+                    declares.Add(ToDeclare(method, navigator));
                     implements.Add(ToImplement(method));
                 }
                 // Case for methods without modifiers

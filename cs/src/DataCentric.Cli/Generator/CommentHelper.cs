@@ -39,5 +39,21 @@ namespace DataCentric.Cli
 
             return sb.ToString().TrimEnd(Environment.NewLine);
         }
+
+        public static string PyComment(string comment)
+        {
+            if (!comment.HasNonWhiteSpaceValue())
+                return string.Empty;
+
+            comment = comment.Replace("\r\n", "\n").Replace("\n", Environment.NewLine).TrimEnd(Environment.NewLine);
+
+            if (comment.Split(Environment.NewLine).Length < 2)
+                comment = $"\"\"\"{comment}\"\"\"";
+            else
+                comment = $"\"\"\"{Environment.NewLine}{comment}{Environment.NewLine}\"\"\"";
+
+
+            return comment;
+        }
     }
 }

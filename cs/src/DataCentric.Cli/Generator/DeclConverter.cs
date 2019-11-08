@@ -21,7 +21,7 @@ using Humanizer;
 
 namespace DataCentric.Cli
 {
-    public class CppFileInfo
+    public class FileInfo
     {
         public string Content { get; set; }
         public string FileName { get; set; }
@@ -51,7 +51,7 @@ namespace DataCentric.Cli
             return result;
         }
 
-        public static List<CppFileInfo> ConvertSet(List<IDecl> declarations)
+        public static List<FileInfo> ConvertSet(List<IDecl> declarations)
         {
             List<TypeDecl> typeDecls = declarations.OfType<TypeDecl>().ToList();
             List<EnumDecl> enumDecls = declarations.OfType<EnumDecl>().ToList();
@@ -77,13 +77,13 @@ namespace DataCentric.Cli
                        : $"{settings.Namespace}".Underscore().Replace('.', '/');
         }
 
-        private static List<CppFileInfo> ConvertType(TypeDecl decl, Dictionary<string, string> includePath)
+        private static List<FileInfo> ConvertType(TypeDecl decl, Dictionary<string, string> includePath)
         {
             string pathInProject = includePath[decl.Name];
 
-            List<CppFileInfo> result = new List<CppFileInfo>();
+            List<FileInfo> result = new List<FileInfo>();
 
-            var dataHeader = new CppFileInfo
+            var dataHeader = new FileInfo
             {
                 Content = CppDataBuilder.BuildDataHeader(decl, includePath),
                 FileName = $"{decl.Name.Underscore()}_data.hpp",
@@ -91,7 +91,7 @@ namespace DataCentric.Cli
             };
             result.Add(dataHeader);
 
-            var dataSource = new CppFileInfo
+            var dataSource = new FileInfo
             {
                 Content = CppDataBuilder.BuildDataSource(decl, includePath),
                 FileName = $"{decl.Name.Underscore()}_data.cpp",
@@ -101,7 +101,7 @@ namespace DataCentric.Cli
 
             if (decl.Keys.Any())
             {
-                var keyHeader = new CppFileInfo
+                var keyHeader = new FileInfo
                 {
                     Content = CppKeyBuilder.BuildKeyHeader(decl, includePath),
                     FileName = $"{decl.Name.Underscore()}_key.hpp",
@@ -109,7 +109,7 @@ namespace DataCentric.Cli
                 };
                 result.Add(keyHeader);
 
-                var keySource = new CppFileInfo
+                var keySource = new FileInfo
                 {
                     Content = CppKeyBuilder.BuildKeySource(decl, includePath),
                     FileName = $"{decl.Name.Underscore()}_key.cpp",
@@ -121,13 +121,13 @@ namespace DataCentric.Cli
             return result;
         }
 
-        private static List<CppFileInfo> ConvertEnum(EnumDecl decl, Dictionary<string, string> includePath)
+        private static List<FileInfo> ConvertEnum(EnumDecl decl, Dictionary<string, string> includePath)
         {
-            var result = new List<CppFileInfo>();
+            var result = new List<FileInfo>();
             var settings = GeneratorSettingsProvider.Get(decl.Module.ModuleName);
             string folderName = $"{settings.Namespace}.{decl.Category}".Underscore().Replace('.', '/');
 
-            var enumHeader = new CppFileInfo
+            var enumHeader = new FileInfo
             {
                 Content = CppEnumBuilder.BuildEnumHeader(decl, includePath),
                 FileName = $"{decl.Name.Underscore()}.hpp",
@@ -135,7 +135,7 @@ namespace DataCentric.Cli
             };
             result.Add(enumHeader);
 
-            var enumSource = new CppFileInfo
+            var enumSource = new FileInfo
             {
                 Content = CppEnumBuilder.BuildEnumSource(decl, includePath),
                 FileName = $"{decl.Name.Underscore()}.cpp",
