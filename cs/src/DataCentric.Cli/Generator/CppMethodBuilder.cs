@@ -23,7 +23,7 @@ namespace DataCentric.Cli
 {
     public static class CppMethodBuilder
     {
-        public static void WriteElements(TypeDecl decl, CppCodeWriter writer)
+        public static void WriteElements(TypeDecl decl, CodeWriter writer)
         {
             foreach (var declare in decl.Declare.Handlers)
             {

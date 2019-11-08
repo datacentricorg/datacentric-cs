@@ -21,11 +21,11 @@ using System.Text;
 
 namespace DataCentric.Cli
 {
-    public class CppCodeWriter
+    public class CodeWriter
     {
         private readonly IndentedTextWriter writer;
 
-        public CppCodeWriter(string tabString = "    ")
+        public CodeWriter(string tabString = "    ")
         {
             writer = new IndentedTextWriter(new StringWriter(new StringBuilder()), tabString);
         }

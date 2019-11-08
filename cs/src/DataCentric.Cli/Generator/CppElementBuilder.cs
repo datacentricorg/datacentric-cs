@@ -22,7 +22,7 @@ namespace DataCentric.Cli
 {
     public static class CppElementBuilder
     {
-        public static void WriteElements(List<TypeElementDecl> elements, CppCodeWriter writer)
+        public static void WriteElements(List<TypeElementDecl> elements, CodeWriter writer)
         {
             foreach (var element in elements)
             {

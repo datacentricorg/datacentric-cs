@@ -24,7 +24,7 @@ namespace DataCentric.Cli
     {
         public static string BuildEnumHeader(EnumDecl decl, Dictionary<string, string> includePath)
         {
-            var writer = new CppCodeWriter();
+            var writer = new CodeWriter();
 
             var settings = GeneratorSettingsProvider.Get(decl.Module.ModuleName);
 
@@ -52,7 +52,7 @@ namespace DataCentric.Cli
 
         public static string BuildEnumSource(EnumDecl decl, Dictionary<string, string> includePath)
         {
-            var writer = new CppCodeWriter();
+            var writer = new CodeWriter();
             var settings = GeneratorSettingsProvider.Get(decl.Module.ModuleName);
 
             writer.AppendLines(settings.Copyright);
@@ -73,7 +73,7 @@ namespace DataCentric.Cli
             return writer.ToString();
         }
 
-        private static void BuildEnumDeclaration(EnumDecl decl, CppCodeWriter writer)
+        private static void BuildEnumDeclaration(EnumDecl decl, CodeWriter writer)
         {
             var settings = GeneratorSettingsProvider.Get(decl.Module.ModuleName);
             var type = decl.Name.Underscore();
@@ -133,7 +133,7 @@ protected:
             writer.AppendLine("};");
         }
 
-        private static void BuildEnumImplementation(EnumDecl decl, CppCodeWriter writer)
+        private static void BuildEnumImplementation(EnumDecl decl, CodeWriter writer)
         {
             var settings = GeneratorSettingsProvider.Get(decl.Module.ModuleName);
             var type = decl.Name.Underscore();
