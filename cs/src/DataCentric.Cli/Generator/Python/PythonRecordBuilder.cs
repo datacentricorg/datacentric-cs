@@ -26,18 +26,22 @@ namespace DataCentric.Cli
         {
             var writer = new CodeWriter();
 
-            string name = decl.Name;
+
 
             if (decl.Inherit != null)
-            {
-            }
+                writer.AppendLine($"from ? import {decl.Inherit.Name}");
             else if (decl.IsRecord)
-                writer.AppendLine("from datacentric.types.record import TypedRecord, TypedKey");
+            {
+                writer.AppendLine("from datacentric.types.record.typed_key import TypedKey");
+                writer.AppendLine("from datacentric.types.record.typed_record import TypedRecord");
+            }
             else
-                writer.AppendLine("from datacentric.types.record import Data");
+                writer.AppendLine("from datacentric.types.record.data import Data");
 
             writer.AppendNewLineWithoutIndent();
             writer.AppendNewLineWithoutIndent();
+
+            string name = decl.Name;
 
             if (decl.Keys.Any())
             {
@@ -49,7 +53,7 @@ namespace DataCentric.Cli
                 writer.AppendNewLineWithoutIndent();
 
                 var keySlots = string.Join(", ", decl.Keys.Select(t => $"'{t.Underscore()}'"));
-                writer.AppendLine($"__slots__ = ({string.Join(", ", keySlots)})");
+                writer.AppendLine($"__slots__ = ({keySlots})");
                 writer.AppendNewLineWithoutIndent();
 
                 foreach (var element in keyElements) writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(element)}");
@@ -91,17 +95,17 @@ namespace DataCentric.Cli
             writer.AppendNewLineWithoutIndent();
 
             var slots = string.Join(", ", decl.Elements.Select(t => $"'{t.Name.Underscore()}'"));
-            writer.AppendLine($"__slots__ = ({string.Join(", ", slots)})");
+            writer.AppendLine($"__slots__ = ({slots})");
             writer.AppendNewLineWithoutIndent();
 
             foreach (var element in decl.Elements) writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(element)}");
             writer.AppendNewLineWithoutIndent();
 
             // Init start
-            writer.AppendLine(decl.Kind == TypeKind.Element ? "def __init__(self):" : "def __init__(self, context: Context):");
+            writer.AppendLine(decl.IsRecord ? "def __init__(self, context: Context):" : "def __init__(self):");
             writer.PushIndent();
 
-            writer.AppendLine(decl.Kind == TypeKind.Element ? "super().__init__()" : "super().__init__(context)");
+            writer.AppendLine(decl.IsRecord ? "super().__init__(context)" : "super().__init__()");
             writer.AppendNewLineWithoutIndent();
 
             foreach (var element in decl.Elements)

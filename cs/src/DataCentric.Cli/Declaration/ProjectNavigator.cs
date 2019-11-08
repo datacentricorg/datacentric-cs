@@ -80,6 +80,7 @@ namespace DataCentric.Cli
         public string GetTypeLocation(System.Type type)
         {
             string projectDir = Path.GetDirectoryName(Location);
+            projectDir = Path.Combine(projectDir, "..");
             string typeLocation;
             try
             {

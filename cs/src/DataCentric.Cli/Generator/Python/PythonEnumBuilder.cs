@@ -14,13 +14,41 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using Humanizer;
+
 namespace DataCentric.Cli
 {
     public static class PythonEnumBuilder
     {
         public static string Build(EnumDecl decl)
         {
-            return string.Empty;
+            var writer = new CodeWriter();
+
+            writer.AppendLine("from enum import Enum");
+
+            writer.AppendNewLineWithoutIndent();
+            writer.AppendNewLineWithoutIndent();
+
+
+            writer.AppendLine($"class {decl.Name}(Enum):");
+            writer.PushIndent();
+            writer.AppendLines(CommentHelper.PyComment(decl.Comment));
+
+            for (int index = 0; index < decl.Items.Count; index++)
+            {
+                EnumItemDecl item = decl.Items[index];
+
+                writer.AppendLine($"{item.Name} = {index},");
+                writer.AppendLines(CommentHelper.PyComment(item.Comment));
+
+                // Do not add new line after last item
+                if (index != decl.Items.Count - 1)
+                    writer.AppendNewLineWithoutIndent();
+            }
+
+            writer.PopIndent();
+            writer.AppendNewLineWithoutIndent();
+            return writer.ToString();
         }
     }
 }
