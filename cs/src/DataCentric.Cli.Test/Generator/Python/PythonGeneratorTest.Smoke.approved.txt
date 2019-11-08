@@ -1,0 +1,335 @@
+Verify: datacentric/date_time/zone.py
+    # Copyright (C) 2013-present The DataCentric Authors.
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    # You may obtain a copy of the License at
+    #
+    #    http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+
+    from datacentric.types.record.typed_key import TypedKey
+    from datacentric.types.record.typed_record import TypedRecord
+
+
+    class ZoneKey(TypedKey['Zone']):
+        """Key for Zone."""
+
+        __slots__ = ('zone_name')
+
+        zone_name: Optional[str]
+
+        def __init__(self):
+            super().__init__()
+
+            self.zone_name = None
+            """
+            Unique timezone name.
+
+            Only the following timezone names are permitted:
+
+            * UTC; and
+            * IANA city timezones such as America/New_York
+
+            Other 3-letter regional timezones such as EST or EDT are
+            not permitted because they do not handle the transition
+            between winter and summer time automatically for those
+            regions where winter time is defined.
+
+            Because ZoneName is used to look up timezone conventions,
+            it must match either the string UTC or the code in IANA
+            timezone database precisely. The IANA city timezone code
+            has two slash-delimited tokens, the first referencing the
+            country and the other the city, for example America/New_York.
+            """
+
+
+    class Zone(TypedRecord[ZoneKey]):
+        """
+        This class provides timezone conversion between UTC
+        and local datetime for the specified timezone.
+
+        Only the following timezone names are permitted:
+
+        * UTC; and
+        * IANA city timezones such as America/New_York
+
+        Other 3-letter regional timezones such as EST or EDT are
+        not permitted because they do not handle the transition
+        between winter and summer time automatically for those
+        regions where winter time is defined.
+
+        Because ZoneName is used to look up timezone conventions,
+        it must match either the string UTC or the code in IANA
+        timezone database precisely. The IANA city timezone code
+        has two slash-delimited tokens, the first referencing the
+        country and the other the city, for example America/New_York.
+        """
+
+        __slots__ = ('zone_name')
+
+        zone_name: Optional[str]
+
+        def __init__(self, context: Context):
+            super().__init__(context)
+
+            self.zone_name = None
+            """
+            Unique timezone name.
+
+            Only the following timezone names are permitted:
+
+            * UTC; and
+            * IANA city timezones such as America/New_York
+
+            Other 3-letter regional timezones such as EST or EDT are
+            not permitted because they do not handle the transition
+            between winter and summer time automatically for those
+            regions where winter time is defined.
+
+            Because ZoneName is used to look up timezone conventions,
+            it must match either the string UTC or the code in IANA
+            timezone database precisely. The IANA city timezone code
+            has two slash-delimited tokens, the first referencing the
+            country and the other the city, for example America/New_York.
+            """
+Verify: datacentric/job/job.py
+    # Copyright (C) 2013-present The DataCentric Authors.
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    # You may obtain a copy of the License at
+    #
+    #    http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+
+    from datacentric.types.record.typed_key import TypedKey
+    from datacentric.types.record.typed_record import TypedRecord
+
+
+    class JobKey(TypedKey['Job']):
+        """Key for Job."""
+
+        __slots__ = ('id')
+
+
+        def __init__(self):
+            super().__init__()
+
+
+
+    class Job(TypedRecord[JobKey]):
+        """
+        The job executes a method of the specified record using:
+
+        * CollectionName - collection where the record is stored
+        * RecordId - TemporalId of the record
+        * MethodName - method to be executed
+        * ParamNames - method parameter names (optional)
+        * ParamValues - serialized method parameter values (optional)
+
+        The method to be executed may take the following parameter types:
+
+        * Atomic type - serialized by AsString() method
+        * Enum - serialized as string value
+        * Key - serialized in semicolon delimited format without type
+
+        The order of parameters in ParameterNames and ParameterValues
+        must match, but does not have to be the same as the order
+        of parameters in the method signature.
+
+        The invoked method must return void.
+
+        A job can execute any public method of a class that returns void.
+        There is no requirement to mark the method by [HandlerMethod] or
+        [ViewerMethod] attribute.
+
+        The job may optionally provides the list of prerequisite job keys.
+        The job will be executed after JobProgress record for each of the
+        prerequisite jobs has Completed status.
+
+        After a job record is created, it is detected and scheduled for
+        execution by the queue specified by the record.JobQueue element.
+        It will have Pending status until all prerequisite jobs are
+        completed.
+
+        The queue updates the JobProgress record at least every time its
+        status changes, and optionally more often to update its progress
+        fraction and progress message. It also monitors the dataset where
+        it is running for JobCancellation records and writes log entries
+        to the log specified by the queue.
+
+        Because Job records reference the queue by its JobQueueName,
+        the existing jobs do not need to be resubmitted when a new
+        queue record is created for the same JobQueueName but it is
+        important to ensure that only one job with a given JobQueueName
+        is running at any given time.
+
+        To run the job, JobQueue executes the Run() method of Job which
+        in turn invokes method with MethodName in the referenced record
+        referenced by the job.
+
+        Depending on the type of queue, MethodName may be executed:
+
+        * In a different process or thread than the one that created the job
+        * On a different machine than the one where the job was created
+        * In parallel or out of sequence relative to other jobs
+
+        The job submitter must ensure that the specified method will have
+        access to the resources it needs and will be able to run successfully
+        in each of these cases.
+        """
+
+        __slots__ = ('queue', 'collection_name', 'record_id', 'method_name', 'param_names', 'param_values', 'prerequisites')
+
+        queue: JobQueueKey
+        collection_name: Optional[str]
+        record_id: ObjectId
+        method_name: Optional[str]
+        param_names: List[Optional[str]]
+        param_values: List[Optional[str]]
+        prerequisites: List[JobKey]
+
+        def __init__(self, context: Context):
+            super().__init__(context)
+
+            self.queue = None
+            """Queue to which the job is submitted."""
+
+            self.collection_name = None
+            """
+            Name of the collection where the referenced record is stored.
+
+            Referenced record is the record in this collection whose
+            TemporalId is RecordId.
+            """
+
+            self.record_id = None
+            """
+            TemporalId of the referenced record.
+
+            This key is specific to the version of the referenced record.
+            When a new record is created for the same key, the view will
+            continue referencing the original version of the record where
+            Id=RecordId.
+            """
+
+            self.method_name = None
+            """
+            Name of the method of the referenced record executed by the job.
+
+            Referenced record is the record in collection with CollectionName
+            whose TemporalId is RecordId.
+            """
+
+            self.param_names = None
+            """
+            Method parameter names (optional).
+
+            The order of parameters in ParameterNames and ParameterValues
+            must match, but does not have to be the same as the order
+            of parameters in the method signature.
+            """
+
+            self.param_values = None
+            """
+            Serialized method parameter values (optional).
+
+            The order of parameters in ParameterNames and ParameterValues
+            must match, but does not have to be the same as the order
+            of parameters in the method signature.
+            """
+
+            self.prerequisites = None
+            """
+            Optional list of prerequisite job keys.
+
+            The job will be executed after JobProgress record for each of
+            the prerequisite jobs has Completed status.
+            """
+Verify: datacentric/job/job_status.py
+    # Copyright (C) 2013-present The DataCentric Authors.
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    # You may obtain a copy of the License at
+    #
+    #    http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+
+    from enum import Enum
+
+
+    class JobStatus(Enum):
+        """
+        This enum is used to indicate job's progress from its initial Pending
+        state through the Running state and ending in one of Completed, Failed,
+        or Cancelled states.
+        """
+        Empty = 0,
+        """Indicates that value is not set."""
+
+        Pending = 1,
+        """
+        The job has been submitted to the queue but is not yet running.
+
+        This status is created by the Run() method of the job.
+        """
+
+        Running = 2,
+        """
+        The job is running.
+
+        This status is created by the job itself when it starts running.
+        """
+
+        Completed = 3,
+        """
+        The job completed successfully.
+
+        This status is created by the job itself when it exits successfully.
+        """
+
+        Failed = 4,
+        """
+        The job has failed.
+
+        This state is distinct from Cancelled, which is the
+        end state if the job did not fail on its own but was
+        cancelled by creating an interrupt record.
+
+        Because there is no guarantee that a job would be able
+        to record its status in case of a failure, this status
+        is created by the job itself (if possible), and after
+        the failure is detected also by the queue running the job.
+        """
+
+        Cancelled = 5,
+        """
+        The job has been cancelled by creating an  interrupt record.
+
+        After an interrupt record is detected by the queue, the job
+        is given 10 seconds to shut down gracefully (soft cancellation);
+        after that time it is terminated by the queue (hard cancellation).
+        The code should be written defensively to continue without errors
+        in case of either soft or hard cancellation.
+
+        This status is created by the job itself when it detects an
+        interrupt with cancellation request.
+        """
+
