@@ -142,23 +142,39 @@ namespace DataCentric.Cli
                     writer.AppendLine("@abstractmethod");
 
                 var parameters = "";
+                foreach (var parameter in declare.Params)
+                    parameters += ($", {parameter.Name.Underscore()}: {GetTypeHint(parameter)}");
+
                 writer.AppendLine($"def {declare.Name.Underscore()}(self{parameters}):");
+                writer.PushIndent();
+
                 writer.AppendLines(CommentHelper.PyComment(declare.Comment));
 
-                if (isAbstract)
-                    writer.AppendLine($"    pass");
-                else writer.AppendLine($"    raise NotImplemented");
+                writer.AppendLine(isAbstract ? "pass" : "raise NotImplemented");
 
                 if (declarations.IndexOf(declare) != declarations.Count - 1)
                     writer.AppendNewLineWithoutIndent();
+
+                writer.PopIndent();
             }
+        }
+
+        private static string GetTypeHint(HandlerParamDecl parameter)
+        {
+            string type = parameter.Value != null ? GetValue(parameter.Value) :
+                          parameter.Data != null  ? $"{parameter.Data.Name}" :
+                          parameter.Key != null   ? $"{parameter.Key.Name}Key" :
+                          parameter.Enum != null  ? parameter.Enum.Name :
+                                                  throw new ArgumentException("Can't deduct type");
+
+            return parameter.Vector == YesNo.Y ? $"List[{type}]" : type;
         }
 
         private static string GetTypeHint(TypeElementDecl element)
         {
             string type = element.Value != null ? GetValue(element.Value) :
-                          element.Data != null  ? $"{element.Data.Name.Underscore()}" :
-                          element.Key != null   ? $"{element.Key.Name.Underscore()}Key" :
+                          element.Data != null  ? $"{element.Data.Name}" :
+                          element.Key != null   ? $"{element.Key.Name}Key" :
                           element.Enum != null  ? element.Enum.Name :
                                                   throw new ArgumentException("Can't deduct type");
 
