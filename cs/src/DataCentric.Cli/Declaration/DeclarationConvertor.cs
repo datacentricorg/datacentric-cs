@@ -118,6 +118,7 @@ namespace DataCentric.Cli
             decl.Label = type.GetLabelFromAttribute() ?? type.Name;
             decl.Comment = type.GetCommentFromAttribute() ?? navigator?.GetXmlComment(type);
             decl.Kind = type.GetKind();
+            decl.IsRecord = type.IsSubclassOf(typeof(Record));
             decl.Inherit = IsRoot(type.BaseType)
                                ? null
                                : CreateTypeDeclKey(type.BaseType.Namespace, type.BaseType.Name);
@@ -236,6 +237,13 @@ namespace DataCentric.Cli
             return type;
         }
 
+        private static Type GetNullableArgument(Type type)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                return type.GetGenericArgument(0);
+            return type;
+        }
+
         /// <summary>
         /// Checks if type could be used in declaration.
         /// Namely, it checks if it is one of the following: is primitive, is enum or derived from Data
@@ -249,10 +257,11 @@ namespace DataCentric.Cli
                 return false;
 
             type = GetListArgument(type);
+            type = GetNullableArgument(type);
 
             return AllowedPrimitiveTypes.Contains(type) ||
                    type.IsSubclassOf(typeof(Data)) ||
-                   type.IsEnum;
+                   type.IsSubclassOf(typeof(Enum));
         }
 
         /// <summary>
@@ -455,6 +464,7 @@ namespace DataCentric.Cli
             var typeDecl = new T();
 
             type = GetListArgument(type);
+            type = GetNullableArgument(type);
             if (type.IsEnum)
             {
                 typeDecl.Enum = CreateTypeDeclKey(type.Namespace, type.Name);

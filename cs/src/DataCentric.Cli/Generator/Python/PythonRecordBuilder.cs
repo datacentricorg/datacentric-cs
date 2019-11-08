@@ -26,14 +26,13 @@ namespace DataCentric.Cli
         {
             var writer = new CodeWriter();
 
-            bool hasKey = decl.Keys.Any();
-            bool isDerived = decl.Inherit != null;
             string name = decl.Name;
 
-            if (hasKey)
+            if (decl.Inherit != null)
+            {
+            }
+            else if (decl.IsRecord)
                 writer.AppendLine("from datacentric.types.record import TypedRecord, TypedKey");
-            else if (isDerived)
-                writer.AppendLine("");
             else
                 writer.AppendLine("from datacentric.types.record import Data");
 
@@ -80,9 +79,9 @@ namespace DataCentric.Cli
             if (decl.Kind == TypeKind.Abstract)
                 abstractBase = ", ABC";
 
-            if (hasKey)
+            if (decl.Keys.Any())
                 writer.AppendLine($"class {name}(TypedRecord[{name}Key]{abstractBase}):");
-            else if (isDerived)
+            else if (decl.Inherit != null)
                 writer.AppendLine($"class {name}({decl.Inherit.Name}{abstractBase}):");
             else
                 writer.AppendLine($"class {name}(Data{abstractBase}):");

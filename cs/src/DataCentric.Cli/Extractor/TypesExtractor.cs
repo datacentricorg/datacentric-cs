@@ -38,7 +38,9 @@ namespace DataCentric.Cli
             typeof(Record),
             typeof(RootRecord<,>),
             typeof(TypedRecord<,>),
-            typeof(TypedKey<,>)
+            typeof(TypedKey<,>),
+            typeof(DeletedRecord),
+            typeof(GenericRecord),
         };
 
         /// <summary>
