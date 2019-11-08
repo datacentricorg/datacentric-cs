@@ -281,6 +281,7 @@ Verify: datacentric/job/job_status.py
         state through the Running state and ending in one of Completed, Failed,
         or Cancelled states.
         """
+
         Empty = 0,
         """Indicates that value is not set."""
 
@@ -332,4 +333,3 @@ Verify: datacentric/job/job_status.py
         This status is created by the job itself when it detects an
         interrupt with cancellation request.
         """
-

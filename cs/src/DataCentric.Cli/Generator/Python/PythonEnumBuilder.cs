@@ -33,21 +33,22 @@ namespace DataCentric.Cli
             writer.AppendLine($"class {decl.Name}(Enum):");
             writer.PushIndent();
             writer.AppendLines(CommentHelper.PyComment(decl.Comment));
+            writer.AppendNewLineWithoutIndent();
 
-            for (int index = 0; index < decl.Items.Count; index++)
+            var items = decl.Items;
+            for (int index = 0; index < items.Count; index++)
             {
-                EnumItemDecl item = decl.Items[index];
+                EnumItemDecl item = items[index];
 
                 writer.AppendLine($"{item.Name} = {index},");
                 writer.AppendLines(CommentHelper.PyComment(item.Comment));
 
                 // Do not add new line after last item
-                if (index != decl.Items.Count - 1)
+                if (index != items.Count - 1)
                     writer.AppendNewLineWithoutIndent();
             }
 
             writer.PopIndent();
-            writer.AppendNewLineWithoutIndent();
             return writer.ToString();
         }
     }
