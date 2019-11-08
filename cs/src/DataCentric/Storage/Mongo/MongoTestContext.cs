@@ -39,6 +39,22 @@ namespace DataCentric
     {
         private bool keepTestData_;
 
+        //--- PROPERTIES
+
+        /// <summary>
+        /// Name of the unit test method obtained using [CallerMemberName]
+        /// attribute of the unit test method signature.
+        /// </summary>
+        public string CallerMemberName { get; }
+
+        /// <summary>
+        /// Path to the unit test source code file obtained using [CallerFilePath]
+        /// attribute of the unit test method signature.
+        /// </summary>
+        public string CallerFilePath { get; }
+
+        //--- CONSTRUCTORS
+
         /// <summary>
         /// Unit test context for the specified object for the Mongo
         /// server running on the default port of localhost.
@@ -70,6 +86,11 @@ namespace DataCentric
             :
             base(obj, methodName, sourceFilePath)
         {
+            // Initialize properties of the method context
+            // that the unit test method may use.
+            CallerMemberName = methodName;
+            CallerFilePath = sourceFilePath;
+
             // Create and initialize data source with TEST instance type.
             //
             // This does not create the database until the data source
