@@ -75,8 +75,8 @@ Verify: datacentric/date_time/zone.py
 
         zone_name: Optional[str]
 
-        def __init__(self, context: Context):
-            super().__init__(context)
+        def __init__(self):
+            super().__init__()
 
             self.zone_name = None
             """
@@ -200,8 +200,8 @@ Verify: datacentric/job/job.py
         param_values: List[Optional[str]]
         prerequisites: List[JobKey]
 
-        def __init__(self, context: Context):
-            super().__init__(context)
+        def __init__(self):
+            super().__init__()
 
             self.queue = None
             """Queue to which the job is submitted."""

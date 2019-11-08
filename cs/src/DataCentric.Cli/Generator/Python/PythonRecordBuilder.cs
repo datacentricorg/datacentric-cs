@@ -102,10 +102,10 @@ namespace DataCentric.Cli
             writer.AppendNewLineWithoutIndent();
 
             // Init start
-            writer.AppendLine(decl.IsRecord ? "def __init__(self, context: Context):" : "def __init__(self):");
+            writer.AppendLine("def __init__(self):");
             writer.PushIndent();
 
-            writer.AppendLine(decl.IsRecord ? "super().__init__(context)" : "super().__init__()");
+            writer.AppendLine("super().__init__()");
             writer.AppendNewLineWithoutIndent();
 
             foreach (var element in decl.Elements)
