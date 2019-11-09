@@ -33,7 +33,8 @@ namespace DataCentric
         //--- CONSTRUCTORS
 
         /// <summary>
-        /// Creates local time to one minute precision from the specified hour and minute.
+        /// Creates local time to one minute precision from the specified
+        /// hour and minute.
         /// </summary>
         public LocalMinute(int hour, int minute)
         {
@@ -52,13 +53,16 @@ namespace DataCentric
         /// <summary>The minute of the hour, in the range 0 to 59 inclusive.</summary>
         public int Minute { get; }
 
-        /// <summary>The minute of the day, in the range 0 to 59 inclusive.</summary>
+        /// <summary>The minute of the day, in the range 0 to 1439 inclusive.</summary>
         public int MinuteOfDay
         {
             get { return 60 * Hour + Minute; }
         }
 
         //--- METHODS
+
+        /// <summary>Convert LocalMinute to ISO 8601 string in hh:mm format.</summary>
+        public override string ToString() { return this.ToIsoString(); }
 
         /// <summary>Converts this LocalMinute to LocalTime.</summary>
         public LocalTime ToLocalTime()
