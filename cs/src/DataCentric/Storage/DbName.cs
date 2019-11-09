@@ -40,7 +40,7 @@ namespace DataCentric
         /// Some API functions are restricted based on the instance type.
         /// </summary>
         [BsonRequired]
-        public InstanceType InstanceType { get; set; }
+        public InstanceType? InstanceType { get; set; }
 
         /// <summary>
         /// The meaning of instance name depends on the instance type.
