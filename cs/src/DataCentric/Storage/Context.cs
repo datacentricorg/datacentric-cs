@@ -20,7 +20,24 @@ using System.Runtime.CompilerServices;
 namespace DataCentric
 {
     /// <summary>
-    /// Context for use in handlers.
+    /// Provides standard implementation of IContext where
+    /// each of the services provided by the context can
+    /// be configured independently by setting the appropriate
+    /// property of this class.
+    ///
+    /// This class provides detailed error messages when a property
+    /// is accessed without being set first.
+    ///
+    /// This class is a non-abstract base. It can be used
+    /// directly or as base class of other context implementations.
+    ///
+    /// Context interface provides:
+    ///
+    /// * Default data source
+    /// * Default dataset of the default data source
+    /// * Logging
+    /// * Progress reporting
+    /// * Filesystem access (if available)
     /// </summary>
     public class Context : IContext
     {

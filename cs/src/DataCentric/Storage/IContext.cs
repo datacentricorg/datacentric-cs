@@ -22,8 +22,13 @@ using System.Reflection;
 namespace DataCentric
 {
     /// <summary>
-    /// Context defines dataset and provides access to data,
-    /// logging, and other supporting functionality.
+    /// Context interface provides:
+    ///
+    /// * Default data source
+    /// * Default dataset of the default data source
+    /// * Logging
+    /// * Progress reporting
+    /// * Filesystem access (if available)
     /// </summary>
     public interface IContext : IDisposable
     {
