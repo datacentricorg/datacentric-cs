@@ -19,7 +19,7 @@ using System;
 namespace DataCentric
 {
     /// <summary>Kind of the data type (record, key, or element).</summary>
-    public enum DataKindEnum
+    public enum DataKind
     {
         /// <summary>Empty</summary>
         Empty,

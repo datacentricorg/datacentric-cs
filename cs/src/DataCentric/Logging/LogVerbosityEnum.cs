@@ -22,7 +22,7 @@ namespace DataCentric
     /// A log entry is not published to log output if entry verbosity
     /// exceeds log verbosity.
     /// </summary>
-    public enum LogVerbosityEnum
+    public enum LogVerbosity
     {
         /// <summary>
         /// Error is the default verbosity, used when verbosity is not set.

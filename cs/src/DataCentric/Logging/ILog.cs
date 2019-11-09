@@ -46,7 +46,7 @@ namespace DataCentric
         /// <summary>
         /// Minimal verbosity for which log entry will be displayed.
         /// </summary>
-        LogVerbosityEnum? Verbosity { get; set; }
+        LogVerbosity? Verbosity { get; set; }
 
         //--- METHODS
 
@@ -108,7 +108,7 @@ namespace DataCentric
         ///
         /// Info: Sample Title
         /// </summary>
-        public static void Publish(this ILog obj, LogVerbosityEnum verbosity, string title)
+        public static void Publish(this ILog obj, LogVerbosity verbosity, string title)
         {
             // Invoke the overload with message title and body
             // and pass null for the body variable
@@ -130,7 +130,7 @@ namespace DataCentric
         ///     Sample Description Line 1
         ///     Sample Description Line 2
         /// </summary>
-        public static void Publish(this ILog obj, LogVerbosityEnum verbosity, string title, string description)
+        public static void Publish(this ILog obj, LogVerbosity verbosity, string title, string description)
         {
             // Populate only those fields of of the log entry that are passed to this method.
             // The remaining fields will be populated if the log entry is published to a data
@@ -158,7 +158,7 @@ namespace DataCentric
         public static void Error(this ILog obj, string title)
         {
             // Published at any level of verbosity
-            obj.Publish(LogVerbosityEnum.Error, title);
+            obj.Publish(LogVerbosity.Error, title);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace DataCentric
         public static void Error(this ILog obj, string title, string description)
         {
             // Published at any level of verbosity
-            obj.Publish(LogVerbosityEnum.Error, title, description);
+            obj.Publish(LogVerbosity.Error, title, description);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace DataCentric
         public static void Warning(this ILog obj, string title)
         {
             // Requires at least Warning verbosity
-            obj.Publish(LogVerbosityEnum.Warning, title);
+            obj.Publish(LogVerbosity.Warning, title);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace DataCentric
         public static void Warning(this ILog obj, string title, string description)
         {
             // Requires at least Warning verbosity
-            obj.Publish(LogVerbosityEnum.Warning, title, description);
+            obj.Publish(LogVerbosity.Warning, title, description);
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace DataCentric
         public static void Info(this ILog obj, string title)
         {
             // Requires at least Info verbosity
-            obj.Publish(LogVerbosityEnum.Info, title);
+            obj.Publish(LogVerbosity.Info, title);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace DataCentric
         public static void Info(this ILog obj, string title, string description)
         {
             // Requires at least Info verbosity
-            obj.Publish(LogVerbosityEnum.Info, title, description);
+            obj.Publish(LogVerbosity.Info, title, description);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace DataCentric
         public static void Verify(this ILog obj, string title)
         {
             // Requires at least Verify verbosity
-            obj.Publish(LogVerbosityEnum.Verify, title);
+            obj.Publish(LogVerbosity.Verify, title);
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace DataCentric
         public static void Verify(this ILog obj, string title, string description)
         {
             // Requires at least Verify verbosity
-            obj.Publish(LogVerbosityEnum.Verify, title, description);
+            obj.Publish(LogVerbosity.Verify, title, description);
         }
 
         /// <summary>

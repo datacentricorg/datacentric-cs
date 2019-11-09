@@ -47,7 +47,7 @@ namespace DataCentric
         /// Minimal verbosity for which log entry will be displayed.
         /// </summary>
         [BsonRequired]
-        public LogVerbosityEnum? Verbosity { get; set; }
+        public LogVerbosity? Verbosity { get; set; }
 
         /// <summary>
         /// Short, single-line title of the log entry.
@@ -85,7 +85,7 @@ namespace DataCentric
 
             // We do not want to have an error inside logging code.
             // If Verbosity and Title are not specified, provide defaults
-            if (Verbosity == null) Verbosity = LogVerbosityEnum.Error;
+            if (Verbosity == null) Verbosity = LogVerbosity.Error;
             if (string.IsNullOrEmpty(Title)) Title = "Log entry title is not specified.";
         }
 

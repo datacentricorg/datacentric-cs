@@ -31,7 +31,7 @@ namespace DataCentric
         /// Specifies the type of positioning method used for an element.
         /// </summary>
         [BsonRequired]
-        public PositionTypeEnum? PositionType { get; set; }
+        public PositionType? PositionType { get; set; }
 
         /// <summary>
         /// Specify vertical position of the control counting from the top.

@@ -48,7 +48,7 @@ namespace DataCentric
         /// </summary>
         public string GetCollectionName()
         {
-            if (DataKind != DataKindEnum.Record)
+            if (DataKind != DataKind.Record)
                 throw new Exception(
                     $"GetCollectionName() method is called for {type_.Name} " +
                     $"that is not derived from TypedRecord.");
@@ -57,7 +57,7 @@ namespace DataCentric
         }
 
         /// <summary>Kind of the data type (record, key, or element).</summary>
-        public DataKindEnum DataKind { get; }
+        public DataKind DataKind { get; }
 
         /// <summary>
         /// Inheritance chain from derived to base, ending
@@ -181,7 +181,7 @@ namespace DataCentric
                 {
                     if (rootType_ == null)
                     {
-                        DataKind = DataKindEnum.Element;
+                        DataKind = DataKind.Element;
                         rootType_ = currentType;
                     }
                 }
@@ -189,7 +189,7 @@ namespace DataCentric
                 {
                     if (rootType_ == null)
                     {
-                        DataKind = DataKindEnum.Key;
+                        DataKind = DataKind.Key;
                         rootType_ = currentType;
 
                         if (inheritanceChain.Count > 1)
@@ -202,7 +202,7 @@ namespace DataCentric
                 {
                     if (rootType_ == null)
                     {
-                        DataKind = DataKindEnum.Record;
+                        DataKind = DataKind.Record;
                         rootType_ = currentType;
                     }
                 }
@@ -217,7 +217,7 @@ namespace DataCentric
             }
 
             // Error message if the type is not derived from one of the permitted base classes
-            if (DataKind == DataKindEnum.Empty)
+            if (DataKind == DataKind.Empty)
                 throw new Exception(
                     $"Data type {type.Name} is not derived from Data, TypedKey<TKey, TRecord>, or TypedRecord<TKey, TRecord>.");
 

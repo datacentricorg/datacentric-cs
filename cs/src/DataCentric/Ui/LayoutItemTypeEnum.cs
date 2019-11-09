@@ -23,7 +23,7 @@ namespace DataCentric
     /// <summary>
     /// Specifies the type of the layout item.
     /// </summary>
-    public enum LayoutItemTypeEnum
+    public enum LayoutItemType
     {
         /// <summary>
         /// The controls inside are arranged vertically 

@@ -30,7 +30,7 @@ namespace DataCentric
         /// The type of the layout item.
         /// </summary>
         [BsonRequired]
-        public LayoutItemTypeEnum Type { get; set; }
+        public LayoutItemType Type { get; set; }
 
         /// <summary>
         /// Provides information for positioning the control within its

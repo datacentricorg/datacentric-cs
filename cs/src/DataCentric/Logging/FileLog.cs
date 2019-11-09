@@ -48,7 +48,7 @@ namespace DataCentric
             base.Init(context);
 
             // Assign text writer for the log file
-            textWriter_ = context.OutputFolder.GetTextWriter(LogFilePath, FileWriteModeEnum.Replace);
+            textWriter_ = context.OutputFolder.GetTextWriter(LogFilePath, FileWriteMode.Replace);
         }
     }
 }

@@ -19,7 +19,7 @@ using System;
 namespace DataCentric
 {
     /// <summary>Specifies how to open a file for writing.</summary>
-    public enum FileWriteModeEnum
+    public enum FileWriteMode
     {
         /// <summary>Empty</summary>
         Empty,

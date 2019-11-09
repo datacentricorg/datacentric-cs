@@ -69,7 +69,7 @@ namespace DataCentric
 
             // Increase log verbosity to Verify from its
             // default level set in base class Context
-            Log.Verbosity = LogVerbosityEnum.Verify;
+            Log.Verbosity = LogVerbosity.Verify;
         }
     }
 }

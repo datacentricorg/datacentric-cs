@@ -42,7 +42,7 @@ namespace DataCentric
         /// a zero-length string, or if the caller does not have sufficient
         /// permissions to write to the specified file.
         /// </summary>
-        public TextWriter GetTextWriter(string filePath, FileWriteModeEnum writeMode)
+        public TextWriter GetTextWriter(string filePath, FileWriteMode writeMode)
         {
             // Create full path by combining with output folder path
             string fullFilePath = Path.Combine(FolderPath, filePath);
@@ -53,12 +53,12 @@ namespace DataCentric
 
             switch (writeMode)
             {
-                case FileWriteModeEnum.Append:
+                case FileWriteMode.Append:
                     return new StreamWriter(fullFilePath);
-                case FileWriteModeEnum.Replace:
+                case FileWriteMode.Replace:
                     if (File.Exists(fullFilePath)) File.Delete(fullFilePath);
                     return new StreamWriter(fullFilePath);
-                case FileWriteModeEnum.CreateNew:
+                case FileWriteMode.CreateNew:
                     if (File.Exists(fullFilePath)) Context.Log.Error($"File {fullFilePath} already exists.");
                     return new StreamWriter(fullFilePath);
                 default:

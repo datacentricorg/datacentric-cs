@@ -21,7 +21,7 @@ namespace DataCentric
     /// <summary>
     /// Specifies the type of positioning method used for an element.
     /// </summary>
-    public enum PositionTypeEnum
+    public enum PositionType
     {
         /// <summary>
         /// Control positioned relative to the position it would have
