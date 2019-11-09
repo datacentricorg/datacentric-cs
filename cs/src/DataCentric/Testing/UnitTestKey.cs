@@ -21,10 +21,10 @@ using NodaTime;
 namespace DataCentric
 {
     /// <summary>
-    /// Makes possible for tests to be executed by:
+    /// Base class for executing the tests using:
     ///
-    /// * Standard xUnit test runner; or
-    /// * Via a DataCentric handler via CLI or in the front end
+    /// * A standard xUnit test runner; or
+    /// * A handler via CLI or the front end
     ///
     /// This makes it possible to test not only inside the development
     /// environment but also on a deployed version of the application where
