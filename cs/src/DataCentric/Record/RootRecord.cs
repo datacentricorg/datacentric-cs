@@ -21,7 +21,7 @@ namespace DataCentric
     /// <summary>
     /// Base class of records stored in root dataset of the data store.
     ///
-    /// This class overrides DataSet property to always return TemporalId.Empty.
+    /// Init(...) method of this class sets DataSet to TemporalId.Empty.
     /// </summary>
     public abstract class RootRecord<TKey, TRecord> : TypedRecord<TKey, TRecord>
         where TKey : TypedKey<TKey, TRecord>, new()
@@ -43,7 +43,7 @@ namespace DataCentric
             base.Init(context);
 
             // For this base type of records stored in root dataset,
-            // DataSet element has the value designated for the
+            // set DataSet element to the value designated for the
             // root dataset: TemporalId.Empty.
             DataSet = TemporalId.Empty;
         }
