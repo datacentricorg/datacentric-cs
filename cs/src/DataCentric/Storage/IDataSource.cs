@@ -68,7 +68,7 @@ namespace DataCentric
         /// In a non-temporal data source, this flag is ignored as all
         /// datasets in such data source are non-temporal.
         /// </summary>
-        bool? NonTemporal { get; }
+        bool NonTemporal { get; }
 
         //--- METHODS
 
@@ -428,7 +428,7 @@ namespace DataCentric
 
             // If data source is NonTemporal, dataset will be created
             // as NonTemporal even if not specified by dataset flags
-            if (obj.NonTemporal.IsTrue() || (flags & DataSetFlags.NonTemporal) == DataSetFlags.NonTemporal)
+            if (obj.NonTemporal || (flags & DataSetFlags.NonTemporal) == DataSetFlags.NonTemporal)
             {
                 // Make non-temporal if either data source is NonTemporal,
                 // or dataset flag for NonTemporal is set

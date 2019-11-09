@@ -527,7 +527,7 @@ namespace DataCentric
         public bool IsNonTemporal<TRecord>(TemporalId dataSetId) where TRecord : Record
         {
             // Check NonTemporal attribute for the data source, if set return true.
-            if (NonTemporal.IsTrue()) return true;
+            if (NonTemporal) return true;
 
             // Otherwise check NonTemporal attribute for the type, if set return true
             if (typeof(TRecord).GetCustomAttribute<NonTemporalAttribute>(true) != null) return true;
@@ -539,7 +539,7 @@ namespace DataCentric
             // In dataset other than root, check for NonTemporal flag of the dataset record.
             // If not set, consider its value false.
             var dataSetDetail = LoadOrNull<DataSet>(dataSetId);
-            if (dataSetDetail != null && dataSetDetail.NonTemporal.IsTrue()) return true;
+            if (dataSetDetail != null && dataSetDetail.NonTemporal) return true;
             else return false;
         }
 
@@ -819,12 +819,12 @@ namespace DataCentric
         /// </summary>
         private void CheckNotReadOnly(TemporalId dataSetId)
         {
-            if (ReadOnly != null && ReadOnly.Value)
+            if (ReadOnly)
                 throw new Exception(
                     $"Attempting write operation for data source {DataSourceName} where ReadOnly flag is set.");
 
             var dataSetDetail = GetDataSetDetailOrNull(dataSetId);
-            if (dataSetDetail != null && dataSetDetail.ReadOnly != null && dataSetDetail.ReadOnly.Value)
+            if (dataSetDetail != null && dataSetDetail.ReadOnly)
                 throw new Exception(
                     $"Attempting write operation for dataset {dataSetId} where ReadOnly flag is set.");
 

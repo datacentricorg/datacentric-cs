@@ -68,7 +68,7 @@ namespace DataCentric
         /// In a non-temporal data source, this flag is ignored as all
         /// datasets in such data source are non-temporal.
         /// </summary>
-        public bool? NonTemporal { get; set; }
+        public bool NonTemporal { get; set; }
 
         /// <summary>
         /// List of datasets where records are looked up if they are

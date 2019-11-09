@@ -67,14 +67,14 @@ namespace DataCentric
         /// In a non-temporal data source, this flag is ignored as all
         /// datasets in such data source are non-temporal.
         /// </summary>
-        public bool? NonTemporal { get; set; }
+        public bool NonTemporal { get; set; }
 
         /// <summary>
         /// Use this flag to mark data source as readonly.
         ///
         /// Data source may also be readonly because CutoffTime is set.
         /// </summary>
-        public bool? ReadOnly { get; set; }
+        public bool ReadOnly { get; set; }
 
         //--- METHODS
 

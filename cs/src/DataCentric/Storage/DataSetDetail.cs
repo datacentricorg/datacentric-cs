@@ -47,7 +47,7 @@ namespace DataCentric
         /// If specified, write operations to the referenced dataset
         /// will result in an error.
         /// </summary>
-        public bool? ReadOnly { get; set; }
+        public bool ReadOnly { get; set; }
 
         /// <summary>
         /// Records with TemporalId that is greater than or equal to CutoffTime
