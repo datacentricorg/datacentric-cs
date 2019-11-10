@@ -32,14 +32,12 @@ namespace DataCentric.Cli
         /// </summary>
         public void Execute()
         {
-            DbNameKey dbName = new DbNameKey
-            {
-                EnvType = EnvType.USER, EnvGroup = "TEMP", EnvName = "Default" // TODO - use GUID based DB name
-            };
-
+            // TODO - remove placeholder names
             var dataSource = new TemporalMongoDataSource
             {
-                DbName = dbName,
+                EnvType = EnvType.USER,
+                EnvGroup = "TEMP",
+                EnvName = "Default",
                 MongoServer = new MongoServerKey { MongoServerUri = "mongodb://localhost:27017"} // TODO - specify server URI
             };
 

@@ -42,14 +42,34 @@ namespace DataCentric
         public string DataSourceName { get; set; }
 
         /// <summary>
-        /// This class enforces strict naming conventions
-        /// for database naming. While format of the resulting database
-        /// name is specific to data store type, it always consists
-        /// of three tokens: EnvType, EnvGroup, and EnvName.
-        /// The meaning of EnvGroup and EnvName tokens depends on
-        /// the value of EnvType enumeration.
+        /// Environment type enumeration.
+        ///
+        /// Some API functions are restricted based on the environment type.
         /// </summary>
-        public DbNameKey DbName { get; set; }
+        public EnvType EnvType { get; set; }
+
+        /// <summary>
+        /// The meaning of environment group depends on the environment type.
+        ///
+        /// * For PROD, UAT, and DEV environment types, environment group
+        ///   identifies the endpoint.
+        ///
+        /// * For USER environment type, environment group is user alias.
+        ///
+        /// * For TEST environment type, environment group is the name of
+        ///   the unit test class (test fixture).
+        /// </summary>
+        public string EnvGroup { get; set; }
+
+        /// <summary>
+        /// The meaning of environment name depends on the environment type.
+        ///
+        /// * For PROD, UAT, DEV, and USER environment types, it is the
+        ///   name of the user environment selected in the client.
+        ///
+        /// * For TEST environment type, it is the test method name.
+        /// </summary>
+        public string EnvName { get; set; }
 
         /// <summary>
         /// Flag indicating that the data source is non-temporal.

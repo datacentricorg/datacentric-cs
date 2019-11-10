@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using MongoDB.Bson;
@@ -114,15 +115,33 @@ namespace DataCentric
             // Configure custom BSON serializers
             BsonSerializer.RegisterSerializationProvider(new BsonSerializationProvider());
 
-            // Perform key validation
-            if (DbName == null) throw new Exception("DB key is null or empty.");
-            if (DbName.EnvType == EnvType.Empty) throw new Exception("DB environment type is not specified.");
-            if (string.IsNullOrEmpty(DbName.EnvGroup)) throw new Exception("DB environment group is not specified.");
-            if (string.IsNullOrEmpty(DbName.EnvName)) throw new Exception("DB environment name is not specified.");
+            // Perform validation
+            if (EnvType == EnvType.Empty) throw new Exception("DB environment type is not specified.");
+            if (string.IsNullOrEmpty(EnvGroup)) throw new Exception("DB environment group is not specified.");
+            if (string.IsNullOrEmpty(EnvName)) throw new Exception("DB environment name is not specified.");
 
-            // The name is the database key in the standard semicolon delimited format.
-            dbName_ = DbName.ToString();
-            envType_ = DbName.EnvType;
+            // Database name is a semicolon delimited format.
+            envType_ = EnvType;
+            dbName_ = null;
+            switch (envType_)
+            {
+                case EnvType.PROD:
+                case EnvType.UAT:
+                case EnvType.DEV:
+                case EnvType.TEST:
+                    dbName_ = string.Join(";", envType_.ToString().ToUpper(), EnvGroup, EnvName);
+                    break;
+                case EnvType.CUSTOM:
+                    if (!string.IsNullOrEmpty(EnvGroup))
+                        throw new Exception($"EnvGroup={EnvGroup} is specified, but " +
+                                            $"should be empty for Custom environment type.");
+                    dbName_ = EnvName;
+                    break;
+                case EnvType.Empty:
+                    throw new Exception($"EnvType is empty for DataSourceName={DataSourceName}.");
+                default:
+                    throw new Exception($"Unknown EnvType={EnvType}.");
+            }
 
             // Perform additional validation for restricted characters and database name length.
             if (dbName_.IndexOfAny(prohibitedDbNameSymbols_) != -1)

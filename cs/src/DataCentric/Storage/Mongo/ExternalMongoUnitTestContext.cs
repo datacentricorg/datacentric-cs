@@ -52,12 +52,11 @@ namespace DataCentric
                                         [CallerFilePath] string sourceFilePath = null) :
             base(classInstance, methodName, sourceFilePath)
         {
-            DbNameKey dbName = new DbNameKey();
-            dbName.PopulateFrom(dbNameString);
-
             var dataSource = new TemporalMongoDataSource
             {
-                DbName = dbName,
+                EnvType = EnvType.TEST, // TODO - change to custom
+                EnvGroup = null,
+                EnvName = dbNameString,
                 MongoServer = serverKey
             };
 

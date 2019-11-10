@@ -30,8 +30,14 @@ namespace DataCentric.Cli
         [Option('s', "source", Required = true, HelpText = "Source environment - folder for file storage and connection string for DB.")]
         public string Source { get; set; }
 
-        [Option('e', "environment", Required = true, HelpText = "Parameter pointing to environment snapshot name.")]
-        public string Environment { get; set; }
+        [Option('e', "envtype", Required = true, HelpText = "Environment type.")]
+        public string EnvType { get; set; }
+
+        [Option('e', "envgroup", Required = true, HelpText = "Environment group.")]
+        public string EnvGroup { get; set; }
+
+        [Option('e', "envname", Required = true, HelpText = "Environment name.")]
+        public string EnvName { get; set; }
 
         [Option('d', "dataset", Required = true, HelpText = "Setting specifies data set name.")]
         public string Dataset { get; set; }
@@ -82,14 +88,11 @@ namespace DataCentric.Cli
             // Convert connection string to db name and hosts
             MongoUrl url = MongoUrl.Create(connectionString);
 
-            string dbNameString = $"{url.DatabaseName};{this.Environment}";
-
-            DbNameKey dbName = Activator.CreateInstance<DbNameKey>();
-            dbName.PopulateFrom(dbNameString);
-
             var dataSource = new TemporalMongoDataSource
             {
-                DbName = dbName,
+                EnvType = Enum.Parse<EnvType>(EnvType),
+                EnvGroup = EnvGroup,
+                EnvName = EnvName,
                 MongoServer = new MongoServerKey { MongoServerUri = $"mongodb://{url.Server}"}
             };
 
