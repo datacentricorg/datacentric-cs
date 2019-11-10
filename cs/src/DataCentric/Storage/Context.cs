@@ -42,7 +42,7 @@ namespace DataCentric
     {
         private IFolder outputFolder_;
         private Log log_;
-        private IProgress progress_;
+        private Progress progress_;
         private IDataSource dataSource_;
         private TemporalId? dataSet_;
 
@@ -81,7 +81,7 @@ namespace DataCentric
         }
 
         /// <summary>Progress interface.</summary>
-        public IProgress Progress
+        public Progress Progress
         {
             get
             {

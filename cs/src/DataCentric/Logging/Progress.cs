@@ -18,9 +18,11 @@ using System;
 
 namespace DataCentric
 {
-    /// <summary>Progress data is recorded in Context.Log under
-    /// Progress.Ratio and Progress.Message entry types.</summary>
-    public abstract class Progress : IProgress
+    /// <summary>
+    /// Provides the ability to record to progress ratio
+    /// and progress message.
+    /// </summary>
+    public abstract class Progress : IDisposable
     {
         /// <summary>
         /// Execution context provides access to key resources including:
