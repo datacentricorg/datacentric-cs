@@ -21,14 +21,14 @@ using NodaTime;
 namespace DataCentric
 {
     /// <summary>
-    /// Log record implements ILog interface for recording log
-    /// entries in a data source. Each log entry is a separate
-    /// record.
+    /// Provides a unified API for writing log output to:
     ///
-    /// The log record serves as the key for querying log entries.
-    /// To obtain the entire log, run a query for the Log element
-    /// of the LogEntry record, then sort the entry records by
-    /// their TemporalId.
+    /// * Console
+    /// * String
+    /// * File
+    /// * Database
+    /// * Logging frameworks such as log4net and other logging frameworks
+    /// * Cloud logging services such as AWS CloudWatch
     /// </summary>
     [BsonSerializer(typeof(BsonKeySerializer<LogKey>))]
     public sealed class LogKey : TypedKey<LogKey, Log>

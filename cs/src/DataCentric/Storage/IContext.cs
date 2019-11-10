@@ -40,7 +40,7 @@ namespace DataCentric
         IFolder OutputFolder { get; }
 
         /// <summary>Logging interface.</summary>
-        ILog Log { get; }
+        Log Log { get; }
 
         /// <summary>Progress interface.</summary>
         IProgress Progress { get; }

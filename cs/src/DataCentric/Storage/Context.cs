@@ -42,7 +42,7 @@ namespace DataCentric
     public class Context : IContext
     {
         private IFolder outputFolder_;
-        private ILog log_;
+        private Log log_;
         private IProgress progress_;
         private IDataSource dataSource_;
         private TemporalId? dataSet_;
@@ -67,7 +67,7 @@ namespace DataCentric
         }
 
         /// <summary>Logging interface.</summary>
-        public ILog Log
+        public Log Log
         {
             get
             {

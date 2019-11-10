@@ -20,8 +20,13 @@ using System.IO;
 namespace DataCentric
 {
     /// <summary>
-    /// Implementation of ILog that writes LogEntry records into
+    /// Implementation of Log that writes LogEntry records into
     /// the data source and dataset where Log record is located.
+    ///
+    /// The log record serves as the key for querying log entries.
+    /// To obtain the entire log, run a query for the Log element
+    /// of the LogEntry record, then sort the entry records by
+    /// their TemporalId.
     /// </summary>
     public sealed class DataLog : Log
     {

@@ -20,16 +20,16 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace DataCentric
 {
     /// <summary>
-    /// Log record implements ILog interface for recording log
-    /// entries in a data source. Each log entry is a separate
-    /// record.
+    /// Provides a unified API for writing log output to:
     ///
-    /// The log record serves as the key for querying log entries.
-    /// To obtain the entire log, run a query for the Log element
-    /// of the LogEntry record, then sort the entry records by
-    /// their TemporalId.
+    /// * Console
+    /// * String
+    /// * File
+    /// * Database
+    /// * Logging frameworks such as log4net and other logging frameworks
+    /// * Cloud logging services such as AWS CloudWatch
     /// </summary>
-    public abstract class Log : TypedRecord<LogKey, Log>, ILog
+    public abstract class Log : TypedRecord<LogKey, Log>, IDisposable
     {
         /// <summary>Unique log name.</summary>
         [BsonRequired]
@@ -112,5 +112,271 @@ namespace DataCentric
         ///     Sample Description Line 2
         /// </summary>
         public abstract void PublishEntry(LogEntry logEntry);
+    }
+
+    /// <summary>Extension methods for Log.</summary>
+    public static class LogExtensions
+    {
+        /// <summary>
+        /// Publish a new entry to the log if log verbosity
+        /// is the same or high as entry verbosity.
+        ///
+        /// In a text log, each log entry is Verbosity followed
+        /// by semicolon separator and then Title.
+        ///
+        /// Example:
+        ///
+        /// Info: Sample Title
+        /// </summary>
+        public static void Publish(this Log obj, LogVerbosity verbosity, string title)
+        {
+            // Invoke the overload with message title and body
+            // and pass null for the body variable
+            obj.Publish(verbosity, title, null);
+        }
+
+        /// <summary>
+        /// Publish a new entry to the log if log verbosity
+        /// is the same or high as entry verbosity.
+        ///
+        /// In a text log, the first line of each log entry is Verbosity
+        /// followed by semicolon separator and then Title of the log entry.
+        /// Remaining lines are Description of the log entry recorded with
+        /// 4 space indent but otherwise preserving its formatting.
+        ///
+        /// Example:
+        ///
+        /// Info: Sample Title
+        ///     Sample Description Line 1
+        ///     Sample Description Line 2
+        /// </summary>
+        public static void Publish(this Log obj, LogVerbosity verbosity, string title, string description)
+        {
+            // Populate only those fields of of the log entry that are passed to this method.
+            // The remaining fields will be populated if the log entry is published to a data
+            // source. They are not necessary if the log entry is published to a text log.
+            var logEntry = new LogEntry { Verbosity = verbosity, Title = title, Description = description };
+
+            // Publish the log entry to the log
+            obj.PublishEntry(logEntry);
+        }
+
+        /// <summary>
+        /// Publish an error message to the log for any log verbosity.
+        ///
+        /// This method does not throw an exception; it is invoked
+        /// to indicate an error when exception is not necessary,
+        /// and it may also be invoked when the exception is caught.
+        ///
+        /// In a text log, each log entry is Verbosity followed
+        /// by semicolon separator and then Title.
+        ///
+        /// Example:
+        ///
+        /// Error: Sample Title
+        /// </summary>
+        public static void Error(this Log obj, string title)
+        {
+            // Published at any level of verbosity
+            obj.Publish(LogVerbosity.Error, title);
+        }
+
+        /// <summary>
+        /// Publish an error message to the log for any log verbosity.
+        ///
+        /// This method does not throw an exception; it is invoked
+        /// to indicate an error when exception is not necessary,
+        /// and it may also be invoked when the exception is caught.
+        ///
+        /// In a text log, the first line of each log entry is Verbosity
+        /// followed by semicolon separator and then Title of the log entry.
+        /// Remaining lines are Description of the log entry recorded with
+        /// 4 space indent but otherwise preserving its formatting.
+        ///
+        /// Example:
+        ///
+        /// Error: Sample Title
+        ///     Sample Description Line 1
+        ///     Sample Description Line 2
+        /// </summary>
+        public static void Error(this Log obj, string title, string description)
+        {
+            // Published at any level of verbosity
+            obj.Publish(LogVerbosity.Error, title, description);
+        }
+
+        /// <summary>
+        /// Publish a warning message to the log if log verbosity
+        /// is at least Warning.
+        ///
+        /// Warning messages should be used sparingly to avoid
+        /// flooding log output with insignificant warnings.
+        /// A warning message should never be generated inside
+        /// a loop.
+        ///
+        /// In a text log, each log entry is Verbosity followed
+        /// by semicolon separator and then Title.
+        ///
+        /// Example:
+        ///
+        /// Warning: Sample Title
+        /// </summary>
+        public static void Warning(this Log obj, string title)
+        {
+            // Requires at least Warning verbosity
+            obj.Publish(LogVerbosity.Warning, title);
+        }
+
+        /// <summary>
+        /// Publish a warning message to the log if log verbosity
+        /// is at least Warning.
+        ///
+        /// Warning messages should be used sparingly to avoid
+        /// flooding log output with insignificant warnings.
+        /// A warning message should never be generated inside
+        /// a loop.
+        ///
+        /// In a text log, the first line of each log entry is Verbosity
+        /// followed by semicolon separator and then Title of the log entry.
+        /// Remaining lines are Description of the log entry recorded with
+        /// 4 space indent but otherwise preserving its formatting.
+        ///
+        /// Example:
+        ///
+        /// Warning: Sample Title
+        ///     Sample Description Line 1
+        ///     Sample Description Line 2
+        /// </summary>
+        public static void Warning(this Log obj, string title, string description)
+        {
+            // Requires at least Warning verbosity
+            obj.Publish(LogVerbosity.Warning, title, description);
+        }
+
+        /// <summary>
+        /// Publish an info message to the log if log verbosity
+        /// is at least Info.
+        ///
+        /// Info messages should be used sparingly to avoid
+        /// flooding log output with superfluous data. An info
+        /// message should never be generated inside a loop.
+        ///
+        /// In a text log, each log entry is Verbosity followed
+        /// by semicolon separator and then Title.
+        ///
+        /// Example:
+        ///
+        /// Info: Sample Title
+        /// </summary>
+        public static void Info(this Log obj, string title)
+        {
+            // Requires at least Info verbosity
+            obj.Publish(LogVerbosity.Info, title);
+        }
+
+        /// <summary>
+        /// Publish an info message to the log if log verbosity
+        /// is at least Info.
+        ///
+        /// Info messages should be used sparingly to avoid
+        /// flooding log output with superfluous data. An info
+        /// message should never be generated inside a loop.
+        ///
+        /// In a text log, the first line of each log entry is Verbosity
+        /// followed by semicolon separator and then Title of the log entry.
+        /// Remaining lines are Description of the log entry recorded with
+        /// 4 space indent but otherwise preserving its formatting.
+        ///
+        /// Example:
+        ///
+        /// Info: Sample Title
+        ///     Sample Description Line 1
+        ///     Sample Description Line 2
+        /// </summary>
+        public static void Info(this Log obj, string title, string description)
+        {
+            // Requires at least Info verbosity
+            obj.Publish(LogVerbosity.Info, title, description);
+        }
+
+        /// <summary>
+        /// Publish a verification message to the log if log verbosity
+        /// is at least Verify.
+        ///
+        /// In a text log, each log entry is Verbosity followed
+        /// by semicolon separator and then Title.
+        ///
+        /// Example:
+        ///
+        /// Verify: Sample Title
+        /// </summary>
+        public static void Verify(this Log obj, string title)
+        {
+            // Requires at least Verify verbosity
+            obj.Publish(LogVerbosity.Verify, title);
+        }
+
+        /// <summary>
+        /// Publish a verification message to the log if log verbosity
+        /// is at least Verify.
+        ///
+        /// In a text log, the first line of each log entry is Verbosity
+        /// followed by semicolon separator and then Title of the log entry.
+        /// Remaining lines are Description of the log entry recorded with
+        /// 4 space indent but otherwise preserving its formatting.
+        ///
+        /// Example:
+        ///
+        /// Verify: Sample Title
+        ///     Sample Description Line 1
+        ///     Sample Description Line 2
+        /// </summary>
+        public static void Verify(this Log obj, string title, string description)
+        {
+            // Requires at least Verify verbosity
+            obj.Publish(LogVerbosity.Verify, title, description);
+        }
+
+        /// <summary>
+        /// If condition is false, record an error message for any
+        /// verbosity. If condition is true, record a verification
+        /// message to the log if log verbosity is at least Verify.
+        ///
+        /// In a text log, each log entry is Verbosity followed
+        /// by semicolon separator and then Title.
+        ///
+        /// Example:
+        ///
+        /// Verify: Sample Title
+        /// </summary>
+        public static void Assert(this Log obj, bool condition, string title)
+        {
+            // Requires at least Verify verbosity if condition is true
+            if (!condition) obj.Error(title);
+            else obj.Verify(title);
+        }
+
+        /// <summary>
+        /// If condition is false, record an error message for any
+        /// verbosity. If condition is true, record a verification
+        /// message to the log if log verbosity is at least Verify.
+        ///
+        /// In a text log, the first line of each log entry is Verbosity
+        /// followed by semicolon separator and then Title of the log entry.
+        /// Remaining lines are Description of the log entry recorded with
+        /// 4 space indent but otherwise preserving its formatting.
+        ///
+        /// Example:
+        ///
+        /// Verify: Sample Title
+        ///     Sample Description Line 1
+        ///     Sample Description Line 2
+        /// </summary>
+        public static void Assert(this Log obj, bool condition, string title, string description)
+        {
+            // Requires at least Verify verbosity if condition is true
+            if (!condition) obj.Error(title, description);
+            else obj.Verify(title, description);
+        }
     }
 }
