@@ -125,13 +125,13 @@ namespace DataCentric
             dbName_ = null;
             switch (envType_)
             {
-                case EnvType.PROD:
-                case EnvType.UAT:
-                case EnvType.DEV:
-                case EnvType.TEST:
+                case EnvType.Prod:
+                case EnvType.Uat:
+                case EnvType.Dev:
+                case EnvType.Test:
                     dbName_ = string.Join(";", envType_.ToString().ToUpper(), EnvGroup, EnvName);
                     break;
-                case EnvType.CUSTOM:
+                case EnvType.Custom:
                     if (!string.IsNullOrEmpty(EnvGroup))
                         throw new Exception($"EnvGroup={EnvGroup} is specified, but " +
                                             $"should be empty for Custom environment type.");
@@ -234,9 +234,9 @@ namespace DataCentric
                 //
                 // Use other tokens such as UAT or PROD to protect the
                 // database from accidental deletion
-                if (envType_ == EnvType.DEV
-                    || envType_ == EnvType.USER
-                    || envType_ == EnvType.TEST)
+                if (envType_ == EnvType.Dev
+                    || envType_ == EnvType.User
+                    || envType_ == EnvType.Test)
                 {
                     // The name is the database key in the standard
                     // semicolon delimited format. However this method
@@ -249,7 +249,7 @@ namespace DataCentric
                     throw new Exception(
                         $"As an extra safety measure, database {dbName_} cannot be " +
                         $"dropped because this operation is not permitted for database " +
-                        $"environment type {envType_}.");
+                        $"environment type {envType_.ToString().ToUpper()}.");
                 }
             }
         }

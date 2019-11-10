@@ -38,10 +38,10 @@ namespace DataCentric
         ///
         /// PROD;EnvGroup;EnvName
         /// 
-        /// Database for this environment type cannot be dropped
-        /// (deleted) through an API call.
+        /// Database for this environment type cannot be deleted
+        /// (dropped) through an API call.
         /// </summary>
-        PROD,
+        Prod,
 
         /// <summary>
         /// Shared UAT (user acceptance testing) environment.
@@ -51,10 +51,10 @@ namespace DataCentric
         ///
         /// UAT;EnvGroup;EnvName
         ///
-        /// Database for this environment type cannot be dropped
-        /// (deleted) through an API call.
+        /// Database for this environment type cannot be deleted
+        /// (dropped) through an API call.
         /// </summary>
-        UAT,
+        Uat,
 
         /// <summary>
         /// Shared environment used for development.
@@ -64,10 +64,10 @@ namespace DataCentric
         ///
         /// DEV;EnvGroup;EnvName
         ///
-        /// Database for this environment type CAN be dropped
-        /// (deleted) through an API call.
+        /// Database for this environment type CAN be deleted
+        /// (dropped) through an API call.
         /// </summary>
-        DEV,
+        Dev,
 
         /// <summary>
         /// Personal environment of a specific user.
@@ -77,10 +77,10 @@ namespace DataCentric
         ///
         /// USER;EnvGroup;EnvName
         ///
-        /// Database for this environment type CAN be dropped
-        /// (deleted) through an API call.
+        /// Database for this environment type CAN be deleted
+        /// (dropped) through an API call.
         /// </summary>
-        USER,
+        User,
 
         /// <summary>
         /// Environment used for unit testing.
@@ -91,11 +91,11 @@ namespace DataCentric
         /// TEST;EnvGroup;EnvName
         ///
         /// IMPORTANT - Database for the test environment type is
-        /// AUTOMATICALLY dropped (deleted) at the start and the end
+        /// AUTOMATICALLY deleted (dropped) at the start and the end
         /// of each unit test execution. They should not be used for
         /// any purpose other than unit tests.
         /// </summary>
-        TEST,
+        Test,
 
         /// <summary>
         /// Environment type is used to specify a custom database
@@ -105,9 +105,9 @@ namespace DataCentric
         /// For this environment type, EnvGroup must be null and
         /// EnvName is database name.
         ///
-        /// Database for this environment type cannot be dropped
-        /// (deleted) through an API call.
+        /// Database for this environment type cannot be deleted
+        /// (dropped) through an API call.
         /// </summary>
-        CUSTOM
+        Custom
     }
 }

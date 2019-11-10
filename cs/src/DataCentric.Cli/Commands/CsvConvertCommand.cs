@@ -35,7 +35,7 @@ namespace DataCentric.Cli
             // TODO - remove placeholder names
             var dataSource = new TemporalMongoDataSource
             {
-                EnvType = EnvType.USER,
+                EnvType = EnvType.User,
                 EnvGroup = "TEMP",
                 EnvName = "Default",
                 MongoServer = new MongoServerKey { MongoServerUri = "mongodb://localhost:27017"} // TODO - specify server URI

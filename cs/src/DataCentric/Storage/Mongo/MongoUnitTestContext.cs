@@ -100,7 +100,7 @@ namespace DataCentric
             // Create data source specified as generic argument
             DataSource = new TDataSource()
             {
-                EnvType = EnvType.TEST,
+                EnvType = EnvType.Test,
                 EnvGroup = className,
                 EnvName = methodName,
                 MongoServer = mongoServerKey

@@ -54,7 +54,7 @@ namespace DataCentric
         {
             var dataSource = new TemporalMongoDataSource
             {
-                EnvType = EnvType.TEST, // TODO - change to custom
+                EnvType = EnvType.Test, // TODO - change to custom
                 EnvGroup = null,
                 EnvName = dbNameString,
                 MongoServer = serverKey
