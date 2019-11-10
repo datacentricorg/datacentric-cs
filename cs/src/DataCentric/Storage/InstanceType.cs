@@ -19,9 +19,9 @@ using System;
 namespace DataCentric
 {
     /// <summary>
-    /// Specifies environment group.
+    /// Specifies environment type.
     ///
-    /// Some API functions are restricted based on the environment group.
+    /// Some API functions are restricted based on the environment type.
     /// </summary>
     public enum EnvType
     {
@@ -29,48 +29,85 @@ namespace DataCentric
         Empty,
 
         /// <summary>
-        /// Production environment group.
+        /// Production environment.
         ///
-        /// This environment group is used for live production data
-        /// and has the most restrictions. For example, it
-        /// does not allow a database to be deleted (dropped)
-        /// through the API call.
+        /// This environment type is used for live production data.
+        ///
+        /// For this environment type, database name is semicolon
+        /// delimited string with the following format:
+        ///
+        /// PROD;EnvGroup;EnvName
+        /// 
+        /// Database for this environment type cannot be dropped
+        /// (deleted) through an API call.
         /// </summary>
         PROD,
 
         /// <summary>
-        /// Shared user acceptance testing environment group.
+        /// Shared UAT (user acceptance testing) environment.
         ///
-        /// This environment group is used has some of the restrictions
-        /// of the PROD environment group, including the restriction
-        /// on deleting (dropping) the database through an API
-        /// call.
+        /// For this environment type, database name is semicolon
+        /// delimited string with the following format:
+        ///
+        /// UAT;EnvGroup;EnvName
+        ///
+        /// Database for this environment type cannot be dropped
+        /// (deleted) through an API call.
         /// </summary>
         UAT,
 
         /// <summary>
-        /// Shared development environment group.
+        /// Shared environment used for development.
         ///
-        /// This environment group is shared but is free from most
-        /// restrictions.
+        /// For this environment type, database name is semicolon
+        /// delimited string with the following format:
+        ///
+        /// DEV;EnvGroup;EnvName
+        ///
+        /// Database for this environment type CAN be dropped
+        /// (deleted) through an API call.
         /// </summary>
         DEV,
 
         /// <summary>
-        /// Personal environment group of a specific user.
+        /// Personal environment of a specific user.
         ///
-        /// This environment group is not shared between users and is
-        /// free from most restrictions.
+        /// For this environment type, database name is semicolon
+        /// delimited string with the following format:
+        ///
+        /// USER;EnvGroup;EnvName
+        ///
+        /// Database for this environment type CAN be dropped
+        /// (deleted) through an API call.
         /// </summary>
         USER,
 
         /// <summary>
-        /// Environment type is used for unit testing.
+        /// Environment used for unit testing.
         ///
-        /// Databases for the test environment group are routinely
-        /// cleared (deleted). They should not be used for any
-        /// purpose other than unit tests.
+        /// For this environment type, database name is semicolon
+        /// delimited string with the following format:
+        ///
+        /// TEST;EnvGroup;EnvName
+        ///
+        /// IMPORTANT - Database for the test environment type is
+        /// AUTOMATICALLY dropped (deleted) at the start and the end
+        /// of each unit test execution. They should not be used for
+        /// any purpose other than unit tests.
         /// </summary>
-        TEST
+        TEST,
+
+        /// <summary>
+        /// Environment type is used to specify a custom database
+        /// name that does not use the standard semicolon delimited
+        /// format of other environment types.
+        ///
+        /// For this environment type, EnvGroup must be null and
+        /// EnvName is database name.
+        ///
+        /// Database for this environment type cannot be dropped
+        /// (deleted) through an API call.
+        /// </summary>
+        CUSTOM
     }
 }
