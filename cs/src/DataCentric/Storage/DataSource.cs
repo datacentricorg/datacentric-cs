@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MongoDB.Bson.Serialization.Attributes;
 using NodaTime;
 
@@ -34,7 +35,7 @@ namespace DataCentric
     ///
     /// This record is stored in root dataset.
     /// </summary>
-    public abstract class DataSource : RootRecord<DataSourceKey, DataSource>, IDataSource
+    public abstract class DataSource : RootRecord<DataSourceKey, DataSource>, IDisposable
     {
         /// <summary>Unique data source name.</summary>
         [BsonRequired]
@@ -234,5 +235,227 @@ namespace DataCentric
         /// This method updates in-memory cache to the saved dataset.
         /// </summary>
         public abstract void SaveDataSet(DataSet dataSetRecord, TemporalId saveTo);
+    }
+
+    /// <summary>Extension methods for DataSource.</summary>
+    public static class DataSourceExtensions
+    {
+        /// <summary>
+        /// Load record by its TemporalId.
+        ///
+        /// Error message if there is no record for the specified TemporalId,
+        /// or if the record exists but is not derived from TRecord.
+        /// </summary>
+        public static TRecord Load<TRecord>(this DataSource obj, TemporalId id)
+            where TRecord : Record
+        {
+            var result = obj.LoadOrNull<TRecord>(id);
+            if (result == null) throw new Exception(
+                $"Record with TemporalId={id} is not found in data store {obj.DataSourceName}.");
+            return result;
+        }
+
+        /// <summary>
+        /// Load record from context.DataSource, overriding the dataset
+        /// specified in the context with the value specified as the
+        /// second parameter. The lookup occurs in the specified dataset
+        /// and its imports, expanded to arbitrary depth with repetitions
+        /// and cyclic references removed.
+        ///
+        /// IMPORTANT - this overload of the method loads from loadFrom
+        /// dataset, not from context.DataSet.
+        ///
+        /// If Record property is set, its value is returned without
+        /// performing lookup in the data store; otherwise the record
+        /// is loaded from storage and cached in Record and the
+        /// cached value is returned from subsequent calls.
+        ///
+        /// Once the record has been cached, the same version will be
+        /// returned in subsequent calls with the same key instance.
+        /// Create a new key or call earRecord() method to force
+        /// reloading new version of the record from storage.
+        ///
+        /// Error message if the record is not found or is a DeletedRecord.
+        /// </summary>
+        public static TRecord Load<TKey, TRecord>(this DataSource obj, TypedKey<TKey, TRecord> key, TemporalId loadFrom)
+            where TKey : TypedKey<TKey, TRecord>, new()
+            where TRecord : TypedRecord<TKey, TRecord>
+        {
+            // This method will return null if the record is
+            // not found or the found record is a DeletedRecord
+            var result = obj.LoadOrNull(key, loadFrom);
+
+            // Error message if null, otherwise return
+            if (result == null) throw new Exception(
+                $"Record with key {key} is not found in dataset with TemporalId={loadFrom}.");
+
+            return result;
+        }
+
+        /// <summary>
+        /// Save one record to the specified dataset. After the method exits,
+        /// record.DataSet will be set to the value of the dataSet parameter.
+        ///
+        /// All Save methods ignore the value of record.DataSet before the
+        /// Save method is called. When dataset is not specified explicitly,
+        /// the value of dataset from the context, not from the record, is used.
+        /// The reason for this behavior is that the record may be stored from
+        /// a different dataset than the one where it is used.
+        ///
+        /// This method guarantees that TemporalIds of the saved records will be in
+        /// strictly increasing order.
+        /// </summary>
+        public static void SaveOne<TRecord>(this DataSource obj, TRecord record, TemporalId saveTo)
+            where TRecord : Record
+        {
+            // Pass a list of records with one element to SaveMany
+            obj.SaveMany(new List<TRecord> { record }, saveTo);
+        }
+
+        /// <summary>
+        /// Return TemporalId of the latest Common dataset.
+        ///
+        /// Common dataset is always stored in root dataset.
+        /// </summary>
+        public static TemporalId GetCommon(this DataSource obj)
+        {
+            return obj.GetDataSet(DataSetKey.Common.DataSetName, TemporalId.Empty);
+        }
+
+        /// <summary>
+        /// Get TemporalId of the dataset with the specified name.
+        ///
+        /// All of the previously requested dataSetIds are cached by
+        /// the data source. To load the latest version of the dataset
+        /// written by a separate process, clear the cache first by
+        /// calling DataSource.ClearDataSetCache() method.
+        ///
+        /// Error message if not found.
+        /// </summary>
+        public static TemporalId GetDataSet(this DataSource obj, string dataSetName, TemporalId loadFrom)
+        {
+            // Get dataset or null
+            var result = obj.GetDataSetOrNull(dataSetName, loadFrom);
+
+            // Check that it is not null and return
+            if (result == null) throw new Exception($"Dataset {dataSetName} is not found in data store {obj.DataSourceName}.");
+            return result.Value;
+        }
+
+        /// <summary>
+        /// Create Common dataset with default flags.
+        ///
+        /// By convention, the Common dataset contains reference and
+        /// configuration data and is included as import in all other
+        /// datasets.
+        ///
+        /// The Common dataset is always stored in root dataset.
+        ///
+        /// This method updates in-memory dataset cache to include
+        /// the created dataset.
+        /// </summary>
+        public static TemporalId CreateCommon(this DataSource obj)
+        {
+            // Create with default flags in root dataset
+            return obj.CreateCommon(DataSetFlags.Default);
+        }
+
+        /// <summary>
+        /// Create Common dataset with the specified flags.
+        ///
+        /// The flags may be used, among other things, to specify
+        /// that the created dataset will be NonTemporal even if the
+        /// data source is itself temporal. This setting is typically
+        /// used to prevent the accumulation of data where history is
+        /// not needed.
+        ///
+        /// By convention, the Common dataset contains reference and
+        /// configuration data and is included as import in all other
+        /// datasets.
+        ///
+        /// The Common dataset is always stored in root dataset.
+        ///
+        /// This method updates in-memory dataset cache to include
+        /// the created dataset.
+        /// </summary>
+        public static TemporalId CreateCommon(this DataSource obj, DataSetFlags flags)
+        {
+            // Create with the specified flags in root dataset
+            return obj.CreateDataSet("Common", flags, TemporalId.Empty);
+        }
+
+        /// <summary>
+        /// Create dataset with the specified dataSetName and default flags
+        /// in parentDataSet.
+        ///
+        /// This method updates in-memory dataset cache to include
+        /// the created dataset.
+        /// </summary>
+        public static TemporalId CreateDataSet(this DataSource obj, string dataSetName, TemporalId parentDataSet)
+        {
+            // If imports are not specified, define with parentDataSet as the only import
+            var imports = new TemporalId[] { parentDataSet };
+
+            // Create with default flags in parentDataSet
+            return obj.CreateDataSet(dataSetName, imports, DataSetFlags.Default, parentDataSet);
+        }
+
+        /// <summary>
+        /// Create dataset with the specified dataSetName, specified
+        /// imports, and default flags in parentDataSet.
+        ///
+        /// This method updates in-memory dataset cache to include
+        /// the created dataset.
+        /// </summary>
+        public static TemporalId CreateDataSet(this DataSource obj, string dataSetName, IEnumerable<TemporalId> imports, TemporalId parentDataSet)
+        {
+            // Create with default flags in parentDataSet
+            return obj.CreateDataSet(dataSetName, imports, DataSetFlags.Default, parentDataSet);
+        }
+
+        /// <summary>
+        /// Create dataset with the specified dataSetName and flags
+        /// in context.DataSet, and make context.DataSet its sole import.
+        ///
+        /// This method updates in-memory dataset cache to include
+        /// the created dataset.
+        /// </summary>
+        public static TemporalId CreateDataSet(this DataSource obj, string dataSetName, DataSetFlags flags, TemporalId parentDataSet)
+        {
+            // If imports are not specified, define with parent dataset as the only import
+            var imports = new TemporalId[] { parentDataSet };
+
+            // Create with the specified flags in parentDataSet
+            return obj.CreateDataSet(dataSetName, imports, flags, parentDataSet);
+        }
+
+        /// <summary>
+        /// Create dataset with the specified dataSetName, imports,
+        /// and flags in parentDataSet.
+        ///
+        /// This method updates in-memory dataset cache to include
+        /// the created dataset.
+        /// </summary>
+        public static TemporalId CreateDataSet(this DataSource obj, string dataSetName, IEnumerable<TemporalId> imports, DataSetFlags flags, TemporalId parentDataSet)
+        {
+            // Create dataset record with the specified name and import
+            var result = new DataSet() { DataSetName = dataSetName, Imports = imports.ToList() };
+
+            // If data source is NonTemporal, dataset will be created
+            // as NonTemporal even if not specified by dataset flags
+            if (obj.NonTemporal || (flags & DataSetFlags.NonTemporal) == DataSetFlags.NonTemporal)
+            {
+                // Make non-temporal if either data source is NonTemporal,
+                // or dataset flag for NonTemporal is set
+                result.NonTemporal = true;
+            }
+
+            // Save in parentDataSet (this also updates the dictionaries)
+            obj.SaveDataSet(result, parentDataSet);
+
+            // Return TemporalId that was assigned to the
+            // record inside the SaveDataSet method
+            return result.Id;
+        }
     }
 }

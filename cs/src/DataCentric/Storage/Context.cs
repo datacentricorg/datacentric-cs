@@ -43,7 +43,7 @@ namespace DataCentric
         private IFolder outputFolder_;
         private Log log_;
         private Progress progress_;
-        private IDataSource dataSource_;
+        private DataSource dataSource_;
         private TemporalId? dataSet_;
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace DataCentric
         }
 
         /// <summary>Default data source of the context.</summary>
-        public IDataSource DataSource
+        public DataSource DataSource
         {
             get
             {
@@ -187,7 +187,7 @@ namespace DataCentric
     /// <summary>
     /// Extension methods for Context.
     ///
-    /// This class permits the methods of IDataSource to be called for
+    /// This class permits the methods of DataSource to be called for
     /// Context by forwarding the implementation to Context.DataSource.
     /// </summary>
     public static class ContextExtensions

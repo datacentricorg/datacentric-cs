@@ -35,7 +35,7 @@ namespace DataCentric
     /// For tests that do not require a data source, use UnitTestContext.
     /// </summary>
     public class MongoTestContext<TDataSource> : UnitTestContext
-        where TDataSource : MongoDataSource, IDataSource, new()
+        where TDataSource : MongoDataSource, new()
     {
         private bool keepTestData_;
 
