@@ -28,7 +28,7 @@ namespace DataCentric.Cli.Test
         [Fact]
         public void Smoke()
         {
-            using (var context = new TemporalMongoTestContext(this))
+            using (var context = new TemporalMongoUnitTestContext(this))
             {
                 // Root of the C# source code of the DataCentric module
                 string testFolder = Path.GetDirectoryName(context.CallerFilePath);

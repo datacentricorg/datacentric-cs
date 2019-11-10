@@ -19,7 +19,7 @@ using System.Runtime.CompilerServices;
 namespace DataCentric
 {
     /// <summary>
-    /// ExternalMongoTestContext is the context for use in test
+    /// ExternalMongoUnitTestContext is the context for use in test
     /// fixtures that will interact with external mongo database.
     ///
     /// It extends UnitTestContext by connecting to the specified
@@ -28,13 +28,13 @@ namespace DataCentric
     /// The context loads an existing Common dataset from data source
     /// and assigns its TemporalId to the DataSet property of the context.
     /// </summary>
-    public class ExternalMongoTestContext : UnitTestContext
+    public class ExternalMongoUnitTestContext : UnitTestContext
     {
         /// Unit test context for the specified object and database name.
         ///
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
-        public ExternalMongoTestContext(object classInstance, string dbNameString,
+        public ExternalMongoUnitTestContext(object classInstance, string dbNameString,
                                         [CallerMemberName] string methodName = null,
                                         [CallerFilePath] string sourceFilePath = null) :
             this(classInstance, dbNameString, MongoServerKey.Default, methodName, sourceFilePath)
@@ -47,7 +47,7 @@ namespace DataCentric
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
         /// </summary>
-        public ExternalMongoTestContext(object classInstance, string dbNameString, MongoServerKey serverKey,
+        public ExternalMongoUnitTestContext(object classInstance, string dbNameString, MongoServerKey serverKey,
                                         [CallerMemberName] string methodName = null,
                                         [CallerFilePath] string sourceFilePath = null) :
             base(classInstance, methodName, sourceFilePath)

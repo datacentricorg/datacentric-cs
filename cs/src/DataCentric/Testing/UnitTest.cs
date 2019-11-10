@@ -104,7 +104,7 @@ namespace DataCentric
         {
             if (Context == null)
             {
-                Context result = new TemporalMongoTestContext(this, methodName, sourceFilePath);
+                Context result = new TemporalMongoUnitTestContext(this, methodName, sourceFilePath);
                 return result;
             }
             else

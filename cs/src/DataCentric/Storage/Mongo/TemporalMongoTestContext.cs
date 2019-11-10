@@ -20,9 +20,9 @@ using System.Runtime.CompilerServices;
 namespace DataCentric
 {
     /// <summary>
-    /// Specialization of MongoTestContext for TemporalMongoDataSource.
+    /// Specialization of MongoUnitTestContext for TemporalMongoDataSource.
     ///
-    /// MongoTestContext is the context for use in test fixtures that
+    /// MongoUnitTestContext is the context for use in test fixtures that
     /// require a data source, parameterized by data source type.
     /// It extends UnitTestContext by creating an empty test
     /// database specific to the test method, and deleting
@@ -36,7 +36,7 @@ namespace DataCentric
     ///
     /// For tests that do not require a data source, use UnitTestContext.
     /// </summary>
-    public class TemporalMongoTestContext : MongoTestContext<TemporalMongoDataSource>
+    public class TemporalMongoUnitTestContext : MongoUnitTestContext<TemporalMongoDataSource>
     {
         /// <summary>
         /// Unit test context for the specified object for the Mongo
@@ -45,7 +45,7 @@ namespace DataCentric
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
         /// </summary>
-        public TemporalMongoTestContext(
+        public TemporalMongoUnitTestContext(
             object obj,
             [CallerMemberName] string methodName = null,
             [CallerFilePath] string sourceFilePath = null)
@@ -60,7 +60,7 @@ namespace DataCentric
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
         /// </summary>
-        public TemporalMongoTestContext( // TODO - move to a separate class
+        public TemporalMongoUnitTestContext( // TODO - move to a separate class
             object classInstance,
             MongoServerKey mongoServerKey,
             [CallerMemberName] string methodName = null,

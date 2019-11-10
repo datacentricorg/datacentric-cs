@@ -34,7 +34,7 @@ namespace DataCentric
     ///
     /// For tests that do not require a data source, use UnitTestContext.
     /// </summary>
-    public class MongoTestContext<TDataSource> : UnitTestContext
+    public class MongoUnitTestContext<TDataSource> : UnitTestContext
         where TDataSource : MongoDataSource, new()
     {
         private bool keepTestData_;
@@ -62,7 +62,7 @@ namespace DataCentric
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
         /// </summary>
-        public MongoTestContext(
+        public MongoUnitTestContext(
             object obj,
             [CallerMemberName] string methodName = null,
             [CallerFilePath] string sourceFilePath = null)
@@ -78,7 +78,7 @@ namespace DataCentric
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
         /// </summary>
-        public MongoTestContext(
+        public MongoUnitTestContext(
             object obj,
             MongoServerKey mongoServerKey,
             [CallerMemberName] string methodName = null,
