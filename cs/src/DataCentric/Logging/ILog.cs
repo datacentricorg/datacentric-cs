@@ -91,7 +91,7 @@ namespace DataCentric
         ///     Sample Description Line 1
         ///     Sample Description Line 2
         /// </summary>
-        void Publish(LogEntry logEntry);
+        void PublishEntry(LogEntry logEntry);
     }
 
     /// <summary>Extension methods for ILog.</summary>
@@ -138,7 +138,7 @@ namespace DataCentric
             var logEntry = new LogEntry {Verbosity = verbosity, Title = title, Description = description};
 
             // Publish the log entry to the log
-            obj.Publish(logEntry);
+            obj.PublishEntry(logEntry);
         }
 
         /// <summary>

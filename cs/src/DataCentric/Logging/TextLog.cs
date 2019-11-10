@@ -84,7 +84,7 @@ namespace DataCentric
         ///     Sample Description Line 1
         ///     Sample Description Line 2
         /// </summary>
-        public override void Publish(LogEntry logEntry)
+        public override void PublishEntry(LogEntry logEntry)
         {
             // Do not record the log entry if entry verbosity exceeds log verbosity
             // Record all entries if log verbosity is not specified

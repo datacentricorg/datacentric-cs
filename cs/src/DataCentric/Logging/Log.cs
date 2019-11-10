@@ -111,6 +111,6 @@ namespace DataCentric
         ///     Sample Description Line 1
         ///     Sample Description Line 2
         /// </summary>
-        public abstract void Publish(LogEntry logEntry);
+        public abstract void PublishEntry(LogEntry logEntry);
     }
 }
