@@ -351,7 +351,8 @@ namespace DataCentric
         /// </summary>
         public static void Assert(this Log obj, bool condition, string title)
         {
-            // Requires at least Verify verbosity if condition is true
+            // Records a log entry for any verbosity if condition is false,
+            // but requires at least Verify verbosity if condition is true
             if (!condition) obj.Error(title);
             else obj.Verify(title);
         }
@@ -374,7 +375,8 @@ namespace DataCentric
         /// </summary>
         public static void Assert(this Log obj, bool condition, string title, string description)
         {
-            // Requires at least Verify verbosity if condition is true
+            // Records a log entry for any verbosity if condition is false,
+            // but requires at least Verify verbosity if condition is true
             if (!condition) obj.Error(title, description);
             else obj.Verify(title, description);
         }

@@ -23,9 +23,9 @@ namespace DataCentric
     /// This class enforces strict naming conventions
     /// for database naming. While format of the resulting database
     /// name is specific to data store type, it always consists
-    /// of three tokens: InstanceType, InstanceName, and EnvName.
-    /// The meaning of InstanceName and EnvName tokens depends on
-    /// the value of InstanceType enumeration.
+    /// of three tokens: EnvType, EnvGroup, and EnvName.
+    /// The meaning of EnvGroup and EnvName tokens depends on
+    /// the value of EnvType enumeration.
     ///
     /// This record is stored in root dataset.
     /// </summary>
@@ -33,32 +33,32 @@ namespace DataCentric
     public class DbNameKey : TypedKey<DbNameKey, DbName>
     {
         /// <summary>
-        /// Instance type enumeration.
+        /// Environment type enumeration.
         ///
-        /// Some API functions are restricted based on the instance type.
+        /// Some API functions are restricted based on the environment type.
         /// </summary>
-        public InstanceType InstanceType { get; set; }
+        public EnvType EnvType { get; set; }
 
         /// <summary>
-        /// The meaning of instance name depends on the instance type.
+        /// The meaning of environment group depends on the environment type.
         ///
-        /// * For PROD, UAT, and DEV instance types, instance name
+        /// * For PROD, UAT, and DEV environment types, environment group
         ///   identifies the endpoint.
         ///
-        /// * For USER instance type, instance name is user alias.
+        /// * For USER environment type, environment group is user alias.
         ///
-        /// * For TEST instance type, instance name is the name of
+        /// * For TEST environment type, environment group is the name of
         ///   the unit test class (test fixture).
         /// </summary>
-        public string InstanceName { get; set; }
+        public string EnvGroup { get; set; }
 
         /// <summary>
-        /// The meaning of environment name depends on the instance type.
+        /// The meaning of environment name depends on the environment type.
         ///
-        /// * For PROD, UAT, DEV, and USER instance types, it is the
+        /// * For PROD, UAT, DEV, and USER environment types, it is the
         ///   name of the user environment selected in the client.
         ///
-        /// * For TEST instance type, it is the test method name.
+        /// * For TEST environment type, it is the test method name.
         /// </summary>
         public string EnvName { get; set; }
     }

@@ -34,7 +34,7 @@ namespace DataCentric.Cli
         {
             DbNameKey dbName = new DbNameKey
             {
-                InstanceType = InstanceType.USER, InstanceName = "TEMP", EnvName = "Default" // TODO - use GUID based DB name
+                EnvType = EnvType.USER, EnvGroup = "TEMP", EnvName = "Default" // TODO - use GUID based DB name
             };
 
             var dataSource = new TemporalMongoDataSource

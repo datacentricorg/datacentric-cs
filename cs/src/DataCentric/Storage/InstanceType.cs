@@ -19,19 +19,19 @@ using System;
 namespace DataCentric
 {
     /// <summary>
-    /// Specifies instance type.
+    /// Specifies environment group.
     ///
-    /// Some API functions are restricted based on the instance type.
+    /// Some API functions are restricted based on the environment group.
     /// </summary>
-    public enum InstanceType
+    public enum EnvType
     {
         /// <summary>Empty</summary>
         Empty,
 
         /// <summary>
-        /// Production instance type.
+        /// Production environment group.
         ///
-        /// This instance type is used for live production data
+        /// This environment group is used for live production data
         /// and has the most restrictions. For example, it
         /// does not allow a database to be deleted (dropped)
         /// through the API call.
@@ -39,35 +39,35 @@ namespace DataCentric
         PROD,
 
         /// <summary>
-        /// Shared user acceptance testing instance type.
+        /// Shared user acceptance testing environment group.
         ///
-        /// This instance type is used has some of the restrictions
-        /// of the PROD instance type, including the restriction
+        /// This environment group is used has some of the restrictions
+        /// of the PROD environment group, including the restriction
         /// on deleting (dropping) the database through an API
         /// call.
         /// </summary>
         UAT,
 
         /// <summary>
-        /// Shared development instance type.
+        /// Shared development environment group.
         ///
-        /// This instance type is shared but is free from most
+        /// This environment group is shared but is free from most
         /// restrictions.
         /// </summary>
         DEV,
 
         /// <summary>
-        /// Personal instance type of a specific user.
+        /// Personal environment group of a specific user.
         ///
-        /// This instance type is not shared between users and is
+        /// This environment group is not shared between users and is
         /// free from most restrictions.
         /// </summary>
         USER,
 
         /// <summary>
-        /// Instance type is used for unit testing.
+        /// Environment type is used for unit testing.
         ///
-        /// Databases for the test instance type are routinely
+        /// Databases for the test environment group are routinely
         /// cleared (deleted). They should not be used for any
         /// purpose other than unit tests.
         /// </summary>

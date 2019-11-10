@@ -91,7 +91,7 @@ namespace DataCentric
             CallerMemberName = methodName;
             CallerFilePath = sourceFilePath;
 
-            // Create and initialize data source with TEST instance type.
+            // Create and initialize data source with TEST environment type.
             //
             // This does not create the database until the data source
             // is actually used to access data.
@@ -102,8 +102,8 @@ namespace DataCentric
             {
                 DbName = new DbNameKey()
                 {
-                    InstanceType = InstanceType.TEST,
-                    InstanceName = className,
+                    EnvType = EnvType.TEST,
+                    EnvGroup = className,
                     EnvName = methodName
                 },
                 MongoServer = mongoServerKey

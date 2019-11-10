@@ -37,7 +37,7 @@ namespace DataCentric
         protected const bool useScalarDiscriminatorConvention_ = false;
         static readonly char[] prohibitedDbNameSymbols_ = new char[] { '/', '\\', '.', ' ', '"', '$', '*', '<', '>', ':', '|', '?' };
         static int maxDbNameLength_ = 64;
-        private InstanceType instanceType_;
+        private EnvType envType_;
         private string dbName_;
         private IMongoClient client_;
         private TemporalId prevTemporalId_ = TemporalId.Empty;
@@ -116,13 +116,13 @@ namespace DataCentric
 
             // Perform key validation
             if (DbName == null) throw new Exception("DB key is null or empty.");
-            if (DbName.InstanceType == InstanceType.Empty) throw new Exception("DB instance type is not specified.");
-            if (string.IsNullOrEmpty(DbName.InstanceName)) throw new Exception("DB instance name is not specified.");
+            if (DbName.EnvType == EnvType.Empty) throw new Exception("DB environment type is not specified.");
+            if (string.IsNullOrEmpty(DbName.EnvGroup)) throw new Exception("DB environment group is not specified.");
             if (string.IsNullOrEmpty(DbName.EnvName)) throw new Exception("DB environment name is not specified.");
 
             // The name is the database key in the standard semicolon delimited format.
             dbName_ = DbName.ToString();
-            instanceType_ = DbName.InstanceType;
+            envType_ = DbName.EnvType;
 
             // Perform additional validation for restricted characters and database name length.
             if (dbName_.IndexOfAny(prohibitedDbNameSymbols_) != -1)
@@ -215,9 +215,9 @@ namespace DataCentric
                 //
                 // Use other tokens such as UAT or PROD to protect the
                 // database from accidental deletion
-                if (instanceType_ == InstanceType.DEV
-                    || instanceType_ == InstanceType.USER
-                    || instanceType_ == InstanceType.TEST)
+                if (envType_ == EnvType.DEV
+                    || envType_ == EnvType.USER
+                    || envType_ == EnvType.TEST)
                 {
                     // The name is the database key in the standard
                     // semicolon delimited format. However this method
@@ -230,7 +230,7 @@ namespace DataCentric
                     throw new Exception(
                         $"As an extra safety measure, database {dbName_} cannot be " +
                         $"dropped because this operation is not permitted for database " +
-                        $"instance type {instanceType_}.");
+                        $"environment type {envType_}.");
                 }
             }
         }

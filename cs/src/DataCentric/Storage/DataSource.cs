@@ -45,9 +45,9 @@ namespace DataCentric
         /// This class enforces strict naming conventions
         /// for database naming. While format of the resulting database
         /// name is specific to data store type, it always consists
-        /// of three tokens: InstanceType, InstanceName, and EnvName.
-        /// The meaning of InstanceName and EnvName tokens depends on
-        /// the value of InstanceType enumeration.
+        /// of three tokens: EnvType, EnvGroup, and EnvName.
+        /// The meaning of EnvGroup and EnvName tokens depends on
+        /// the value of EnvType enumeration.
         /// </summary>
         public DbNameKey DbName { get; set; }
 
