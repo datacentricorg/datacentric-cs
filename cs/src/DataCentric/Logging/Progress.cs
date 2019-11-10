@@ -31,7 +31,7 @@ namespace DataCentric
         /// * Filesystem
         /// * Progress reporting
         /// </summary>
-        public IContext Context { get; private set; }
+        public Context Context { get; private set; }
 
         /// <summary>Get or set progress ratio from 0 to 1 (0 if not set).</summary>
         public abstract double Ratio { get; set; }
@@ -51,7 +51,7 @@ namespace DataCentric
         /// IMPORTANT - Every override of this method must call base.Init()
         /// first, and only then execute the rest of the override method's code.
         /// </summary>
-        public virtual void Init(IContext context)
+        public virtual void Init(Context context)
         {
             // Uncomment except in root class of the hierarchy
             // base.Init(context);

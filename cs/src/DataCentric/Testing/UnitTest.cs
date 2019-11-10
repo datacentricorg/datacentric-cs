@@ -74,7 +74,7 @@ namespace DataCentric
         /// IMPORTANT - Every override of this method must call base.Init()
         /// first, and only then execute the rest of the override method's code.
         /// </summary>
-        public override void Init(IContext context)
+        public override void Init(Context context)
         {
             // Initialize base
             base.Init(context);
@@ -98,13 +98,13 @@ namespace DataCentric
         /// This method may be used by the unit tests in this class or as
         /// part of the test data set up by other classes.
         /// </summary>
-        public virtual IContext CreateMethodContext(
+        public virtual Context CreateMethodContext(
             [CallerMemberName] string methodName = null,
             [CallerFilePath] string sourceFilePath = null)
         {
             if (Context == null)
             {
-                IContext result = new TemporalMongoTestContext(this, methodName, sourceFilePath);
+                Context result = new TemporalMongoTestContext(this, methodName, sourceFilePath);
                 return result;
             }
             else

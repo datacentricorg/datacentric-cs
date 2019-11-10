@@ -37,7 +37,7 @@ namespace DataCentric
         /// * Filesystem
         /// * Progress reporting
         /// </summary>
-        IContext Context { get; }
+        Context Context { get; }
 
         //--- METHODS
 
@@ -51,7 +51,7 @@ namespace DataCentric
         /// IMPORTANT - Every override of this method must call base.Init()
         /// first, and only then execute the rest of the override method's code.
         /// </summary>
-        void Init(IContext context);
+        void Init(Context context);
 
         /// <summary>
         /// True if the caller has the required permissions and path contains

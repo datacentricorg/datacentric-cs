@@ -112,7 +112,7 @@ namespace DataCentric.Cli
         /// <summary>
         /// Helper method to create and init instance of handler class.
         /// </summary>
-        private static TRecord CreateHandler<TKey, TBaseRecord, TRecord>(IContext context, RunCommand command)
+        private static TRecord CreateHandler<TKey, TBaseRecord, TRecord>(Context context, RunCommand command)
             where TKey : TypedKey<TKey, TBaseRecord>, new()
             where TRecord : TBaseRecord
             where TBaseRecord : TypedRecord<TKey, TBaseRecord>

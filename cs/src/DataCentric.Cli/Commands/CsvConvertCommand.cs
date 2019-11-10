@@ -54,7 +54,7 @@ namespace DataCentric.Cli
             }
         }
 
-        private static void ProcessDirectory(IContext context, string path, TemporalId parentDataset)
+        private static void ProcessDirectory(Context context, string path, TemporalId parentDataset)
         {
             var dirName = Path.GetFileName(path);
 
@@ -83,7 +83,7 @@ namespace DataCentric.Cli
             }
         }
 
-        private static void ConvertCsvToMongo<T>(IContext context, TemporalId dataset, string csvFile) where T : Record
+        private static void ConvertCsvToMongo<T>(Context context, TemporalId dataset, string csvFile) where T : Record
         {
             string fileContent = File.ReadAllText(csvFile);
             var records = CsvRecordsSerializer<T>.Deserialize(fileContent);

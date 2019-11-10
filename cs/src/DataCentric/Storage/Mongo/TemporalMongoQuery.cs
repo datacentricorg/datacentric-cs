@@ -107,7 +107,7 @@ namespace DataCentric
         /// * Filesystem
         /// * Progress reporting
         /// </summary>
-        public IContext Context { get => collection_.DataSource.Context; }
+        public Context Context { get => collection_.DataSource.Context; }
 
         //--- METHODS
 

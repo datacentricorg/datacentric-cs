@@ -105,7 +105,7 @@ namespace DataCentric.Cli
         /// <summary>Enable cache flag.</summary>
         public YesNo? EnableCache { get; set; }
 
-        /// <summary>Use IObjectContext Instead of IContext</summary>
+        /// <summary>Use IObjectContext Instead of Context</summary>
         public YesNo? ObjectContext { get; set; }
 
         /// <summary>Creates object without context</summary>

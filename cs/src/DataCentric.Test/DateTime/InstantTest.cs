@@ -68,7 +68,7 @@ namespace DataCentric.Test
         /// Verify that the result of serializing and then deserializing
         /// an object is the same as the original.
         /// </summary>
-        private void VerifyRoundtrip(IContext context, Instant value)
+        private void VerifyRoundtrip(Context context, Instant value)
         {
             // To be used in assert message
             string nameAsString = value.AsString();

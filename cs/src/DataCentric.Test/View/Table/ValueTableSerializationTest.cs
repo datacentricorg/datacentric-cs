@@ -68,7 +68,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Test serialization.</summary>
-        private void TestSerialization(IContext context, AtomicType[] valueTypes, TableLayout layout)
+        private void TestSerialization(Context context, AtomicType[] valueTypes, TableLayout layout)
         {
             // Create and resize
             int rowCount = 3;

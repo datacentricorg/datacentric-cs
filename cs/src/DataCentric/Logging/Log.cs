@@ -52,7 +52,7 @@ namespace DataCentric
         /// IMPORTANT - Every override of this method must call base.Init()
         /// first, and only then execute the rest of the override method's code.
         /// </summary>
-        public override void Init(IContext context)
+        public override void Init(Context context)
         {
             // Initialize base
             base.Init(context);

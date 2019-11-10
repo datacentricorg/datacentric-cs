@@ -81,7 +81,7 @@ namespace DataCentric
         /// All overrides of this method must call base.Init(context) first, then
         /// execute the rest of the code in the override.
         /// </summary>
-        public override void Init(IContext context)
+        public override void Init(Context context)
         {
             // Initialize base before executing the rest of the code in this method
             base.Init(context);
@@ -146,7 +146,7 @@ namespace DataCentric
         /// inheritance chain, specify [Configurable] attribute for each
         /// class that provides Configure(context) method.
         /// </summary>
-        public static void Configure(IContext context)
+        public static void Configure(Context context)
         {
             var result = new List<Zone>
             {

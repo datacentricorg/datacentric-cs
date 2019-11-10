@@ -598,7 +598,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Load the object and verify the outcome.</summary>
-        private void VerifyLoad<TKey, TRecord>(IContext context, string dataSetName, TypedKey<TKey, TRecord> key)
+        private void VerifyLoad<TKey, TRecord>(Context context, string dataSetName, TypedKey<TKey, TRecord> key)
             where TKey : TypedKey<TKey, TRecord>, new()
             where TRecord : TypedRecord<TKey, TRecord>
         {
@@ -624,7 +624,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Query over all records of the specified type in the specified dataset.</summary>
-        private void VerifyQuery<TRecord>(IContext context, string dataSetName)
+        private void VerifyQuery<TRecord>(Context context, string dataSetName)
             where TRecord : Record
         {
             // Get dataset and query
@@ -641,7 +641,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Two datasets and two objects, one base and one derived.</summary>
-        private void SaveBasicData(IContext context)
+        private void SaveBasicData(Context context)
         {
             // Create first dataset and record
             var dataSet0 = context.CreateDataSet("DataSet0", context.DataSet);
@@ -653,7 +653,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Two datasets and eight objects, split between base and derived.</summary>
-        private void SaveCompleteData(IContext context)
+        private void SaveCompleteData(Context context)
         {
             // Create records with minimal data
 
@@ -683,7 +683,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Minimal data in multiple datasets with overlapping imports.</summary>
-        private void SaveMultiDataSetData(IContext context)
+        private void SaveMultiDataSetData(Context context)
         {
             // Create datasets
             var dataSet0 = context.CreateDataSet("DataSet0", context.DataSet);
@@ -703,7 +703,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Save record with minimal data for testing how the records are found. </summary>
-        private TemporalId SaveMinimalRecord(IContext context, string dataSetName, string recordName, int recordIndex, int? version = null)
+        private TemporalId SaveMinimalRecord(Context context, string dataSetName, string recordName, int recordIndex, int? version = null)
         {
             var rec = new BaseSample();
             rec.RecordName = recordName;
@@ -717,7 +717,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Save base record</summary>
-        private TemporalId SaveBaseRecord(IContext context, string dataSetName, string recordName, int recordIndex)
+        private TemporalId SaveBaseRecord(Context context, string dataSetName, string recordName, int recordIndex)
         {
             var rec = new BaseSample();
             rec.RecordName = recordName;
@@ -736,7 +736,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Save derived record</summary>
-        private TemporalId SaveDerivedRecord(IContext context, string dataSetName, string recordName, int recordIndex)
+        private TemporalId SaveDerivedRecord(Context context, string dataSetName, string recordName, int recordIndex)
         {
             var rec = new DerivedSample();
             rec.RecordName = recordName;
@@ -800,7 +800,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Save other derived record.</summary>
-        private TemporalId SaveOtherDerivedRecord(IContext context, string dataSetName, string recordName, int recordIndex)
+        private TemporalId SaveOtherDerivedRecord(Context context, string dataSetName, string recordName, int recordIndex)
         {
             var rec = new OtherDerivedSample();
             rec.RecordName = recordName;
@@ -820,7 +820,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Save record that is derived from derived.</summary>
-        private TemporalId SaveDerivedFromDerivedRecord(IContext context, string dataSetName, string recordName, int recordIndex)
+        private TemporalId SaveDerivedFromDerivedRecord(Context context, string dataSetName, string recordName, int recordIndex)
         {
             var rec = new DerivedFromDerivedSample();
             rec.RecordName = recordName;

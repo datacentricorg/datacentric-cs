@@ -38,7 +38,7 @@ namespace DataCentric
         /// * Filesystem
         /// * Progress reporting
         /// </summary>
-        IContext Context { get; }
+        Context Context { get; }
 
         /// <summary>Filters a sequence of values based on a predicate.</summary>
         IQuery<TRecord> Where(Expression<Func<TRecord, bool>> predicate);

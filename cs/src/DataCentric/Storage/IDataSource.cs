@@ -46,7 +46,7 @@ namespace DataCentric
         /// * Filesystem
         /// * Progress reporting
         /// </summary>
-        IContext Context { get; }
+        Context Context { get; }
 
         /// <summary>Unique data source name.</summary>
         string DataSourceName { get; }
@@ -82,7 +82,7 @@ namespace DataCentric
         /// IMPORTANT - Every override of this method must call base.Init()
         /// first, and only then execute the rest of the override method's code.
         /// </summary>
-        void Init(IContext context);
+        void Init(Context context);
 
         /// <summary>Flush data to permanent storage.</summary>
         void Flush();

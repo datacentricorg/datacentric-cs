@@ -33,10 +33,10 @@ namespace DataCentric.Test
         /// * Filesystem
         /// * Progress reporting
         /// </summary>
-        public IContext Context { get; }
+        public Context Context { get; }
 
         /// <summary>Create from context.</summary>
-        public DisposableTestBaseSample(IContext context)
+        public DisposableTestBaseSample(Context context)
         {
             Context = context;
         }
@@ -66,7 +66,7 @@ namespace DataCentric.Test
     public class DisposableTestDerivedSample : DisposableTestBaseSample
     {
         /// <summary>Create from context.</summary>
-        public DisposableTestDerivedSample(IContext context) : base(context)
+        public DisposableTestDerivedSample(Context context) : base(context)
         {
         }
 

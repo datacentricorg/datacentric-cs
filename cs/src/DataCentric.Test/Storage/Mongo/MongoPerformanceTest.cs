@@ -66,14 +66,14 @@ namespace DataCentric.Test
         }
 
         /// <summary>Create DB instance.</summary>
-        public IMongoDatabase GetDb(IContext context)
+        public IMongoDatabase GetDb(Context context)
         {
             var result = context.DataSource.CastTo<MongoDataSource>().Db;
             return result;
         }
 
         /// <summary>Insert N non-versioned instances.</summary>
-        private void InsertRecordsA(IContext context)
+        private void InsertRecordsA(Context context)
         {
             var db = GetDb(context);
 
@@ -108,7 +108,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Insert M copies of each of N versioned instances B.</summary>
-        private void InsertRecordsB(IContext context)
+        private void InsertRecordsB(Context context)
         {
             var db = GetDb(context);
             var collection = db.GetCollection<B>("B");

@@ -31,7 +31,7 @@ namespace DataCentric
         /// * Filesystem
         /// * Progress reporting
         /// </summary>
-        IContext Context { get; }
+        Context Context { get; }
 
         /// <summary>Get or set progress ratio from 0 to 1 (0 if not set).</summary>
         double Ratio { get; set; }
@@ -51,7 +51,7 @@ namespace DataCentric
         /// IMPORTANT - Every override of this method must call base.Init()
         /// first, and only then execute the rest of the override method's code.
         /// </summary>
-        void Init(IContext context);
+        void Init(Context context);
 
         /// <summary>Flush data to permanent storage.</summary>
         void Flush();
