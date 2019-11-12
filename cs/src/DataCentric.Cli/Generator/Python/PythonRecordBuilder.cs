@@ -34,7 +34,7 @@ namespace DataCentric.Cli
 
             // If not generating for DataCentric package, use dc. namespace
             // in front of datacentric types, otherwise use no prefix
-            string dcNamespacePrefix = insideDc ? "dc." : "";
+            string dcNamespacePrefix = insideDc ? "" : "dc.";
 
             // Full package name and short namespace of the parent class,
             // or null if there is no parent
