@@ -34,14 +34,18 @@ namespace DataCentric.Cli
 
             // If not generating for DataCentric package, use dc. namespace
             // in front of datacentric types, otherwise use no prefix
-            string dcNamespace = insideDc ? "dc." : "";
+            string dcNamespacePrefix = insideDc ? "dc." : "";
 
             // Full package name and short namespace of the parent class,
             // or null if there is no parent
-            string parentClassPackage = decl.Inherit != null ?
+            bool parentClassInDifferentModule =
+                decl.Inherit != null && decl.Inherit.Module.ModuleName != decl.Module.ModuleName;
+            string parentClassPackage = parentClassInDifferentModule ?
                 GetPythonPackage(decl.Inherit.Module.ModuleName) : null;
-            string parentClassNamespace = decl.Inherit != null ?
+            string parentClassNamespace = parentClassInDifferentModule ?
                 GetPythonNamespace(decl.Inherit.Module.ModuleName) : null;
+            string parentClassNamespacePrefix = parentClassInDifferentModule ?
+                parentClassNamespace + "." : "";
 
             // Import datacentric package as dc, or if inside datacentric,
             // import individual classes instead
@@ -124,7 +128,7 @@ namespace DataCentric.Cli
             {
                 var keyElements = decl.Elements.Where(e => decl.Keys.Contains(e.Name)).ToList();
 
-                writer.AppendLine($"class {name}Key({dcNamespace}TypedKey['{name}']):");
+                writer.AppendLine($"class {name}Key({dcNamespacePrefix}TypedKey['{name}']):");
 
                 // Same comment for the key and for the record
                 writer.PushIndent();
@@ -163,11 +167,11 @@ namespace DataCentric.Cli
                 abstractBase = ", ABC";
 
             if (decl.Keys.Any())
-                writer.AppendLine($"class {name}({dcNamespace}TypedRecord[{name}Key]{abstractBase}):");
+                writer.AppendLine($"class {name}({dcNamespacePrefix}TypedRecord[{name}Key]{abstractBase}):");
             else if (decl.Inherit != null)
-                writer.AppendLine($"class {name}({decl.Inherit.Name}{abstractBase}):");
+                writer.AppendLine($"class {name}({parentClassNamespacePrefix}{decl.Inherit.Name}{abstractBase}):");
             else
-                writer.AppendLine($"class {name}(Data{abstractBase}):");
+                writer.AppendLine($"class {name}({dcNamespacePrefix}Data{abstractBase}):");
 
             // Same comment for the key and for the record
             writer.PushIndent();
@@ -226,7 +230,7 @@ namespace DataCentric.Cli
 
                 var parameters = "";
                 foreach (var parameter in declare.Params)
-                    parameters += ($", {parameter.Name.Underscore()}: {GetTypeHint(parameter)}");
+                    parameters += ($", {parameter.Name.Underscore()}: {GetTypeHint(decl, parameter)}");
 
                 writer.AppendLine($"def {declare.Name.Underscore()}(self{parameters}):");
                 writer.PushIndent();
@@ -242,15 +246,42 @@ namespace DataCentric.Cli
             }
         }
 
-        private static string GetTypeHint(HandlerParamDecl parameter)
+        private static string GetTypeHint(TypeDecl decl, HandlerParamDecl parameter)
         {
-            string type = parameter.Value != null ? GetValue(parameter.Value) :
-                          parameter.Data != null  ? $"{parameter.Data.Name}" :
-                          parameter.Key != null   ? $"{parameter.Key.Name}Key" :
-                          parameter.Enum != null  ? parameter.Enum.Name :
-                                                  throw new ArgumentException("Can't deduct type");
-
-            return parameter.Vector == YesNo.Y ? $"List[{type}]" : type;
+            if (parameter.Value != null)
+            {
+                var result = GetValue(parameter.Value);
+                if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
+                return result;
+            }
+            else if (parameter.Data != null)
+            {
+                string paramNamespace = parameter.Data.Module.ModuleName != decl.Module.ModuleName
+                    ? GetPythonNamespace(parameter.Data.Module.ModuleName) + "."
+                    : "";
+                var result = $"{paramNamespace}{parameter.Data.Name}";
+                if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
+                return result;
+            }
+            else if (parameter.Key != null)
+            {
+                string paramNamespace = parameter.Key.Module.ModuleName != decl.Module.ModuleName
+                    ? GetPythonNamespace(parameter.Key.Module.ModuleName) + "."
+                    : "";
+                var result = $"{paramNamespace}{parameter.Key.Name}Key";
+                if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
+                return result;
+            }
+            else if (parameter.Enum != null)
+            {
+                string paramNamespace = parameter.Enum.Module.ModuleName != decl.Module.ModuleName
+                    ? GetPythonNamespace(parameter.Enum.Module.ModuleName) + "."
+                    : "";
+                var result = $"{paramNamespace}{parameter.Enum.Name}";
+                if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
+                return result;
+            }
+            else throw new ArgumentException("Can't deduct type");
         }
 
         private static string GetTypeHint(TypeElementDecl element)
