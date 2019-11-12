@@ -26,30 +26,109 @@ namespace DataCentric.Cli
         {
             var writer = new CodeWriter();
 
+            // Determine if we are inside datacentric package
+            // based on module name. This affects the imports
+            // and namespace use.
+            string name = decl.Name;
+            bool insideDc = decl.Module.ModuleName == "DataCentric";
 
+            // If not generating for DataCentric package, use dc. namespace
+            // in front of datacentric types, otherwise use no prefix
+            string dcNamespace = insideDc ? "dc." : "";
 
-            if (decl.Inherit != null)
-                writer.AppendLine($"from ? import {decl.Inherit.Name}");
-            else if (decl.IsRecord)
+            // Full package name and short namespace of the parent class,
+            // or null if there is no parent
+            string parentClassPackage = decl.Inherit != null ?
+                GetPythonPackage(decl.Inherit.Module.ModuleName) : null;
+            string parentClassNamespace = decl.Inherit != null ?
+                GetPythonNamespace(decl.Inherit.Module.ModuleName) : null;
+
+            // Import datacentric package as dc, or if inside datacentric,
+            // import individual classes instead
+            if (decl.IsRecord)
             {
-                writer.AppendLine("from datacentric.types.record.typed_key import TypedKey");
-                writer.AppendLine("from datacentric.types.record.typed_record import TypedRecord");
+                if (insideDc)
+                {
+                    writer.AppendLine("from datacentric.storage.typed_key import TypedKey");
+                    writer.AppendLine("from datacentric.storage.typed_record import TypedRecord");
+                }
+                else
+                {
+                    writer.AppendLine("import datacentric as dc");
+                }
             }
             else
-                writer.AppendLine("from datacentric.types.record.data import Data");
+            {
+                if (insideDc)
+                {
+                    writer.AppendLine("from datacentric.storage.data import Data");
+                }
+                else
+                {
+                    writer.AppendLine("import datacentric as dc");
+                }
+            }
+
+            // Import parent class package as its namespace, or if inside datacentric,
+            // import individual class instead
+            if (decl.Inherit != null)
+            {
+                if (insideDc)
+                {
+                    // Import parent package namespace unless it is the same as
+                    // the namespace for the class itself
+                    if (decl.Module.ModuleName == decl.Inherit.Module.ModuleName)
+                    {
+                        // Parent class name and filename based on converting
+                        // class name to snake case
+                        string parentClassName = decl.Inherit.Name;
+                        string parentPythonFileName = parentClassName.Underscore();
+
+                        // Import individual parent class if package namespace is
+                        // the same as parent class namespace. Use ? as the folder
+                        // is unknown, this will be corrected after the generation
+                        writer.AppendLine($"from datacentric.?.{parentPythonFileName} import {parentClassName}");
+                    }
+                    else
+                        throw new Exception("When generating code for the datacentric package, " +
+                                            "parent packages should not be managed via a declaration.");
+                }
+                else
+                {
+                    // Import parent package namespace unless it is the same as
+                    // the namespace for the class itself
+                    if (decl.Module.ModuleName == decl.Inherit.Module.ModuleName)
+                    {
+                        // Parent class name and filename based on converting
+                        // class name to snake case
+                        string parentClassName = decl.Inherit.Name;
+                        string parentPythonFileName = parentClassName.Underscore();
+
+                        // Import individual parent class if package namespace is
+                        // the same as parent class namespace. Use ? as the folder
+                        // is unknown, this will be corrected after the generation
+                        writer.AppendLine($"from ?.{parentPythonFileName} import {parentClassName}");
+                    }
+                    else
+                    {
+                        // Otherwise import the entire package of the parent class
+                        writer.AppendLine($"import {parentClassPackage} as {parentClassNamespace}");
+                    }
+                }
+            }
 
             writer.AppendNewLineWithoutIndent();
             writer.AppendNewLineWithoutIndent();
-
-            string name = decl.Name;
 
             if (decl.Keys.Any())
             {
                 var keyElements = decl.Elements.Where(e => decl.Keys.Contains(e.Name)).ToList();
 
-                writer.AppendLine($"class {name}Key(TypedKey['{name}']):");
+                writer.AppendLine($"class {name}Key({dcNamespace}TypedKey['{name}']):");
+
+                // Same comment for the key and for the record
                 writer.PushIndent();
-                writer.AppendLine($"\"\"\"Key for {name}.\"\"\"");
+                writer.AppendLines(CommentHelper.PyComment(decl.Comment));
                 writer.AppendNewLineWithoutIndent();
 
                 var keySlots = string.Join(", ", decl.Keys.Select(t => $"'{t.Underscore()}'"));
@@ -84,12 +163,13 @@ namespace DataCentric.Cli
                 abstractBase = ", ABC";
 
             if (decl.Keys.Any())
-                writer.AppendLine($"class {name}(TypedRecord[{name}Key]{abstractBase}):");
+                writer.AppendLine($"class {name}({dcNamespace}TypedRecord[{name}Key]{abstractBase}):");
             else if (decl.Inherit != null)
                 writer.AppendLine($"class {name}({decl.Inherit.Name}{abstractBase}):");
             else
                 writer.AppendLine($"class {name}(Data{abstractBase}):");
 
+            // Same comment for the key and for the record
             writer.PushIndent();
             writer.AppendLines(CommentHelper.PyComment(decl.Comment));
             writer.AppendNewLineWithoutIndent();
@@ -188,29 +268,47 @@ namespace DataCentric.Cli
         {
             var atomicType = valueDecl.Type;
             return
-                atomicType == AtomicType.String             ? "Optional[str]" :
-                atomicType == AtomicType.Bool               ? "bool" :
-                atomicType == AtomicType.DateTime           ? "dt.datetime" :
-                atomicType == AtomicType.Double             ? "float" :
-                atomicType == AtomicType.Int                ? "int" :
-                atomicType == AtomicType.Long               ? "int" :
-                atomicType == AtomicType.NullableBool       ? "Optional[bool]" :
-                atomicType == AtomicType.NullableDateTime   ? "Optional[dt.datetime]" :
-                atomicType == AtomicType.NullableDouble     ? "Optional[float]" :
-                atomicType == AtomicType.NullableInt        ? "Optional[int]" :
-                atomicType == AtomicType.NullableLong       ? "Optional[int]" :
-                atomicType == AtomicType.DateTime           ? "dt.datetime" :
-                atomicType == AtomicType.Date               ? "dt.date" :
-                atomicType == AtomicType.Time               ? "dt.time" :
-                atomicType == AtomicType.Minute             ? "LocalMinute" :
-                atomicType == AtomicType.NullableDateTime   ? "Optional[dt.datetime]" :
-                atomicType == AtomicType.NullableDate       ? "Optional[dt.date]" :
-                atomicType == AtomicType.NullableTime       ? "Optional[dt.time]" :
-                atomicType == AtomicType.NullableMinute     ? "Optional[LocalMinute]" :
-                atomicType == AtomicType.TemporalId         ? "ObjectId" :
+                atomicType == AtomicType.String ? "Optional[str]" :
+                atomicType == AtomicType.Bool ? "bool" :
+                atomicType == AtomicType.DateTime ? "dt.datetime" :
+                atomicType == AtomicType.Double ? "float" :
+                atomicType == AtomicType.Int ? "int" :
+                atomicType == AtomicType.Long ? "int" :
+                atomicType == AtomicType.NullableBool ? "Optional[bool]" :
+                atomicType == AtomicType.NullableDateTime ? "Optional[dt.datetime]" :
+                atomicType == AtomicType.NullableDouble ? "Optional[float]" :
+                atomicType == AtomicType.NullableInt ? "Optional[int]" :
+                atomicType == AtomicType.NullableLong ? "Optional[int]" :
+                atomicType == AtomicType.DateTime ? "dt.datetime" :
+                atomicType == AtomicType.Date ? "dt.date" :
+                atomicType == AtomicType.Time ? "dt.time" :
+                atomicType == AtomicType.Minute ? "LocalMinute" :
+                atomicType == AtomicType.NullableDateTime ? "Optional[dt.datetime]" :
+                atomicType == AtomicType.NullableDate ? "Optional[dt.date]" :
+                atomicType == AtomicType.NullableTime ? "Optional[dt.time]" :
+                atomicType == AtomicType.NullableMinute ? "Optional[LocalMinute]" :
+                atomicType == AtomicType.TemporalId ? "ObjectId" :
                 atomicType == AtomicType.NullableTemporalId ? "Optional[ObjectId]" :
-                                                              throw new
-                                                                  ArgumentException($"Unknown value type: {atomicType.ToString()}");
+                throw new
+                    ArgumentException($"Unknown value type: {atomicType.ToString()}");
+        }
+
+        private static string GetPythonPackage(string moduleName)
+        {
+            switch (moduleName)
+            {
+                case "DataCentric": return "datacentric";
+                default: return "unknown_module"; // TODO - resolve all and raise an error if not found
+            }
+        }
+
+        private static string GetPythonNamespace(string moduleName)
+        {
+            switch (moduleName)
+            {
+                case "DataCentric": return "dc";
+                default: return "unknown_module"; // TODO - resolve all and raise an error if not found
+            }
         }
     }
 }
