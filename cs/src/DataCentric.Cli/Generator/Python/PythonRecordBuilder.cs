@@ -305,22 +305,22 @@ namespace DataCentric.Cli
             return
                 atomicType == AtomicType.String ? "Optional[str]" :
                 atomicType == AtomicType.Bool ? "bool" :
-                atomicType == AtomicType.DateTime ? "dt.datetime" :
+                atomicType == AtomicType.DateTime ? "LocalDateTime" :
                 atomicType == AtomicType.Double ? "float" :
                 atomicType == AtomicType.Int ? "int" :
                 atomicType == AtomicType.Long ? "int" :
                 atomicType == AtomicType.NullableBool ? "Optional[bool]" :
-                atomicType == AtomicType.NullableDateTime ? "Optional[dt.datetime]" :
+                atomicType == AtomicType.NullableDateTime ? "Optional[LocalDateTime]" :
                 atomicType == AtomicType.NullableDouble ? "Optional[float]" :
                 atomicType == AtomicType.NullableInt ? "Optional[int]" :
                 atomicType == AtomicType.NullableLong ? "Optional[int]" :
-                atomicType == AtomicType.DateTime ? "dt.datetime" :
-                atomicType == AtomicType.Date ? "dt.date" :
-                atomicType == AtomicType.Time ? "dt.time" :
+                atomicType == AtomicType.DateTime ? "LocalDateTime" :
+                atomicType == AtomicType.Date ? "LocalDate" :
+                atomicType == AtomicType.Time ? "LocalTime" :
                 atomicType == AtomicType.Minute ? "LocalMinute" :
-                atomicType == AtomicType.NullableDateTime ? "Optional[dt.datetime]" :
-                atomicType == AtomicType.NullableDate ? "Optional[dt.date]" :
-                atomicType == AtomicType.NullableTime ? "Optional[dt.time]" :
+                atomicType == AtomicType.NullableDateTime ? "Optional[LocalDateTime]" :
+                atomicType == AtomicType.NullableDate ? "Optional[LocalDate]" :
+                atomicType == AtomicType.NullableTime ? "Optional[LocalTime]" :
                 atomicType == AtomicType.NullableMinute ? "Optional[LocalMinute]" :
                 atomicType == AtomicType.TemporalId ? "ObjectId" :
                 atomicType == AtomicType.NullableTemporalId ? "Optional[ObjectId]" :
