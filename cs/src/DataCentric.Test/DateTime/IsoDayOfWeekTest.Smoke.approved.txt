@@ -1,2 +1,0 @@
-Verify: IsoDayOfWeek.None.HasValue must be false
-Verify: IsoDayOfWeek.Monday.HasValue must be true
