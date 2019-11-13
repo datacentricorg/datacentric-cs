@@ -21,10 +21,10 @@ using System.IO;
 
 namespace DataCentric
 {
-    /// <summary>Static helper class for working with tables.</summary>
-    public static class TableUtil // FIXME check use and refactor
+    /// <summary>Static helper class for working with CSV files.</summary>
+    public static class CsvUtil // FIXME check use and refactor
     {
-        /// <summary>(TableUtil) Returns a multi-line message where each line is separated by a blank line.</summary>
+        /// <summary>(CsvUtil) Returns a multi-line message where each line is separated by a blank line.</summary>
         public static string MultiLine(params string[] lines) //!! Review for possible removal
         {
             StringBuilder result = new StringBuilder();
@@ -36,7 +36,7 @@ namespace DataCentric
             return result.ToString();
         }
 
-        /// <summary>(TableUtil) Convert a text string to an array of lines.
+        /// <summary>(CsvUtil) Convert a text string to an array of lines.
         /// Accepts newlines followed by text, but ignores trailing newlines.</summary>
         public static string[] TextToLines(string multiLineText)
         {
@@ -63,7 +63,7 @@ namespace DataCentric
             return result.ToArray();
         }
 
-        /// <summary>(TableUtil) Convert an array of lines to a text string.
+        /// <summary>(CsvUtil) Convert an array of lines to a text string.
         /// Adds a trailing newline.</summary>
         public static string LinesToText(IEnumerable<string> lines)
         {
@@ -75,7 +75,7 @@ namespace DataCentric
             return result.ToString();
         }
 
-        /// <summary>(TableUtil) Convert byte array to text assuming UTF-8 encoding.</summary>
+        /// <summary>(CsvUtil) Convert byte array to text assuming UTF-8 encoding.</summary>
         public static string BytesToText(byte[] bytes)
         {
             if (bytes != null && bytes.Length != 0)

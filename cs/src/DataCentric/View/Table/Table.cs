@@ -71,7 +71,7 @@ namespace DataCentric
             Layout = layout;
 
             // Parse into a list of text lines
-            string[] csvLines = TableUtil.TextToLines(csvText);
+            string[] csvLines = CsvUtil.TextToLines(csvText);
 
             // Parse each line into tokens, keeping track of maximum
             // size which will determine the matrix size
