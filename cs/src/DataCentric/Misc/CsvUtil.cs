@@ -22,7 +22,7 @@ using System.Collections.Generic;
 namespace DataCentric
 {
     /// <summary>Static helper class for working with CSV files.</summary>
-    public static class CsvUtil
+    public static class CsvUtil2
     {
         /// <summary>
         /// Convert a text line to CSV tokens.
