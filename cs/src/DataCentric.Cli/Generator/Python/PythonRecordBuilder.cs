@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Humanizer;
 
@@ -22,7 +23,7 @@ namespace DataCentric.Cli
 {
     public static class PythonRecordBuilder
     {
-        public static string Build(TypeDecl decl)
+        public static string Build(TypeDecl decl, Dictionary<string, string> declPathDict)
         {
             var writer = new CodeWriter();
 
@@ -40,86 +41,12 @@ namespace DataCentric.Cli
             // or null if there is no parent
             bool parentClassInDifferentModule =
                 decl.Inherit != null && decl.Inherit.Module.ModuleName != decl.Module.ModuleName;
-            string parentClassPackage = parentClassInDifferentModule ?
-                GetPythonPackage(decl.Inherit.Module.ModuleName) : null;
             string parentClassNamespace = parentClassInDifferentModule ?
-                GetPythonNamespace(decl.Inherit.Module.ModuleName) : null;
+                PythonImportsBuilder.GetPythonNamespace(decl.Inherit.Module.ModuleName) : null;
             string parentClassNamespacePrefix = parentClassInDifferentModule ?
                 parentClassNamespace + "." : "";
 
-            // Import datacentric package as dc, or if inside datacentric,
-            // import individual classes instead
-            if (decl.IsRecord)
-            {
-                if (insideDc)
-                {
-                    writer.AppendLine("from datacentric.storage.typed_key import TypedKey");
-                    writer.AppendLine("from datacentric.storage.typed_record import TypedRecord");
-                }
-                else
-                {
-                    writer.AppendLine("import datacentric as dc");
-                }
-            }
-            else
-            {
-                if (insideDc)
-                {
-                    writer.AppendLine("from datacentric.storage.data import Data");
-                }
-                else
-                {
-                    writer.AppendLine("import datacentric as dc");
-                }
-            }
-
-            // Import parent class package as its namespace, or if inside datacentric,
-            // import individual class instead
-            if (decl.Inherit != null)
-            {
-                if (insideDc)
-                {
-                    // Import parent package namespace unless it is the same as
-                    // the namespace for the class itself
-                    if (decl.Module.ModuleName == decl.Inherit.Module.ModuleName)
-                    {
-                        // Parent class name and filename based on converting
-                        // class name to snake case
-                        string parentClassName = decl.Inherit.Name;
-                        string parentPythonFileName = parentClassName.Underscore();
-
-                        // Import individual parent class if package namespace is
-                        // the same as parent class namespace. Use ? as the folder
-                        // is unknown, this will be corrected after the generation
-                        writer.AppendLine($"from datacentric.?.{parentPythonFileName} import {parentClassName}");
-                    }
-                    else
-                        throw new Exception("When generating code for the datacentric package, " +
-                                            "parent packages should not be managed via a declaration.");
-                }
-                else
-                {
-                    // Import parent package namespace unless it is the same as
-                    // the namespace for the class itself
-                    if (decl.Module.ModuleName == decl.Inherit.Module.ModuleName)
-                    {
-                        // Parent class name and filename based on converting
-                        // class name to snake case
-                        string parentClassName = decl.Inherit.Name;
-                        string parentPythonFileName = parentClassName.Underscore();
-
-                        // Import individual parent class if package namespace is
-                        // the same as parent class namespace. Use ? as the folder
-                        // is unknown, this will be corrected after the generation
-                        writer.AppendLine($"from ?.{parentPythonFileName} import {parentClassName}");
-                    }
-                    else
-                    {
-                        // Otherwise import the entire package of the parent class
-                        writer.AppendLine($"import {parentClassPackage} as {parentClassNamespace}");
-                    }
-                }
-            }
+            PythonImportsBuilder.WriteImports(decl, declPathDict, writer);
 
             writer.AppendNewLineWithoutIndent();
             writer.AppendNewLineWithoutIndent();
@@ -257,7 +184,7 @@ namespace DataCentric.Cli
             else if (parameter.Data != null)
             {
                 string paramNamespace = parameter.Data.Module.ModuleName != decl.Module.ModuleName
-                    ? GetPythonNamespace(parameter.Data.Module.ModuleName) + "."
+                    ? PythonImportsBuilder.GetPythonNamespace(parameter.Data.Module.ModuleName) + "."
                     : "";
                 var result = $"{paramNamespace}{parameter.Data.Name}";
                 if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
@@ -266,7 +193,7 @@ namespace DataCentric.Cli
             else if (parameter.Key != null)
             {
                 string paramNamespace = parameter.Key.Module.ModuleName != decl.Module.ModuleName
-                    ? GetPythonNamespace(parameter.Key.Module.ModuleName) + "."
+                    ? PythonImportsBuilder.GetPythonNamespace(parameter.Key.Module.ModuleName) + "."
                     : "";
                 var result = $"{paramNamespace}{parameter.Key.Name}Key";
                 if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
@@ -275,7 +202,7 @@ namespace DataCentric.Cli
             else if (parameter.Enum != null)
             {
                 string paramNamespace = parameter.Enum.Module.ModuleName != decl.Module.ModuleName
-                    ? GetPythonNamespace(parameter.Enum.Module.ModuleName) + "."
+                    ? PythonImportsBuilder.GetPythonNamespace(parameter.Enum.Module.ModuleName) + "."
                     : "";
                 var result = $"{paramNamespace}{parameter.Enum.Name}";
                 if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
@@ -286,10 +213,6 @@ namespace DataCentric.Cli
 
         private static string GetTypeHint(TypeElementDecl element)
         {
-            if (element.Value != null && element.Vector == YesNo.Y &&
-                (element.Value.Type == AtomicType.Double || element.Value.Type == AtomicType.NullableDouble))
-                return "np.ndarray";
-
             string type = element.Value != null ? GetValue(element.Value) :
                           element.Data != null  ? $"{element.Data.Name}" :
                           element.Key != null   ? $"{element.Key.Name}Key" :
@@ -328,22 +251,5 @@ namespace DataCentric.Cli
                     ArgumentException($"Unknown value type: {atomicType.ToString()}");
         }
 
-        private static string GetPythonPackage(string moduleName)
-        {
-            switch (moduleName)
-            {
-                case "DataCentric": return "datacentric";
-                default: return "unknown_module"; // TODO - resolve all and raise an error if not found
-            }
-        }
-
-        private static string GetPythonNamespace(string moduleName)
-        {
-            switch (moduleName)
-            {
-                case "DataCentric": return "dc";
-                default: return "unknown_module"; // TODO - resolve all and raise an error if not found
-            }
-        }
     }
 }

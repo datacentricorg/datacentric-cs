@@ -25,13 +25,12 @@ namespace DataCentric.Cli
     {
         public static List<FileInfo> ConvertSet(List<IDecl> declarations)
         {
+            declarations = declarations.Where(t => t.Module.ModuleName.StartsWith("DataCentric")).ToList();
             List<TypeDecl> typeDecls = declarations.OfType<TypeDecl>().ToList();
             List<EnumDecl> enumDecls = declarations.OfType<EnumDecl>().ToList();
 
             var types = typeDecls.SelectMany(d => ConvertType(d, declarations));
-            var enums = enumDecls
-                       .Where(t => t.Module.ModuleName.StartsWith("DataCentric"))
-                       .SelectMany(d => ConvertEnum(d, declarations));
+            var enums = enumDecls.SelectMany(ConvertEnum);
 
             return types.Concat(enums).ToList();
         }
@@ -39,10 +38,10 @@ namespace DataCentric.Cli
         private static List<FileInfo> ConvertType(TypeDecl decl, List<IDecl> declarations)
         {
             List<FileInfo> result = new List<FileInfo>();
-
+            var declPathDict = declarations.ToDictionary(v => v.Module.ModuleName + v.Name, GetDeclModulePath);
             var dataFile = new FileInfo
             {
-                Content = PythonRecordBuilder.Build(decl).AppendCopyright(decl.Category),
+                Content = PythonRecordBuilder.Build(decl, declPathDict).AppendCopyright(decl.Category),
                 FileName = $"{decl.Name.Underscore()}.py",
                 FolderName = decl.Category?.Underscore().Replace('.', '/')
             };
@@ -51,7 +50,13 @@ namespace DataCentric.Cli
             return result;
         }
 
-        private static List<FileInfo> ConvertEnum(EnumDecl decl, List<IDecl> declarations)
+        private static string GetDeclModulePath(IDecl decl)
+        {
+            string folder = decl.Category?.Underscore().Replace('.', '/');
+            return string.IsNullOrEmpty(folder) ? decl.Name.Underscore() : $"{folder}.{decl.Name.Underscore()}";
+        }
+
+        private static List<FileInfo> ConvertEnum(EnumDecl decl)
         {
             var result = new List<FileInfo>();
 
@@ -83,8 +88,15 @@ namespace DataCentric.Cli
 # limitations under the License.
 
 ";
-            if (category == null) return input;
-            else if (category.StartsWith("Datacentric")) return dcCopyright + input;
+
+            if (category == null)
+            {
+                return "# Copyright not specified";
+            }
+            else if (category.StartsWith("Datacentric"))
+            {
+                return dcCopyright + input;
+            }
             else throw new Exception($"Copyright header is not specified for module {category}.");
         }
     }
