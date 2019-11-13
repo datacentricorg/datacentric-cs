@@ -19,52 +19,52 @@ using System;
 namespace DataCentric
 {
     /// <summary>Indicates the presence of row and/or column headers in the table.</summary>
-    public enum TableLayout
+    public enum MatrixLayout
     {
         /// <summary>Empty</summary>
         Empty,
 
-        /// <summary>Table has no headers.</summary>
+        /// <summary>Matrix has no headers.</summary>
         NoHeaders,
 
-        /// <summary>Table has row headers but no column headers.</summary>
+        /// <summary>Matrix has row headers but no column headers.</summary>
         RowHeaders,
 
-        /// <summary>Table has column headers but no row headers.</summary>
+        /// <summary>Matrix has column headers but no row headers.</summary>
         ColHeaders,
 
-        /// <summary>Table has both row and column headers.</summary>
+        /// <summary>Matrix has both row and column headers.</summary>
         RowAndColHeaders
     }
 
-    /// <summary>Extension methods for TableLayout.</summary>
-    public static class TableLayoutExtensions
+    /// <summary>Extension methods for MatrixLayout.</summary>
+    public static class MatrixLayoutExtensions
     {
         /// <summary>Indicates that table has a corner header.</summary>
-        public static bool HasCornerHeader(this TableLayout obj)
+        public static bool HasCornerHeader(this MatrixLayout obj)
         {
-            if (obj == TableLayout.Empty) throw new Exception("Table layout is empty");
-            return obj == TableLayout.RowAndColHeaders;
+            if (obj == MatrixLayout.Empty) throw new Exception("Matrix layout is empty");
+            return obj == MatrixLayout.RowAndColHeaders;
         }
 
         /// <summary>
         /// Indicates that table has row headers, irrespective of
         /// whether or not it also has column headers.
         /// </summary>
-        public static bool HasRowHeaders(this TableLayout obj)
+        public static bool HasRowHeaders(this MatrixLayout obj)
         {
-            if (obj == TableLayout.Empty) throw new Exception("Table layout is empty");
-            return obj == TableLayout.RowHeaders || obj == TableLayout.RowAndColHeaders;
+            if (obj == MatrixLayout.Empty) throw new Exception("Matrix layout is empty");
+            return obj == MatrixLayout.RowHeaders || obj == MatrixLayout.RowAndColHeaders;
         }
 
         /// <summary>
         /// Indicates that table has column headers, irrespective of
         /// whether or not it also has row headers.
         /// </summary>
-        public static bool HasColHeaders(this TableLayout obj)
+        public static bool HasColHeaders(this MatrixLayout obj)
         {
-            if (obj == TableLayout.Empty) throw new Exception("Table layout is empty");
-            return obj == TableLayout.ColHeaders || obj == TableLayout.RowAndColHeaders;
+            if (obj == MatrixLayout.Empty) throw new Exception("Matrix layout is empty");
+            return obj == MatrixLayout.ColHeaders || obj == MatrixLayout.RowAndColHeaders;
         }
     }
 }

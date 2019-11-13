@@ -28,7 +28,7 @@ namespace DataCentric
     /// headers are present. Each header is a string that may optionally
     /// use dot delimiter to represent hierarchical structure.
     /// </summary>
-    public class Table<T>
+    public class Matrix<T>
     {
         private int rowCount_;
         private int colCount_;
@@ -42,7 +42,7 @@ namespace DataCentric
         /// The specified parser is not used for row and column headers
         /// which are always dot delimited strings.
         /// </summary>
-        public void ParseCsv(TableLayout layout, Func<string, T> parser, string csvText)
+        public void ParseCsv(MatrixLayout layout, Func<string, T> parser, string csvText)
         {
             // Create an array of parsers of size one
             // The function taking the array will use
@@ -65,9 +65,9 @@ namespace DataCentric
         /// The specified parser is not used for row and column headers
         /// which are always dot delimited strings.
         /// </summary>
-        public void ParseCsv(TableLayout layout, Func<string, T>[] colParsers, string csvText)
+        public void ParseCsv(MatrixLayout layout, Func<string, T>[] colParsers, string csvText)
         {
-            if (layout == TableLayout.Empty) throw new Exception("Table layout passed to ParseCsv method is empty");
+            if (layout == MatrixLayout.Empty) throw new Exception("Matrix layout passed to ParseCsv method is empty");
             Layout = layout;
 
             // Parse into a list of text lines
@@ -145,7 +145,7 @@ namespace DataCentric
         }
 
         /// <summary>Indicates which headers are present.</summary>
-        public TableLayout Layout { get; set; }
+        public MatrixLayout Layout { get; set; }
 
         /// <summary>Number of matrix rows (excluding header rows, if any).</summary>
         public int RowCount
@@ -239,7 +239,7 @@ namespace DataCentric
         /// This method also creates the row and column headers with the
         /// correct size, if the respective header is specified in the layout.
         /// </summary>
-        public void Resize(TableLayout layout, int rowCount, int colCount)
+        public void Resize(MatrixLayout layout, int rowCount, int colCount)
         {
             Layout = layout;
             RowCount = rowCount;
@@ -252,7 +252,7 @@ namespace DataCentric
         /// <summary>Validate dimensions and that the presence of headers matches the layout.</summary>
         public void Validate()
         {
-            // Table can have no rows but it must have at least one column
+            // Matrix can have no rows but it must have at least one column
             if (ColCount == 0) throw new Exception($"Table has no columns");
 
             // Validate row headers

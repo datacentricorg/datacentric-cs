@@ -33,7 +33,7 @@ namespace DataCentric
     /// Each header is a string that may optionally use dot delimiter
     /// to represent hierarchical structure.
     /// </summary>
-    public class ValueTable : Table<object>
+    public class VariantMatrix : Matrix<object>
     {
         /// <summary>
         /// Create from multi-line CSV text using the specified matrix
@@ -43,7 +43,7 @@ namespace DataCentric
         /// The specified value type is not used for row and column headers
         /// which are always dot delimited strings.
         /// </summary>
-        public void ParseCsv(TableLayout layout, VariantType valueType, string csvText)
+        public void ParseCsv(MatrixLayout layout, VariantType valueType, string csvText)
         {
             // Create an array of parsers of size one
             // The function taking the array will use
@@ -68,7 +68,7 @@ namespace DataCentric
         /// The specified parser is not used for row and column headers
         /// which are always dot delimited strings.
         /// </summary>
-        public void ParseCsv(TableLayout layout, VariantType[] colTypes, string csvText)
+        public void ParseCsv(MatrixLayout layout, VariantType[] colTypes, string csvText)
         {
             // Create and populate an array of column parser functions
             var parsers = new Func<string, object>[colTypes.Length];

@@ -24,8 +24,8 @@ using Xunit;
 
 namespace DataCentric.Test
 {
-    /// <summary>Unit tests for ValueTable.</summary>
-    public class ValueTableSerializationTest
+    /// <summary>Unit tests for VariantMatrix.</summary>
+    public class VariantMatrixSerializationTest
     {
         /// <summary>Basic serialization test with single value type.</summary>
         [Fact]
@@ -33,10 +33,10 @@ namespace DataCentric.Test
         {
             using (var context = new UnitTestContext(this))
             {
-                TestSerialization(context, new[] { VariantType.Int }, TableLayout.NoHeaders);
-                TestSerialization(context, new[] { VariantType.Int }, TableLayout.RowHeaders);
-                TestSerialization(context, new[] { VariantType.Int }, TableLayout.ColHeaders);
-                TestSerialization(context, new[] { VariantType.Int }, TableLayout.RowAndColHeaders);
+                TestSerialization(context, new[] { VariantType.Int }, MatrixLayout.NoHeaders);
+                TestSerialization(context, new[] { VariantType.Int }, MatrixLayout.RowHeaders);
+                TestSerialization(context, new[] { VariantType.Int }, MatrixLayout.ColHeaders);
+                TestSerialization(context, new[] { VariantType.Int }, MatrixLayout.RowAndColHeaders);
             }
         }
 
@@ -60,41 +60,41 @@ namespace DataCentric.Test
                     VariantType.Instant
                 };
 
-                TestSerialization(context, valueTypes, TableLayout.NoHeaders);
-                TestSerialization(context, valueTypes, TableLayout.RowHeaders);
-                TestSerialization(context, valueTypes, TableLayout.ColHeaders);
-                TestSerialization(context, valueTypes, TableLayout.RowAndColHeaders);
+                TestSerialization(context, valueTypes, MatrixLayout.NoHeaders);
+                TestSerialization(context, valueTypes, MatrixLayout.RowHeaders);
+                TestSerialization(context, valueTypes, MatrixLayout.ColHeaders);
+                TestSerialization(context, valueTypes, MatrixLayout.RowAndColHeaders);
             }
         }
 
         /// <summary>Test serialization.</summary>
-        private void TestSerialization(Context context, VariantType[] valueTypes, TableLayout layout)
+        private void TestSerialization(Context context, VariantType[] valueTypes, MatrixLayout layout)
         {
             // Create and resize
             int rowCount = 3;
             int colCount = Math.Max(valueTypes.Length, 4);
-            var originalTable = new ValueTable();
-            originalTable.Resize(layout, rowCount, colCount);
-            PopulateHeaders(originalTable);
-            PopulateValues(valueTypes, originalTable);
+            var originalMatrix = new VariantMatrix();
+            originalMatrix.Resize(layout, rowCount, colCount);
+            PopulateHeaders(originalMatrix);
+            PopulateValues(valueTypes, originalMatrix);
 
             // Serialize the generated table and save serialized string to file
-            string originalNoHeadersString = originalTable.ToString();
+            string originalNoHeadersString = originalMatrix.ToString();
             context.Log.Verify($"{layout}", originalNoHeadersString);
 
             // Deserialize from string back into table
-            var parsedNoHeadersTable = new ValueTable();
-            parsedNoHeadersTable.ParseCsv(layout, valueTypes, originalNoHeadersString);
-            string parsedNoHeadersString = parsedNoHeadersTable.ToString();
+            var parsedNoHeadersMatrix = new VariantMatrix();
+            parsedNoHeadersMatrix.ParseCsv(layout, valueTypes, originalNoHeadersString);
+            string parsedNoHeadersString = parsedNoHeadersMatrix.ToString();
 
             // Compare serialized strings
             Assert.Equal(originalNoHeadersString, parsedNoHeadersString);
         }
 
         /// <summary>Populate table headers based on the specified layout.</summary>
-        private void PopulateHeaders(ValueTable result)
+        private void PopulateHeaders(VariantMatrix result)
         {
-            TableLayout layout = result.Layout;
+            MatrixLayout layout = result.Layout;
 
             // Populate row headers if they are specified by the layout
             if (layout.HasRowHeaders())
@@ -129,7 +129,7 @@ namespace DataCentric.Test
         /// Populate with values based on the specified array
         /// of value types, repeating the types in cycle.
         /// </summary>
-        private void PopulateValues(VariantType[] valueTypes, ValueTable result)
+        private void PopulateValues(VariantType[] valueTypes, VariantMatrix result)
         {
             // Initial values to populate the data
             int stringValueAsInt = 0;
@@ -188,7 +188,7 @@ namespace DataCentric.Test
                             result[rowIndex, colIndex] = instantValue;
                             instantValue = instantValue; // TODO Fix, uses previous value
                             break;
-                        default: throw new Exception($"Value type {valueType} cannot be stored in ValueTable.");
+                        default: throw new Exception($"Value type {valueType} cannot be stored in VariantMatrix.");
                     }
                 }
             }
