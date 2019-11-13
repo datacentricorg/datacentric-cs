@@ -32,31 +32,6 @@ namespace DataCentric.Cli
                                             ? GetPythonPackage(decl.Inherit.Module.ModuleName) : null;
             string parentClassNamespace = parentClassInDifferentModule
                                               ? GetPythonNamespace(decl.Inherit.Module.ModuleName) : null;
-            // Import datacentric package as dc, or if inside datacentric,
-            // import individual classes instead
-            if (decl.IsRecord)
-            {
-                if (insideDc)
-                {
-                    writer.AppendLine("from datacentric.storage.typed_key import TypedKey");
-                    writer.AppendLine("from datacentric.storage.typed_record import TypedRecord");
-                }
-                else
-                {
-                    writer.AppendLine("import datacentric as dc");
-                }
-            }
-            else
-            {
-                if (insideDc)
-                {
-                    writer.AppendLine("from datacentric.storage.data import Data");
-                }
-                else
-                {
-                    writer.AppendLine("import datacentric as dc");
-                }
-            }
 
             // Import parent class package as its namespace, or if inside datacentric,
             // import individual class instead
@@ -103,6 +78,31 @@ namespace DataCentric.Cli
                         // Otherwise import the entire package of the parent class
                         writer.AppendLine($"import {parentClassPackage} as {parentClassNamespace}");
                     }
+                }
+            }
+            // Import datacentric package as dc, or if inside datacentric,
+            // import individual classes instead
+            else if (decl.IsRecord)
+            {
+                if (insideDc)
+                {
+                    writer.AppendLine("from datacentric.storage.typed_key import TypedKey");
+                    writer.AppendLine("from datacentric.storage.typed_record import TypedRecord");
+                }
+                else
+                {
+                    writer.AppendLine("import datacentric as dc");
+                }
+            }
+            else
+            {
+                if (insideDc)
+                {
+                    writer.AppendLine("from datacentric.storage.data import Data");
+                }
+                else
+                {
+                    writer.AppendLine("import datacentric as dc");
                 }
             }
         }
