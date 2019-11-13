@@ -286,6 +286,10 @@ namespace DataCentric.Cli
 
         private static string GetTypeHint(TypeElementDecl element)
         {
+            if (element.Value != null && element.Vector == YesNo.Y &&
+                (element.Value.Type == AtomicType.Double || element.Value.Type == AtomicType.NullableDouble))
+                return "np.ndarray";
+
             string type = element.Value != null ? GetValue(element.Value) :
                           element.Data != null  ? $"{element.Data.Name}" :
                           element.Key != null   ? $"{element.Key.Name}Key" :

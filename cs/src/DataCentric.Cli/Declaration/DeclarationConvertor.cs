@@ -464,10 +464,10 @@ namespace DataCentric.Cli
             var typeDecl = new T();
 
             type = GetListArgument(type);
-            type = GetNullableArgument(type);
-            if (type.IsEnum)
+            var nonNullableType = GetNullableArgument(type);
+            if (nonNullableType.IsEnum)
             {
-                typeDecl.Enum = CreateTypeDeclKey(type.Namespace, type.Name);
+                typeDecl.Enum = CreateTypeDeclKey(nonNullableType.Namespace, nonNullableType.Name);
             }
             else if (type.IsValueType || type == typeof(string))
             {
