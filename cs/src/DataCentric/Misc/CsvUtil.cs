@@ -18,12 +18,81 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
+using System.IO;
 
 namespace DataCentric
 {
     /// <summary>Static helper class for working with CSV files.</summary>
-    public static class CsvUtil2
+    public static class CsvUtil
     {
+        /// <summary>
+        /// Convert a text string to an array of lines.
+        /// 
+        /// Accepts empty newlines followed by non-empty newlines,
+        /// but ignores trailing newlines.
+        /// </summary>
+        public static string[] TextToLines(string multiLineText)
+        {
+            List<string> result = new List<string>();
+            StringReader reader = new StringReader(multiLineText);
+            bool emptyRowSkipped = false;
+            while (true)
+            {
+                // Read line
+                string csvLine = reader.ReadLine();
+
+                // Exit if reached the end of multi-line string
+                if (csvLine == null) break;
+
+                // Set flag if the row is empty; if it turns out later
+                // that this is not the end of file, error message.
+                if (csvLine == String.Empty) { emptyRowSkipped = true; continue; }
+                else if (emptyRowSkipped) throw new Exception("Empty rows can only be at the end of a CSV file but not in the middle.");
+
+                // Append CSV line to the result
+                result.Add(csvLine);
+            }
+
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// Convert an array of lines to a text string.
+        /// 
+        /// Adds a trailing newline.
+        /// </summary>
+        public static string LinesToText(IEnumerable<string> lines)
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (string line in lines)
+            {
+                result.AppendLine(line);
+            }
+            return result.ToString();
+        }
+
+        /// <summary>Convert byte array to text string assuming UTF-8 encoding.</summary>
+        public static string BytesToText(byte[] bytes)
+        {
+            if (bytes != null && bytes.Length != 0)
+            {
+                // This method has more lines of code compared to Encoding.UTF8.GetString,
+                // however it will correctly recognize and remove UTF-8 BOM
+                using (MemoryStream memoryStream = new MemoryStream(bytes))
+                {
+                    using (StreamReader streamReader = new StreamReader(memoryStream))
+                    {
+                        string result = streamReader.ReadToEnd();
+                        return result;
+                    }
+                }
+            }
+            else
+            {
+                return String.Empty;
+            }
+        }
+
         /// <summary>
         /// Convert a text line to CSV tokens.
         ///
@@ -101,46 +170,6 @@ namespace DataCentric
             return result.ToArray();
         }
 
-        /// <summary>Escape list separator if encountered in token.</summary>
-        public static string EscapeListSeparator(string token)
-        {
-            string listSeparator =  LocaleSettings.ListSeparator.ToString();
-            char quoteSymbol =  LocaleSettings.QuoteSymbol;
-            string quoteString = quoteSymbol.ToString();
-            string repeatedQuoteString = quoteString + quoteString;
-
-            // Check that there is no newline
-            if (token.Contains(StringUtil.Eol)) throw new Exception($"Multi-line string encountered in CSV file: {token}");
-
-            // Count quote (") symbols in string, error message if not an even number
-            int quoteCount = token.Count(p => p == quoteSymbol);
-            if(quoteCount % 2 != 0) throw new Exception($"Odd number of quote ({quoteSymbol}) symbols in token: {token}");
-
-            // If there is a CSV separator, perform additional processing to escape it with quotes
-            if (token.Contains(listSeparator))
-            {
-                if (token.StartsWith(quoteString) && token.EndsWith(quoteString))
-                {
-                    // Already starts and ends with quotes, do nothing
-                    return token;
-                }
-                else
-                {
-                    // Escape each single instance of quote with repeated quote
-                    string result = token.Replace(quoteString, repeatedQuoteString);
-
-                    // Then escape list separator with a single instance of quote
-                    result = String.Concat(quoteString, result, quoteString);
-                    return result;
-                }
-            }
-            else
-            {
-                // No need to escape the list separator, return the original quote
-                return token;
-            }
-        }
-
         /// <summary>
         /// Convert an array of CSV tokens to a text line.
         ///
@@ -185,6 +214,52 @@ namespace DataCentric
             }
 
             return result.ToString();
+        }
+
+
+        /// <summary>
+        /// Escape CSV separator if encountered in argument token.
+        ///
+        /// Returns the argument surrounded by quotes, if it contains
+        /// the CSV separator.
+        /// </summary>
+        private static string EscapeCsvSeparator(string token)
+        {
+            string listSeparator = LocaleSettings.ListSeparator.ToString();
+            char quoteSymbol = LocaleSettings.QuoteSymbol;
+            string quoteString = quoteSymbol.ToString();
+            string repeatedQuoteString = quoteString + quoteString;
+
+            // Check that there is no newline
+            if (token.Contains(StringUtil.Eol)) throw new Exception($"Multi-line string encountered in CSV file: {token}");
+
+            // Count quote (") symbols in string, error message if not an even number
+            int quoteCount = token.Count(p => p == quoteSymbol);
+            if (quoteCount % 2 != 0) throw new Exception($"Odd number of quote ({quoteSymbol}) symbols in token: {token}");
+
+            // If there is a CSV separator, perform additional processing to escape it with quotes
+            if (token.Contains(listSeparator))
+            {
+                if (token.StartsWith(quoteString) && token.EndsWith(quoteString))
+                {
+                    // Already starts and ends with quotes, do nothing
+                    return token;
+                }
+                else
+                {
+                    // Escape each single instance of quote with repeated quote
+                    string result = token.Replace(quoteString, repeatedQuoteString);
+
+                    // Then escape list separator with a single instance of quote
+                    result = String.Concat(quoteString, result, quoteString);
+                    return result;
+                }
+            }
+            else
+            {
+                // No need to escape the list separator, return the original quote
+                return token;
+            }
         }
     }
 }

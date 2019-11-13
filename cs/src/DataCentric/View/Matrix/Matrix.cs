@@ -80,7 +80,7 @@ namespace DataCentric
             int colCount = 0;
             foreach (string csvLine in csvLines)
             {
-                string[] tokens = CsvUtil2.LineToTokens(csvLine);
+                string[] tokens = CsvUtil.LineToTokens(csvLine);
                 if (colCount < tokens.Length) colCount = tokens.Length;
                 parsedRows.Add(tokens);
             }
@@ -324,7 +324,7 @@ namespace DataCentric
                     // No corner value
                     firstRowTokens = ColHeaders;
                 }
-                string firstRowString = CsvUtil2.TokensToLine(firstRowTokens);
+                string firstRowString = CsvUtil.TokensToLine(firstRowTokens);
                 result.AppendLine(firstRowString);
             }
 
@@ -346,7 +346,7 @@ namespace DataCentric
                 }
 
                 // Convert to CSV and append
-                string csvLine = CsvUtil2.TokensToLine(tokens);
+                string csvLine = CsvUtil.TokensToLine(tokens);
                 result.AppendLine(csvLine);
             }
 
