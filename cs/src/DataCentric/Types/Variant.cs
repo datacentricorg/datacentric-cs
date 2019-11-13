@@ -69,25 +69,25 @@ namespace DataCentric
         }
 
         /// <summary>Type of the value held by the variant.</summary>
-        public AtomicType ValueType
+        public VariantType ValueType
         {
             get
             {
                 // The purpose of this check is to ensure that variant holds only one of the supported types
                 switch (value_)
                 {
-                    case null: return AtomicType.Empty;
-                    case string stringValue: return AtomicType.String;
-                    case double doubleValue: return AtomicType.Double;
-                    case bool boolValue: return AtomicType.Bool;
-                    case int intValue: return AtomicType.Int;
-                    case long longValue: return AtomicType.Long;
-                    case LocalDate dateValue: return AtomicType.LocalDate;
-                    case LocalTime timeValue: return AtomicType.LocalTime;
-                    case LocalMinute minuteValue: return AtomicType.LocalMinute;
-                    case LocalDateTime dateTimeValue: return AtomicType.LocalDateTime;
-                    case Instant instantValue: return AtomicType.Instant;
-                    case Enum enumValue: return AtomicType.Enum;
+                    case null: return VariantType.Empty;
+                    case string stringValue: return VariantType.String;
+                    case double doubleValue: return VariantType.Double;
+                    case bool boolValue: return VariantType.Bool;
+                    case int intValue: return VariantType.Int;
+                    case long longValue: return VariantType.Long;
+                    case LocalDate dateValue: return VariantType.LocalDate;
+                    case LocalTime timeValue: return VariantType.LocalTime;
+                    case LocalMinute minuteValue: return VariantType.LocalMinute;
+                    case LocalDateTime dateTimeValue: return VariantType.LocalDateTime;
+                    case Instant instantValue: return VariantType.Instant;
+                    case Enum enumValue: return VariantType.Enum;
                     default:
                         // Error message if any other type, should normally not get to here
                         throw new Exception(GetWrongTypeErrorMessage(value_));
@@ -120,7 +120,7 @@ namespace DataCentric
         }
 
         /// <summary>Parse string using the specified value type and return the resulting variant.</summary>
-        public static Variant Parse(AtomicType valueType, string value)
+        public static Variant Parse(VariantType valueType, string value)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -132,36 +132,36 @@ namespace DataCentric
                 // Switch on type of default value
                 switch (valueType)
                 {
-                    case AtomicType.String:
+                    case VariantType.String:
                         return new Variant(value);
-                    case AtomicType.Double:
+                    case VariantType.Double:
                         double doubleResult = double.Parse(value);
                         return new Variant(doubleResult);
-                    case AtomicType.Bool:
+                    case VariantType.Bool:
                         bool boolResult = bool.Parse(value);
                         return new Variant(boolResult);
-                    case AtomicType.Int:
+                    case VariantType.Int:
                         int intResult = int.Parse(value);
                         return new Variant(intResult);
-                    case AtomicType.Long:
+                    case VariantType.Long:
                         long longResult = long.Parse(value);
                         return new Variant(longResult);
-                    case AtomicType.LocalDate:
+                    case VariantType.LocalDate:
                         LocalDate dateResult = LocalDateUtil.Parse(value);
                         return new Variant(dateResult);
-                    case AtomicType.LocalTime:
+                    case VariantType.LocalTime:
                         LocalTime timeResult = LocalTimeUtil.Parse(value);
                         return new Variant(timeResult);
-                    case AtomicType.LocalMinute:
+                    case VariantType.LocalMinute:
                         LocalMinute minuteResult = LocalMinuteUtil.Parse(value);
                         return new Variant(minuteResult);
-                    case AtomicType.LocalDateTime:
+                    case VariantType.LocalDateTime:
                         LocalDateTime dateTimeResult = LocalDateTimeUtil.Parse(value);
                         return new Variant(dateTimeResult);
-                    case AtomicType.Instant:
+                    case VariantType.Instant:
                         Instant instantResult = InstantUtil.Parse(value);
                         return new Variant(instantResult);
-                    case AtomicType.Enum:
+                    case VariantType.Enum:
                         throw new Exception("Variant cannot be created as enum without specifying enum typename.");
                     default:
                         // Error message if any other type

@@ -43,13 +43,13 @@ namespace DataCentric
         /// The specified value type is not used for row and column headers
         /// which are always dot delimited strings.
         /// </summary>
-        public void ParseCsv(TableLayout layout, AtomicType valueType, string csvText)
+        public void ParseCsv(TableLayout layout, VariantType valueType, string csvText)
         {
             // Create an array of parsers of size one
             // The function taking the array will use
             // its last (and only) element for all of
             // the data columns
-            var valueTypes = new AtomicType[] {valueType};
+            var valueTypes = new VariantType[] {valueType};
 
             // Parse and populate the array of column value types
             ParseCsv(layout, valueTypes, csvText);
@@ -68,7 +68,7 @@ namespace DataCentric
         /// The specified parser is not used for row and column headers
         /// which are always dot delimited strings.
         /// </summary>
-        public void ParseCsv(TableLayout layout, AtomicType[] colTypes, string csvText)
+        public void ParseCsv(TableLayout layout, VariantType[] colTypes, string csvText)
         {
             // Create and populate an array of column parser functions
             var parsers = new Func<string, object>[colTypes.Length];
@@ -77,7 +77,7 @@ namespace DataCentric
                 // It is important to copy and pass ValueType by value
                 // rather than as array and element index, because the
                 // array may change by the time the expression is invoked
-                AtomicType colType = colTypes[i];
+                VariantType colType = colTypes[i];
                 parsers[i] = value => Variant.Parse(colType, value).Value;
             }
 
@@ -86,7 +86,7 @@ namespace DataCentric
 
             // Populate the array of column value types using the actual matrix size,
             // padding with the last value of the argument array
-            ColTypes = new AtomicType[ColCount];
+            ColTypes = new VariantType[ColCount];
             for (int i = 0; i < ColTypes.Length; i++)
             {
                 if (i < colTypes.Length) ColTypes[i] = colTypes[i];
@@ -100,6 +100,6 @@ namespace DataCentric
         /// Excludes the type of row headers which are
         /// always dot delimited strings.
         /// </summary>
-        public AtomicType[] ColTypes { get; private set; }
+        public VariantType[] ColTypes { get; private set; }
     }
 }

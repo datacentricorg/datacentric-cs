@@ -33,10 +33,10 @@ namespace DataCentric.Test
         {
             using (var context = new UnitTestContext(this))
             {
-                TestSerialization(context, new[] { AtomicType.Int }, TableLayout.NoHeaders);
-                TestSerialization(context, new[] { AtomicType.Int }, TableLayout.RowHeaders);
-                TestSerialization(context, new[] { AtomicType.Int }, TableLayout.ColHeaders);
-                TestSerialization(context, new[] { AtomicType.Int }, TableLayout.RowAndColHeaders);
+                TestSerialization(context, new[] { VariantType.Int }, TableLayout.NoHeaders);
+                TestSerialization(context, new[] { VariantType.Int }, TableLayout.RowHeaders);
+                TestSerialization(context, new[] { VariantType.Int }, TableLayout.ColHeaders);
+                TestSerialization(context, new[] { VariantType.Int }, TableLayout.RowAndColHeaders);
             }
         }
 
@@ -48,16 +48,16 @@ namespace DataCentric.Test
             {
                 var valueTypes = new[]
                 {
-                    AtomicType.String,
-                    AtomicType.Double,
-                    AtomicType.Bool,
-                    AtomicType.Int,
-                    AtomicType.Long,
-                    AtomicType.LocalDate,
-                    AtomicType.LocalTime,
-                    AtomicType.LocalMinute,
-                    AtomicType.LocalDateTime,
-                    AtomicType.Instant
+                    VariantType.String,
+                    VariantType.Double,
+                    VariantType.Bool,
+                    VariantType.Int,
+                    VariantType.Long,
+                    VariantType.LocalDate,
+                    VariantType.LocalTime,
+                    VariantType.LocalMinute,
+                    VariantType.LocalDateTime,
+                    VariantType.Instant
                 };
 
                 TestSerialization(context, valueTypes, TableLayout.NoHeaders);
@@ -68,7 +68,7 @@ namespace DataCentric.Test
         }
 
         /// <summary>Test serialization.</summary>
-        private void TestSerialization(Context context, AtomicType[] valueTypes, TableLayout layout)
+        private void TestSerialization(Context context, VariantType[] valueTypes, TableLayout layout)
         {
             // Create and resize
             int rowCount = 3;
@@ -129,7 +129,7 @@ namespace DataCentric.Test
         /// Populate with values based on the specified array
         /// of value types, repeating the types in cycle.
         /// </summary>
-        private void PopulateValues(AtomicType[] valueTypes, ValueTable result)
+        private void PopulateValues(VariantType[] valueTypes, ValueTable result)
         {
             // Initial values to populate the data
             int stringValueAsInt = 0;
@@ -152,39 +152,39 @@ namespace DataCentric.Test
                     var valueType = valueTypes[colIndex % valueTypeCount];
                     switch (valueType)
                     {
-                        case AtomicType.String:
+                        case VariantType.String:
                             result[rowIndex, colIndex] = $"Str{stringValueAsInt++}";
                             break;
-                        case AtomicType.Double:
+                        case VariantType.Double:
                             result[rowIndex, colIndex] = doubleValue++;
                             break;
-                        case AtomicType.Bool:
+                        case VariantType.Bool:
                             result[rowIndex, colIndex] = boolValue;
                             boolValue = !boolValue;
                             break;
-                        case AtomicType.Int:
+                        case VariantType.Int:
                             result[rowIndex, colIndex] = intValue++;
                             break;
-                        case AtomicType.Long:
+                        case VariantType.Long:
                             result[rowIndex, colIndex] = longValue++;
                             break;
-                        case AtomicType.LocalDate:
+                        case VariantType.LocalDate:
                             result[rowIndex, colIndex] = localDateValue;
                             localDateValue = localDateValue.PlusDays(1);
                             break;
-                        case AtomicType.LocalTime:
+                        case VariantType.LocalTime:
                             result[rowIndex, colIndex] = localTimeValue;
                             localTimeValue = localTimeValue.PlusHours(1);
                             break;
-                        case AtomicType.LocalMinute:
+                        case VariantType.LocalMinute:
                             result[rowIndex, colIndex] = localMinuteValue;
                             localMinuteValue = localMinuteValue.ToLocalTime().PlusHours(1).ToLocalMinute();
                             break;
-                        case AtomicType.LocalDateTime:
+                        case VariantType.LocalDateTime:
                             result[rowIndex, colIndex] = localDateTimeValue;
                             localDateTimeValue = localDateTimeValue.PlusDays(2).PlusHours(2);
                             break;
-                        case AtomicType.Instant:
+                        case VariantType.Instant:
                             result[rowIndex, colIndex] = instantValue;
                             instantValue = instantValue; // TODO Fix, uses previous value
                             break;

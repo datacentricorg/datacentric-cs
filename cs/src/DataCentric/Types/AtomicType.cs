@@ -19,7 +19,7 @@ using System;
 namespace DataCentric
 {
     /// <summary>Enumeration for the atomic value type.</summary>
-    public enum AtomicType
+    public enum VariantType
     {
         /// <summary>Empty</summary>
         Empty,
@@ -39,7 +39,7 @@ namespace DataCentric
         /// <summary>64-bit long value.</summary>
         Long,
 
-        /// <summary>LOcal date without the time component (does not specify timezone).</summary>
+        /// <summary>Local date without the time component (does not specify timezone).</summary>
         LocalDate,
 
         /// <summary>Local time without the date component to one millisecond resolution (does not specify timezone).</summary>
