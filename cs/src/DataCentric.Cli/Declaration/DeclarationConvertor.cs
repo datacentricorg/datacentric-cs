@@ -490,13 +490,13 @@ namespace DataCentric.Cli
                     type == typeof(long?)     ? AtomicType.NullableLong :
                     // Noda types
                     type == typeof(LocalDateTime) ? AtomicType.DateTime :
-                    type == typeof(Instant) ? AtomicType.DateTime :
+                    type == typeof(Instant) ? AtomicType.Instant :
                     type == typeof(LocalDate)     ? AtomicType.Date :
                     type == typeof(LocalTime)     ? AtomicType.Time :
                     type == typeof(LocalMinute)   ? AtomicType.Minute :
                     // Nullable Noda types
                     type == typeof(LocalDateTime?) ? AtomicType.NullableDateTime :
-                    type == typeof(Instant?) ? AtomicType.NullableDateTime :
+                    type == typeof(Instant?) ? AtomicType.NullableInstant :
                     type == typeof(LocalDate?)     ? AtomicType.NullableDate :
                     type == typeof(LocalTime?)     ? AtomicType.NullableTime :
                     type == typeof(LocalMinute?)   ? AtomicType.NullableMinute :

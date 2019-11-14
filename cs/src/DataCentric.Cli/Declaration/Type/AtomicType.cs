@@ -96,5 +96,11 @@ namespace DataCentric.Cli
 
         /// <summary>Nullable minute.</summary>
         NullableMinute,
+
+        /// <summary>Instant.</summary>
+        Instant,
+
+        /// <summary>Nullable instant.</summary>
+        NullableInstant,
     }
 }

@@ -239,10 +239,12 @@ namespace DataCentric.Cli
                 atomicType == AtomicType.Date ? "LocalDate" :
                 atomicType == AtomicType.Time ? "LocalTime" :
                 atomicType == AtomicType.Minute ? "LocalMinute" :
+                atomicType == AtomicType.Instant ? "Instant" :
                 atomicType == AtomicType.NullableDateTime ? "Optional[LocalDateTime]" :
                 atomicType == AtomicType.NullableDate ? "Optional[LocalDate]" :
                 atomicType == AtomicType.NullableTime ? "Optional[LocalTime]" :
                 atomicType == AtomicType.NullableMinute ? "Optional[LocalMinute]" :
+                atomicType == AtomicType.NullableInstant ? "Optional[Instant]" :
                 atomicType == AtomicType.TemporalId ? "ObjectId" :
                 atomicType == AtomicType.NullableTemporalId ? "Optional[ObjectId]" :
                 throw new

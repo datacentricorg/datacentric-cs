@@ -200,6 +200,8 @@ namespace DataCentric.Cli
                     writer.AppendLine("from datacentric.date_time.local_time import LocalTime");
                 if (atomicElements.Contains(AtomicType.Minute) || atomicElements.Contains(AtomicType.NullableMinute))
                     writer.AppendLine("from datacentric.date_time.local_minute import LocalMinute");
+                if (atomicElements.Contains(AtomicType.Instant) || atomicElements.Contains(AtomicType.NullableInstant))
+                    writer.AppendLine("from datacentric.date_time.instant import Instant");
             }
         }
 
