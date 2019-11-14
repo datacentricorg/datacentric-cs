@@ -192,7 +192,7 @@ namespace DataCentric.Cli
                 string paramNamespace = parameter.Data.Module.ModuleName != decl.Module.ModuleName
                     ? PythonImportsBuilder.GetPythonNamespace(parameter.Data.Module.ModuleName) + "."
                     : "";
-                var result = $"{paramNamespace}{parameter.Data.Name}";
+                var result = $"Optional[{paramNamespace}{parameter.Data.Name}]";
                 if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
                 return result;
             }
@@ -201,7 +201,7 @@ namespace DataCentric.Cli
                 string paramNamespace = parameter.Key.Module.ModuleName != decl.Module.ModuleName
                     ? PythonImportsBuilder.GetPythonNamespace(parameter.Key.Module.ModuleName) + "."
                     : "";
-                var result = $"{paramNamespace}{parameter.Key.Name}Key";
+                var result = $"Optional[{paramNamespace}{parameter.Key.Name}Key]";
                 if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
                 return result;
             }
@@ -210,7 +210,7 @@ namespace DataCentric.Cli
                 string paramNamespace = parameter.Enum.Module.ModuleName != decl.Module.ModuleName
                     ? PythonImportsBuilder.GetPythonNamespace(parameter.Enum.Module.ModuleName) + "."
                     : "";
-                var result = $"{paramNamespace}{parameter.Enum.Name}";
+                var result = $"Optional[{paramNamespace}{parameter.Enum.Name}]";
                 if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
                 return result;
             }
@@ -231,7 +231,7 @@ namespace DataCentric.Cli
                 string paramNamespace = element.Data.Module.ModuleName != decl.Module.ModuleName
                                             ? PythonImportsBuilder.GetPythonNamespace(element.Data.Module.ModuleName) + "."
                                             : "";
-                var result = $"{paramNamespace}{element.Data.Name}";
+                var result = $"Optional[{paramNamespace}{element.Data.Name}]";
                 if (element.Vector == YesNo.Y) result = $"List[{result}]";
                 return result;
             }
@@ -241,7 +241,7 @@ namespace DataCentric.Cli
                 string paramNamespace = element.Key.Module.ModuleName != decl.Module.ModuleName
                                             ? PythonImportsBuilder.GetPythonNamespace(element.Key.Module.ModuleName) + "."
                                             : "";
-                var result = $"{paramNamespace}{element.Key.Name}Key";
+                var result = $"Optional[{paramNamespace}{element.Key.Name}Key]";
                 if (element.Vector == YesNo.Y) result = $"List[{result}]";
                 return result;
             }
@@ -251,7 +251,7 @@ namespace DataCentric.Cli
                 string paramNamespace = element.Enum.Module.ModuleName != decl.Module.ModuleName
                                             ? PythonImportsBuilder.GetPythonNamespace(element.Enum.Module.ModuleName) + "."
                                             : "";
-                var result = $"{paramNamespace}{element.Enum.Name}";
+                var result = $"Optional[{paramNamespace}{element.Enum.Name}]";
                 if (element.Vector == YesNo.Y) result = $"List[{result}]";
                 return result;
             }

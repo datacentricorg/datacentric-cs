@@ -37,7 +37,7 @@ namespace DataCentric.Cli
                 writer.AppendLine("from bson import ObjectId");
 
             bool hasList = decl.Elements.Any(e=>e.Vector == YesNo.Y);
-            bool hasOptional = decl.Elements.Any(e => e.Value != null &&
+            bool hasOptionalValue = decl.Elements.Any(e => e.Value != null &&
                                                       (e.Value.Type == AtomicType.String ||
                                                        e.Value.Type == AtomicType.NullableBool ||
                                                        e.Value.Type == AtomicType.NullableDate ||
@@ -49,6 +49,8 @@ namespace DataCentric.Cli
                                                        e.Value.Type == AtomicType.NullableMinute ||
                                                        e.Value.Type == AtomicType.NullableTemporalId ||
                                                        e.Value.Type == AtomicType.NullableTime));
+            bool hasDataEnumKey = decl.Elements.Any(e => e.Data != null || e.Enum != null || e.Key != null);
+            bool hasOptional = hasDataEnumKey || hasOptionalValue;
 
             // Check imports from typing
             if (hasList && hasOptional)
