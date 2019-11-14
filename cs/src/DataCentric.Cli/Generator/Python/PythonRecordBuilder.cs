@@ -63,6 +63,9 @@ namespace DataCentric.Cli
                 writer.AppendNewLineWithoutIndent();
 
                 var keySlots = string.Join(", ", decl.Keys.Select(t => $"'{t.Underscore()}'"));
+                if (decl.Keys.Count == 1)
+                    keySlots = keySlots + ",";
+
                 writer.AppendLine($"__slots__ = ({keySlots})");
                 writer.AppendNewLineWithoutIndent();
 
@@ -106,6 +109,8 @@ namespace DataCentric.Cli
             writer.AppendNewLineWithoutIndent();
 
             var slots = string.Join(", ", decl.Elements.Select(t => $"'{t.Name.Underscore()}'"));
+            if (decl.Elements.Count == 1)
+                slots = slots + ",";
             writer.AppendLine($"__slots__ = ({slots})");
             writer.AppendNewLineWithoutIndent();
 
@@ -283,6 +288,5 @@ namespace DataCentric.Cli
                 throw new
                     ArgumentException($"Unknown value type: {atomicType.ToString()}");
         }
-
     }
 }

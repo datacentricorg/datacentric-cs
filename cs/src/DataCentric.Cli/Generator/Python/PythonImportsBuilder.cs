@@ -38,7 +38,8 @@ namespace DataCentric.Cli
 
             bool hasList = decl.Elements.Any(e=>e.Vector == YesNo.Y);
             bool hasOptional = decl.Elements.Any(e => e.Value != null &&
-                                                      (e.Value.Type == AtomicType.NullableBool ||
+                                                      (e.Value.Type == AtomicType.String ||
+                                                       e.Value.Type == AtomicType.NullableBool ||
                                                        e.Value.Type == AtomicType.NullableDate ||
                                                        e.Value.Type == AtomicType.NullableDateTime ||
                                                        e.Value.Type == AtomicType.NullableDecimal ||
@@ -210,6 +211,7 @@ namespace DataCentric.Cli
             switch (moduleName)
             {
                 case "DataCentric": return "datacentric";
+                case "Terra":       return "terra";
                 default:            return "unknown_module"; // TODO - resolve all and raise an error if not found
             }
         }
@@ -219,6 +221,7 @@ namespace DataCentric.Cli
             switch (moduleName)
             {
                 case "DataCentric": return "dc";
+                case "Terra":       return "tr";
                 default:            return "unknown_module"; // TODO - resolve all and raise an error if not found
             }
         }
