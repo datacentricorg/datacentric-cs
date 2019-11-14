@@ -38,7 +38,7 @@ namespace DataCentric.Cli
         private static List<FileInfo> ConvertType(TypeDecl decl, List<IDecl> declarations)
         {
             List<FileInfo> result = new List<FileInfo>();
-            var declPathDict = declarations.ToDictionary(v => v.Module.ModuleName + v.Name, GetDeclModulePath);
+            var declPathDict = declarations.ToDictionary(GetNameKey, GetDeclModulePath);
             var dataFile = new FileInfo
             {
                 Content = PythonRecordBuilder.Build(decl, declPathDict).AppendCopyright(decl.Category),
@@ -50,9 +50,14 @@ namespace DataCentric.Cli
             return result;
         }
 
+        public static string GetNameKey(IDecl v)
+        {
+            return v.Module.ModuleName + "." + v.Name;
+        }
+
         private static string GetDeclModulePath(IDecl decl)
         {
-            string folder = decl.Category?.Underscore().Replace('.', '/');
+            string folder = decl.Category?.Underscore();
             return string.IsNullOrEmpty(folder) ? decl.Name.Underscore() : $"{folder}.{decl.Name.Underscore()}";
         }
 

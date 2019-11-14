@@ -46,12 +46,13 @@ namespace DataCentric.Cli
                         // Parent class name and filename based on converting
                         // class name to snake case
                         string parentClassName = decl.Inherit.Name;
-                        string parentPythonFileName = parentClassName.Underscore();
+                        string key = decl.Inherit.Module.ModuleName + "." + decl.Inherit.Name;
+                        string parentPythonFileName = declPathDict[key];
 
                         // Import individual parent class if package namespace is
                         // the same as parent class namespace. Use ? as the folder
                         // is unknown, this will be corrected after the generation
-                        writer.AppendLine($"from datacentric.?.{parentPythonFileName} import {parentClassName}");
+                        writer.AppendLine($"from {parentPythonFileName} import {parentClassName}");
                     }
                     else
                         throw new Exception("When generating code for the datacentric package, " +
@@ -66,12 +67,13 @@ namespace DataCentric.Cli
                         // Parent class name and filename based on converting
                         // class name to snake case
                         string parentClassName = decl.Inherit.Name;
-                        string parentPythonFileName = parentClassName.Underscore();
+                        string key = decl.Inherit.Module.ModuleName + "." + decl.Inherit.Name;
+                        string parentPythonFileName = declPathDict[key];
 
                         // Import individual parent class if package namespace is
                         // the same as parent class namespace. Use ? as the folder
                         // is unknown, this will be corrected after the generation
-                        writer.AppendLine($"from ?.{parentPythonFileName} import {parentClassName}");
+                        writer.AppendLine($"from {parentPythonFileName} import {parentClassName}");
                     }
                     else
                     {
