@@ -132,8 +132,12 @@ Verify: datacentric/job/job.py
     # See the License for the specific language governing permissions and
     # limitations under the License.
 
+    from bson import ObjectId
+    from typing import List
     from datacentric.storage.typed_key import TypedKey
     from datacentric.storage.typed_record import TypedRecord
+    from datacentric.job.job_queue import JobQueueKey
+    from datacentric.job.job import JobKey
 
 
     class JobKey(TypedKey['Job']):
