@@ -33,19 +33,65 @@ namespace DataCentric.Cli
             string GetNameKey(IDecl v) => v.Module.ModuleName + "." + v.Name;
             string GetDeclModulePath(IDecl decl) => $"{decl.Category?.Underscore()}.{decl.Name.Underscore()}";
 
-            var declPathDict = declarations.ToDictionary(GetNameKey, GetDeclModulePath);
+            var declModuleDict = declarations.ToDictionary(GetNameKey, GetDeclModulePath);
 
-            var types = typeDecls.Select(d => ConvertType(d, declPathDict));
+            var types = typeDecls.Select(d => ConvertType(d, declModuleDict));
             var enums = enumDecls.Select(ConvertEnum);
+            var init = GenerateInitFiles(declarations, declModuleDict);
 
-            return types.Concat(enums).ToList();
+            return types.Concat(enums).Concat(init).ToList();
         }
 
-        private static FileInfo ConvertType(TypeDecl decl, Dictionary<string, string> declPathDict)
+        private static List<FileInfo> GenerateInitFiles(List<IDecl> declarations, Dictionary<string, string> declModuleDict)
+        {
+            Dictionary<string, List<string>> packageImports = new Dictionary<string, List<string>>();
+
+            List<TypeDecl> typeDecls = declarations.OfType<TypeDecl>().ToList();
+            List<EnumDecl> enumDecls = declarations.OfType<EnumDecl>().ToList();
+
+            foreach (var decl in enumDecls)
+            {
+                string moduleImport = declModuleDict[decl.Module.ModuleName + "." + decl.Name];
+                int indexOf = moduleImport.IndexOf('.');
+                var package = moduleImport.Substring(0, indexOf);
+                if (!packageImports.ContainsKey(package))
+                    packageImports[package] = new List<string>();
+                packageImports[package].Add($"from {moduleImport} import {decl.Name}");
+            }
+
+            foreach (var decl in typeDecls)
+            {
+                string moduleImport = declModuleDict[decl.Module.ModuleName + "." + decl.Name];
+                int indexOf = moduleImport.IndexOf('.');
+                var package = moduleImport.Substring(0, indexOf);
+                if (!packageImports.ContainsKey(package))
+                    packageImports[package] = new List<string>();
+                if (decl.IsRecord && decl.Inherit == null)
+                    packageImports[package].Add($"from {moduleImport} import {decl.Name}, {decl.Name}Key");
+                else
+                    packageImports[package].Add($"from {moduleImport} import {decl.Name}");
+            }
+
+            var result = new List<FileInfo>();
+            foreach (var pair in packageImports)
+            {
+                var init = new FileInfo
+                {
+                    FileName = "__init__.py",
+                    FolderName = pair.Key,
+                    Content = string.Join(Environment.NewLine, pair.Value)
+                };
+                result.Add(init);
+            }
+
+            return result;
+        }
+
+        private static FileInfo ConvertType(TypeDecl decl, Dictionary<string, string> declModuleDict)
         {
             var dataFile = new FileInfo
             {
-                Content = PythonRecordBuilder.Build(decl, declPathDict).AppendCopyright(decl.Category),
+                Content = PythonRecordBuilder.Build(decl, declModuleDict).AppendCopyright(decl.Category),
                 FileName = $"{decl.Name.Underscore()}.py",
                 FolderName = decl.Category?.Underscore().Replace('.', '/')
             };
