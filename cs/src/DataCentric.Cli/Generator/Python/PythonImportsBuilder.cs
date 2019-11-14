@@ -140,6 +140,48 @@ namespace DataCentric.Cli
                     writer.AppendLine("import datacentric as dc");
                 }
             }
+
+            var samePackageData = decl.Elements
+                                      .Where(e => e.Data != null &&
+                                                  e.Data.Module.ModuleName == decl.Module.ModuleName)
+                                      .GroupBy(e => e.Data.Name)
+                                      .Select(g => g.First().Data)
+                                      .ToList();
+
+            foreach (var dataElement in samePackageData)
+            {
+                string key = dataElement.Module.ModuleName + "." + dataElement.Name;
+                string elementModule = declPathDict[key];
+                writer.AppendLine($"from {elementModule} import {dataElement.Name}");
+            }
+
+            var samePackageKeys = decl.Elements
+                                      .Where(e => e.Key != null &&
+                                                  e.Key.Module.ModuleName == decl.Module.ModuleName)
+                                      .GroupBy(e => e.Key.Name)
+                                      .Select(g => g.First().Key)
+                                      .ToList();
+
+            foreach (var element in samePackageKeys)
+            {
+                string key = element.Module.ModuleName + "." + element.Name;
+                string elementModule = declPathDict[key];
+                writer.AppendLine($"from {elementModule} import {element.Name}Key");
+            }
+
+            var samePackageEnums = decl.Elements
+                                      .Where(e => e.Enum != null &&
+                                                  e.Enum.Module.ModuleName == decl.Module.ModuleName)
+                                      .GroupBy(e => e.Enum.Name)
+                                      .Select(g => g.First().Enum)
+                                      .ToList();
+
+            foreach (var element in samePackageEnums)
+            {
+                string key = element.Module.ModuleName + "." + element.Name;
+                string elementModule = declPathDict[key];
+                writer.AppendLine($"from {elementModule} import {element.Name}");
+            }
         }
 
         public static string GetPythonPackage(string moduleName)
