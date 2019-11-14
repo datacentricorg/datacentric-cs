@@ -29,51 +29,40 @@ namespace DataCentric.Cli
             List<TypeDecl> typeDecls = declarations.OfType<TypeDecl>().ToList();
             List<EnumDecl> enumDecls = declarations.OfType<EnumDecl>().ToList();
 
-            var types = typeDecls.SelectMany(d => ConvertType(d, declarations));
-            var enums = enumDecls.SelectMany(ConvertEnum);
+            // Construct dictionary for declaration and corresponding module
+            string GetNameKey(IDecl v) => v.Module.ModuleName + "." + v.Name;
+            string GetDeclModulePath(IDecl decl) => $"{decl.Category?.Underscore()}.{decl.Name.Underscore()}";
+
+            var declPathDict = declarations.ToDictionary(GetNameKey, GetDeclModulePath);
+
+            var types = typeDecls.Select(d => ConvertType(d, declPathDict));
+            var enums = enumDecls.Select(ConvertEnum);
 
             return types.Concat(enums).ToList();
         }
 
-        private static List<FileInfo> ConvertType(TypeDecl decl, List<IDecl> declarations)
+        private static FileInfo ConvertType(TypeDecl decl, Dictionary<string, string> declPathDict)
         {
-            List<FileInfo> result = new List<FileInfo>();
-            var declPathDict = declarations.ToDictionary(GetNameKey, GetDeclModulePath);
             var dataFile = new FileInfo
             {
                 Content = PythonRecordBuilder.Build(decl, declPathDict).AppendCopyright(decl.Category),
                 FileName = $"{decl.Name.Underscore()}.py",
                 FolderName = decl.Category?.Underscore().Replace('.', '/')
             };
-            result.Add(dataFile);
 
-            return result;
+            return dataFile;
         }
 
-        public static string GetNameKey(IDecl v)
+        private static FileInfo ConvertEnum(EnumDecl decl)
         {
-            return v.Module.ModuleName + "." + v.Name;
-        }
-
-        private static string GetDeclModulePath(IDecl decl)
-        {
-            string folder = decl.Category?.Underscore();
-            return string.IsNullOrEmpty(folder) ? decl.Name.Underscore() : $"{folder}.{decl.Name.Underscore()}";
-        }
-
-        private static List<FileInfo> ConvertEnum(EnumDecl decl)
-        {
-            var result = new List<FileInfo>();
-
             var enumFile = new FileInfo
             {
                 Content = PythonEnumBuilder.Build(decl).AppendCopyright(decl.Category),
                 FileName = $"{decl.Name.Underscore()}.py",
                 FolderName = decl.Category?.Underscore().Replace('.', '/')
             };
-            result.Add(enumFile);
 
-            return result;
+            return enumFile;
         }
 
         private static string AppendCopyright(this string input, string category)
