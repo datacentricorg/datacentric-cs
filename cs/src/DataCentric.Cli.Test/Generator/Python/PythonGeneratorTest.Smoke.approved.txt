@@ -13,6 +13,7 @@ Verify: datacentric/date_time/zone.py
     # See the License for the specific language governing permissions and
     # limitations under the License.
 
+    from typing import Optional
     from datacentric.storage.typed_key import TypedKey
     from datacentric.storage.typed_record import TypedRecord
 
@@ -39,7 +40,7 @@ Verify: datacentric/date_time/zone.py
         country and the other the city, for example America/New_York.
         """
 
-        __slots__ = ('zone_name')
+        __slots__ = ('zone_name',)
 
         zone_name: Optional[str]
 
@@ -90,7 +91,7 @@ Verify: datacentric/date_time/zone.py
         country and the other the city, for example America/New_York.
         """
 
-        __slots__ = ('zone_name')
+        __slots__ = ('zone_name',)
 
         zone_name: Optional[str]
 
@@ -133,7 +134,7 @@ Verify: datacentric/job/job.py
     # limitations under the License.
 
     from bson import ObjectId
-    from typing import List
+    from typing import List, Optional
     from datacentric.storage.typed_key import TypedKey
     from datacentric.storage.typed_record import TypedRecord
     from datacentric.job.job_queue import JobQueueKey
@@ -202,7 +203,7 @@ Verify: datacentric/job/job.py
         in each of these cases.
         """
 
-        __slots__ = ('id')
+        __slots__ = ('id',)
 
 
         def __init__(self):
@@ -274,13 +275,13 @@ Verify: datacentric/job/job.py
 
         __slots__ = ('queue', 'collection_name', 'record_id', 'method_name', 'param_names', 'param_values', 'prerequisites')
 
-        queue: JobQueueKey
+        queue: Optional[JobQueueKey]
         collection_name: Optional[str]
         record_id: ObjectId
         method_name: Optional[str]
         param_names: List[Optional[str]]
         param_values: List[Optional[str]]
-        prerequisites: List[JobKey]
+        prerequisites: List[Optional[JobKey]]
 
         def __init__(self):
             super().__init__()
