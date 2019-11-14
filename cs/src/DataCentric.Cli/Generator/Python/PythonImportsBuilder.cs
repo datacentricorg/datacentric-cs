@@ -182,6 +182,25 @@ namespace DataCentric.Cli
                 string elementModule = declPathDict[key];
                 writer.AppendLine($"from {elementModule} import {element.Name}");
             }
+
+            // Import date-time classes
+            if (insideDc)
+            {
+                var atomicElements = decl.Elements
+                                         .Where(e => e.Value != null)
+                                         .GroupBy(e => e.Value.Type)
+                                         .Select(g => g.First().Value.Type)
+                                         .ToArray();
+
+                if (atomicElements.Contains(AtomicType.DateTime) || atomicElements.Contains(AtomicType.NullableDateTime))
+                    writer.AppendLine("from datacentric.date_time.local_date_time import LocalDateTime");
+                if (atomicElements.Contains(AtomicType.Date) || atomicElements.Contains(AtomicType.NullableDate))
+                    writer.AppendLine("from datacentric.date_time.local_date import LocalDate");
+                if (atomicElements.Contains(AtomicType.Time) || atomicElements.Contains(AtomicType.NullableTime))
+                    writer.AppendLine("from datacentric.date_time.local_time import LocalTime");
+                if (atomicElements.Contains(AtomicType.Minute) || atomicElements.Contains(AtomicType.NullableMinute))
+                    writer.AppendLine("from datacentric.date_time.local_minute import LocalMinute");
+            }
         }
 
         public static string GetPythonPackage(string moduleName)

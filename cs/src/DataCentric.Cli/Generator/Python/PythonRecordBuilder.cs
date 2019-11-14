@@ -228,12 +228,10 @@ namespace DataCentric.Cli
             return
                 atomicType == AtomicType.String ? "Optional[str]" :
                 atomicType == AtomicType.Bool ? "bool" :
-                atomicType == AtomicType.DateTime ? "LocalDateTime" :
                 atomicType == AtomicType.Double ? "float" :
                 atomicType == AtomicType.Int ? "int" :
                 atomicType == AtomicType.Long ? "int" :
                 atomicType == AtomicType.NullableBool ? "Optional[bool]" :
-                atomicType == AtomicType.NullableDateTime ? "Optional[LocalDateTime]" :
                 atomicType == AtomicType.NullableDouble ? "Optional[float]" :
                 atomicType == AtomicType.NullableInt ? "Optional[int]" :
                 atomicType == AtomicType.NullableLong ? "Optional[int]" :
