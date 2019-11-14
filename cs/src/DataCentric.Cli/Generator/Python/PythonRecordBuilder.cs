@@ -66,7 +66,7 @@ namespace DataCentric.Cli
                 writer.AppendLine($"__slots__ = ({keySlots})");
                 writer.AppendNewLineWithoutIndent();
 
-                foreach (var element in keyElements) writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(element)}");
+                foreach (var element in keyElements) writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)}");
                 writer.AppendNewLineWithoutIndent();
 
                 writer.AppendLine("def __init__(self):");
@@ -109,7 +109,7 @@ namespace DataCentric.Cli
             writer.AppendLine($"__slots__ = ({slots})");
             writer.AppendNewLineWithoutIndent();
 
-            foreach (var element in decl.Elements) writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(element)}");
+            foreach (var element in decl.Elements) writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)}");
             writer.AppendNewLineWithoutIndent();
 
             // Init start
@@ -177,7 +177,8 @@ namespace DataCentric.Cli
         {
             if (parameter.Value != null)
             {
-                var result = GetValue(parameter.Value);
+                bool insideDc = decl.Module.ModuleName == "DataCentric";
+                var result = GetValue(insideDc, parameter.Value);
                 if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
                 return result;
             }
@@ -211,19 +212,51 @@ namespace DataCentric.Cli
             else throw new ArgumentException("Can't deduct type");
         }
 
-        private static string GetTypeHint(TypeElementDecl element)
+        private static string GetTypeHint(TypeDecl decl, TypeElementDecl element)
         {
-            string type = element.Value != null ? GetValue(element.Value) :
-                          element.Data != null  ? $"{element.Data.Name}" :
-                          element.Key != null   ? $"{element.Key.Name}Key" :
-                          element.Enum != null  ? element.Enum.Name :
-                                                  throw new ArgumentException("Can't deduct type");
+            if (element.Value != null)
+            {
+                bool insideDc = decl.Module.ModuleName == "DataCentric";
+                string result = GetValue(insideDc, element.Value);
+                return element.Vector == YesNo.Y ? $"List[{result}]" : result;
+            }
 
-            return element.Vector == YesNo.Y ? $"List[{type}]" : type;
+            if (element.Data != null)
+            {
+                string paramNamespace = element.Data.Module.ModuleName != decl.Module.ModuleName
+                                            ? PythonImportsBuilder.GetPythonNamespace(element.Data.Module.ModuleName) + "."
+                                            : "";
+                var result = $"{paramNamespace}{element.Data.Name}";
+                if (element.Vector == YesNo.Y) result = $"List[{result}]";
+                return result;
+            }
+
+            if (element.Key != null)
+            {
+                string paramNamespace = element.Key.Module.ModuleName != decl.Module.ModuleName
+                                            ? PythonImportsBuilder.GetPythonNamespace(element.Key.Module.ModuleName) + "."
+                                            : "";
+                var result = $"{paramNamespace}{element.Key.Name}Key";
+                if (element.Vector == YesNo.Y) result = $"List[{result}]";
+                return result;
+            }
+
+            if (element.Enum != null)
+            {
+                string paramNamespace = element.Enum.Module.ModuleName != decl.Module.ModuleName
+                                            ? PythonImportsBuilder.GetPythonNamespace(element.Enum.Module.ModuleName) + "."
+                                            : "";
+                var result = $"{paramNamespace}{element.Enum.Name}";
+                if (element.Vector == YesNo.Y) result = $"List[{result}]";
+                return result;
+            }
+
+            throw new ArgumentException("Can't deduct type");
         }
 
-        private static string GetValue(ValueDecl valueDecl)
+        private static string GetValue(bool insideDc, ValueDecl valueDecl)
         {
+            string prefix = insideDc ? "" : "dc.";
             var atomicType = valueDecl.Type;
             return
                 atomicType == AtomicType.String ? "Optional[str]" :
@@ -235,16 +268,16 @@ namespace DataCentric.Cli
                 atomicType == AtomicType.NullableDouble ? "Optional[float]" :
                 atomicType == AtomicType.NullableInt ? "Optional[int]" :
                 atomicType == AtomicType.NullableLong ? "Optional[int]" :
-                atomicType == AtomicType.DateTime ? "LocalDateTime" :
-                atomicType == AtomicType.Date ? "LocalDate" :
-                atomicType == AtomicType.Time ? "LocalTime" :
-                atomicType == AtomicType.Minute ? "LocalMinute" :
-                atomicType == AtomicType.Instant ? "Instant" :
-                atomicType == AtomicType.NullableDateTime ? "Optional[LocalDateTime]" :
-                atomicType == AtomicType.NullableDate ? "Optional[LocalDate]" :
-                atomicType == AtomicType.NullableTime ? "Optional[LocalTime]" :
-                atomicType == AtomicType.NullableMinute ? "Optional[LocalMinute]" :
-                atomicType == AtomicType.NullableInstant ? "Optional[Instant]" :
+                atomicType == AtomicType.DateTime ? $"LocalDateTime" :
+                atomicType == AtomicType.Date ? $"{prefix}LocalDate" :
+                atomicType == AtomicType.Time ? $"{prefix}LocalTime" :
+                atomicType == AtomicType.Minute ? $"{prefix}LocalMinute" :
+                atomicType == AtomicType.Instant ? $"{prefix}Instant" :
+                atomicType == AtomicType.NullableDateTime ? $"Optional[{prefix}LocalDateTime]" :
+                atomicType == AtomicType.NullableDate ? $"Optional[{prefix}LocalDate]" :
+                atomicType == AtomicType.NullableTime ? $"Optional[{prefix}LocalTime]" :
+                atomicType == AtomicType.NullableMinute ? $"Optional[{prefix}LocalMinute]" :
+                atomicType == AtomicType.NullableInstant ? $"Optional[{prefix}Instant]" :
                 atomicType == AtomicType.TemporalId ? "ObjectId" :
                 atomicType == AtomicType.NullableTemporalId ? "Optional[ObjectId]" :
                 throw new
