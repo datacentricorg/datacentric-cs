@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Humanizer;
 
 namespace DataCentric.Cli
@@ -24,6 +25,38 @@ namespace DataCentric.Cli
     {
         public static void WriteImports(TypeDecl decl, Dictionary<string, string> declPathDict, CodeWriter writer)
         {
+            // If type is abstract - ABC import is needed
+            if (decl.Kind == TypeKind.Abstract)
+                writer.AppendLine("from abc import ABC");
+
+            // Check if ObjectId is used
+            bool hasObjectId = decl.Elements.Any(e => e.Value != null &&
+                                                      (e.Value.Type == AtomicType.TemporalId ||
+                                                       e.Value.Type == AtomicType.NullableTemporalId));
+            if (hasObjectId)
+                writer.AppendLine("from bson import ObjectId");
+
+            bool hasList = decl.Elements.Any(e=>e.Vector == YesNo.Y);
+            bool hasOptional = decl.Elements.Any(e => e.Value != null &&
+                                                      (e.Value.Type == AtomicType.NullableBool ||
+                                                       e.Value.Type == AtomicType.NullableDate ||
+                                                       e.Value.Type == AtomicType.NullableDateTime ||
+                                                       e.Value.Type == AtomicType.NullableDecimal ||
+                                                       e.Value.Type == AtomicType.NullableDouble ||
+                                                       e.Value.Type == AtomicType.NullableInt ||
+                                                       e.Value.Type == AtomicType.NullableLong ||
+                                                       e.Value.Type == AtomicType.NullableMinute ||
+                                                       e.Value.Type == AtomicType.NullableTemporalId ||
+                                                       e.Value.Type == AtomicType.NullableTime));
+
+            // Check imports from typing
+            if (hasList && hasOptional)
+                writer.AppendLine("from typing import List, Optional");
+            else if (hasList)
+                writer.AppendLine("from typing import List");
+            else if (hasOptional)
+                writer.AppendLine("from typing import Optional");
+
             bool insideDc = decl.Module.ModuleName == "DataCentric";
 
             bool parentClassInDifferentModule =
