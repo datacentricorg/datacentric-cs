@@ -28,7 +28,7 @@ namespace DataCentric.Test
         [Fact]
         public void Attributes()
         {
-            using (var context = new UnitTestContext(this))
+            using (var context = new TestCaseContext(this))
             {
                 // Create XML writer
                 ITreeWriter writer = new XmlTreeWriter();

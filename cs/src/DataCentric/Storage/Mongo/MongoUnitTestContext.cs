@@ -22,7 +22,7 @@ namespace DataCentric
     /// <summary>
     /// Context for use in test fixtures that require a data source.
     ///
-    /// It extends UnitTestContext by creating an empty test
+    /// It extends TestCaseContext by creating an empty test
     /// database specific to the test method, and deleting
     /// it after the test exits. The context creates Common
     /// dataset in the database and assigns its TemporalId to
@@ -32,9 +32,9 @@ namespace DataCentric
     /// after the text exits. This data will be cleared on the
     /// next launch of the test.
     ///
-    /// For tests that do not require a data source, use UnitTestContext.
+    /// For tests that do not require a data source, use TestCaseContext.
     /// </summary>
-    public class MongoUnitTestContext<TDataSource> : UnitTestContext
+    public class MongoTestCaseContext<TDataSource> : TestCaseContext
         where TDataSource : MongoDataSource, new()
     {
         private bool keepTestData_;
@@ -56,13 +56,13 @@ namespace DataCentric
         //--- CONSTRUCTORS
 
         /// <summary>
-        /// Unit test context for the specified object for the Mongo
+        /// Test case context for the specified object for the Mongo
         /// server running on the default port of localhost.
         ///
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
         /// </summary>
-        public MongoUnitTestContext(
+        public MongoTestCaseContext(
             object obj,
             [CallerMemberName] string methodName = null,
             [CallerFilePath] string sourceFilePath = null)
@@ -73,12 +73,12 @@ namespace DataCentric
         }
 
         /// <summary>
-        /// Unit test context for the specified object and Mongo server URI.
+        /// Test case context for the specified object and Mongo server URI.
         ///
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
         /// </summary>
-        public MongoUnitTestContext(
+        public MongoTestCaseContext(
             object obj,
             MongoServerKey mongoServerKey,
             [CallerMemberName] string methodName = null,

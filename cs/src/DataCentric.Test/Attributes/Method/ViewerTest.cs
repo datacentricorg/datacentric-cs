@@ -21,7 +21,7 @@ using DataCentric;
 namespace DataCentric.Test
 {
     /// <summary>Test for HandlerMethod attribute.</summary>
-    public class ViewerTest : UnitTest
+    public class ViewerTest : TestCase
     {
         /// <summary>
         /// In this test, we invoke viewers in process to create baseline output

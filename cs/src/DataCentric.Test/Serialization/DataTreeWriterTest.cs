@@ -28,7 +28,7 @@ namespace DataCentric.Test
         [Fact]
         public void Basic()
         {
-            using (var context = new UnitTestContext(this))
+            using (var context = new TestCaseContext(this))
             {
                 var obj = new BaseTypeSample();
                 obj.SampleName = "ABC";
@@ -54,7 +54,7 @@ namespace DataCentric.Test
         [Fact]
         public void Complete()
         {
-            using (var context = new UnitTestContext(this))
+            using (var context = new TestCaseContext(this))
             {
                 var obj = new DerivedTypeSample();
                 obj.SampleName = "AAA";

@@ -31,7 +31,7 @@ namespace DataCentric.Test
         [Fact]
         public void Basic()
         {
-            using (var context = new UnitTestContext(this))
+            using (var context = new TestCaseContext(this))
             {
                 TestSerialization(context, new[] { VariantType.Int }, MatrixLayout.NoHeaders);
                 TestSerialization(context, new[] { VariantType.Int }, MatrixLayout.RowHeaders);
@@ -44,7 +44,7 @@ namespace DataCentric.Test
         [Fact]
         public void MultiType()
         {
-            using (var context = new UnitTestContext(this))
+            using (var context = new TestCaseContext(this))
             {
                 var valueTypes = new[]
                 {

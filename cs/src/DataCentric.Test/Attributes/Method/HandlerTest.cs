@@ -30,7 +30,7 @@ namespace DataCentric.Test
         [Fact]
         public void InProcess()
         {
-            using (var context = new UnitTestContext(this))
+            using (var context = new TestCaseContext(this))
             {
                 // Create base instance
                 var baseSample = new BaseSample();

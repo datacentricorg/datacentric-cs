@@ -56,8 +56,8 @@ namespace DataCentric
         ///
         /// * For USER environment type, environment group is user alias.
         ///
-        /// * For TEST environment type, environment group is the name of
-        ///   the unit test class (test fixture).
+        /// * For TEST environment type, environment group is TestCaseName,
+        ///   the unique identifier of test case record.
         /// </summary>
         public string EnvGroup { get; set; }
 

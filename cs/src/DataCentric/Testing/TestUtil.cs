@@ -21,9 +21,9 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace DataCentric
 {
     /// <summary>
-    /// Helper class for unit testing.
+    /// Helper class for TestCase.
     /// </summary>
-    public static class TestUtil
+    public static class TestCaseUtil
     {
         /// <summary>
         /// Generates random seed using hashcode of class name and method name,

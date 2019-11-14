@@ -28,7 +28,7 @@ namespace DataCentric.Test
         [Fact]
         public void DisplayFormat()
         {
-            using (var context = new UnitTestContext(this))
+            using (var context = new TestCaseContext(this))
             {
                 double baseValue = 1.23456789;
                 List<double> values = new List<double>();

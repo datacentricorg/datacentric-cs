@@ -28,7 +28,7 @@ namespace DataCentric
     /// * Logging
     /// * Progress reporting
     /// * Filesystem access (if available)
-    /// 
+    ///
     /// The context is configured by setting each of the service
     /// properties (e.g. Log, Progress, etc.). The setter then
     /// invokes Init(...) method of the property and passes self
@@ -180,7 +180,7 @@ namespace DataCentric
         /// </summary>
         public virtual void KeepTestData()
         {
-            throw new Exception("Method KeepTestData() invoked on a context that is not a unit test context.");
+            throw new Exception("Method KeepTestData() invoked on a context that is not a test case context.");
         }
     }
 

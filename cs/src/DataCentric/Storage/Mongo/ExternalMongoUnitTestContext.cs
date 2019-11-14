@@ -19,22 +19,22 @@ using System.Runtime.CompilerServices;
 namespace DataCentric
 {
     /// <summary>
-    /// ExternalMongoUnitTestContext is the context for use in test
+    /// ExternalMongoTestCaseContext is the context for use in test
     /// fixtures that will interact with external mongo database.
     ///
-    /// It extends UnitTestContext by connecting to the specified
+    /// It extends TestCaseContext by connecting to the specified
     /// mongo server and picking specified database.
     ///
     /// The context loads an existing Common dataset from data source
     /// and assigns its TemporalId to the DataSet property of the context.
     /// </summary>
-    public class ExternalMongoUnitTestContext : UnitTestContext
+    public class ExternalMongoTestCaseContext : TestCaseContext
     {
-        /// Unit test context for the specified object and database name.
+        /// Test case context for the specified object and database name.
         ///
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
-        public ExternalMongoUnitTestContext(object classInstance, string dbNameString,
+        public ExternalMongoTestCaseContext(object classInstance, string dbNameString,
                                         [CallerMemberName] string methodName = null,
                                         [CallerFilePath] string sourceFilePath = null) :
             this(classInstance, dbNameString, MongoServerKey.Default, methodName, sourceFilePath)
@@ -42,12 +42,12 @@ namespace DataCentric
         }
 
         /// <summary>
-        /// Unit test context for the specified object, database name and Mongo server URI.
+        /// Test case context for the specified object, database name and Mongo server URI.
         ///
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
         /// </summary>
-        public ExternalMongoUnitTestContext(object classInstance, string dbNameString, MongoServerKey serverKey,
+        public ExternalMongoTestCaseContext(object classInstance, string dbNameString, MongoServerKey serverKey,
                                         [CallerMemberName] string methodName = null,
                                         [CallerFilePath] string sourceFilePath = null) :
             base(classInstance, methodName, sourceFilePath)

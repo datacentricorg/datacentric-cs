@@ -66,8 +66,8 @@ namespace DataCentric.Test
         public IsoDayOfWeek? DayOfWeek { get; set; }
     }
 
-    /// <summary>Unit test for Query.</summary>
-    public class EnumTest : UnitTest
+    /// <summary>Unit tests for Query.</summary>
+    public class EnumTest : TestCase
 
     {
     /// <summary>
@@ -79,7 +79,7 @@ namespace DataCentric.Test
     [Fact]
     public void EmptyValue()
     {
-        using (var context = new UnitTestContext(this))
+        using (var context = new TestCaseContext(this))
         {
             // Shows that we cannot detect special enum values such as None or Empty
             object none = IsoDayOfWeek.None;

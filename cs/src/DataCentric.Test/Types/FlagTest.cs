@@ -42,8 +42,8 @@ namespace DataCentric.Test
         public Flag? FlagValue { get; set; }
     }
 
-    /// <summary>Unit test for Query.</summary>
-    public class FlagTest : UnitTest
+    /// <summary>Unit tests for Query.</summary>
+    public class FlagTest : TestCase
     {
         /// <summary>Test query by flag value.</summary>
         [Fact]
