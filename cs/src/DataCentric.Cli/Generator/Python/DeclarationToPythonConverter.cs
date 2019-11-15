@@ -21,28 +21,61 @@ using Humanizer;
 
 namespace DataCentric.Cli
 {
+    /// <summary>
+    /// Converts declarations to generated python files.
+    /// </summary>
     public static class DeclarationToPythonConverter
     {
+        /// <summary>
+        /// Perform conversion.
+        /// </summary>
         public static List<FileInfo> ConvertSet(List<IDecl> declarations)
         {
             declarations = declarations.Where(t => t.Module.ModuleName.StartsWith("DataCentric")).ToList();
+
+            // Skipping declarations with empty Category, since it is impossible
+            // to determine their proper package and module in python.
+            var skipped = declarations.Where(d => string.IsNullOrEmpty(d.Category)).ToList();
+            foreach (var decl in skipped)
+            {
+                Console.WriteLine($"Skipping {decl.Module.ModuleName}:{decl.Name} since filename was not resolved. " +
+                                  $"Possible class-filename mismatch or duplicate file names.");
+            }
+
+            // From now - Category is guaranteed to be not null and non-empty.
+            declarations = declarations.Except(skipped).ToList();
+
+            // Modify DataCentric to avoid its conversion to data_centric by Underscore()
+            foreach (var decl in declarations)
+            {
+                if (decl.Category.StartsWith("DataCentric"))
+                {
+                    decl.Category = decl.Category.TrimStart("DataCentric");
+                    decl.Category = "Datacentric" + decl.Category;
+                }
+            }
+
+            // !!! Important.
+            // Convert information to usable form, namely:
+            // Category to python module.
+            foreach (var decl in declarations)
+            {
+                // e.g. datacentric.storage.context
+                var module = decl.Category.Underscore() + '.' + decl.Name.Underscore();
+                decl.Category = module;
+            }
+
             List<TypeDecl> typeDecls = declarations.OfType<TypeDecl>().ToList();
             List<EnumDecl> enumDecls = declarations.OfType<EnumDecl>().ToList();
 
-            // Construct dictionary for declaration and corresponding module
-            string GetNameKey(IDecl v) => v.Module.ModuleName + "." + v.Name;
-            string GetDeclModulePath(IDecl decl) => $"{decl.Category?.Underscore()}.{decl.Name.Underscore()}";
-
-            var declModuleDict = declarations.ToDictionary(GetNameKey, GetDeclModulePath);
-
-            var types = typeDecls.Select(d => ConvertType(d, declModuleDict));
+            var types = typeDecls.Select(d => ConvertType(d, declarations));
             var enums = enumDecls.Select(ConvertEnum);
-            var init = GenerateInitFiles(declarations, declModuleDict);
+            var init = GenerateInitFiles(declarations);
 
             return types.Concat(enums).Concat(init).ToList();
         }
 
-        private static List<FileInfo> GenerateInitFiles(List<IDecl> declarations, Dictionary<string, string> declModuleDict)
+        private static List<FileInfo> GenerateInitFiles(List<IDecl> declarations)
         {
             Dictionary<string, List<string>> packageImports = new Dictionary<string, List<string>>();
 
@@ -51,25 +84,24 @@ namespace DataCentric.Cli
 
             foreach (var decl in enumDecls)
             {
-                string moduleImport = declModuleDict[decl.Module.ModuleName + "." + decl.Name];
-                int indexOf = moduleImport.IndexOf('.');
-                var package = moduleImport.Substring(0, indexOf);
+                var package = PyExtensions.GetPackage(decl);
                 if (!packageImports.ContainsKey(package))
                     packageImports[package] = new List<string>();
-                packageImports[package].Add($"from {moduleImport} import {decl.Name}");
+
+                packageImports[package].Add($"from {decl.Category} import {decl.Name}");
             }
 
             foreach (var decl in typeDecls)
             {
-                string moduleImport = declModuleDict[decl.Module.ModuleName + "." + decl.Name];
-                int indexOf = moduleImport.IndexOf('.');
-                var package = moduleImport.Substring(0, indexOf);
+                var package = PyExtensions.GetPackage(decl);
                 if (!packageImports.ContainsKey(package))
                     packageImports[package] = new List<string>();
+
+                // Two classes are imported in case of first children of record
                 if (decl.IsRecord && decl.Inherit == null)
-                    packageImports[package].Add($"from {moduleImport} import {decl.Name}, {decl.Name}Key");
+                    packageImports[package].Add($"from {decl.Category} import {decl.Name}, {decl.Name}Key");
                 else
-                    packageImports[package].Add($"from {moduleImport} import {decl.Name}");
+                    packageImports[package].Add($"from {decl.Category} import {decl.Name}");
             }
 
             var result = new List<FileInfo>();
@@ -87,13 +119,18 @@ namespace DataCentric.Cli
             return result;
         }
 
-        private static FileInfo ConvertType(TypeDecl decl, Dictionary<string, string> declModuleDict)
+        private static FileInfo ConvertType(TypeDecl decl, List<IDecl> declarations)
         {
+            // Decompose package to folder and file name.
+            int dotIndex = decl.Category.LastIndexOf('.');
+            string fileName = $"{decl.Category.Substring(dotIndex+1)}.py";
+            string folderName = decl.Category.Substring(0,dotIndex).Replace('.', '/');
+
             var dataFile = new FileInfo
             {
-                Content = PythonRecordBuilder.Build(decl, declModuleDict).AppendCopyright(decl.Category),
-                FileName = $"{decl.Name.Underscore()}.py",
-                FolderName = decl.Category?.Underscore().Replace('.', '/')
+                Content = PythonRecordBuilder.Build(decl, declarations).AppendCopyright(decl),
+                FileName = fileName,
+                FolderName = folderName
             };
 
             return dataFile;
@@ -101,18 +138,25 @@ namespace DataCentric.Cli
 
         private static FileInfo ConvertEnum(EnumDecl decl)
         {
+            // Decompose package to folder and file name.
+            int dotIndex = decl.Category.LastIndexOf('.');
+            string fileName = $"{decl.Category.Substring(dotIndex+1)}.py";
+            string folderName = decl.Category.Substring(0,dotIndex).Replace('.', '/');
+
             var enumFile = new FileInfo
             {
-                Content = PythonEnumBuilder.Build(decl).AppendCopyright(decl.Category),
-                FileName = $"{decl.Name.Underscore()}.py",
-                FolderName = decl.Category?.Underscore().Replace('.', '/')
+                Content = PythonEnumBuilder.Build(decl).AppendCopyright(decl),
+                FileName = fileName,
+                FolderName = folderName
             };
 
             return enumFile;
         }
 
-        private static string AppendCopyright(this string input, string category)
+        private static string AppendCopyright(this string input, IDecl declaration)
         {
+            string package = PyExtensions.GetPackage(declaration);
+
             string dcCopyright = @"# Copyright (C) 2013-present The DataCentric Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the ""License"");
@@ -129,15 +173,11 @@ namespace DataCentric.Cli
 
 ";
 
-            if (category == null)
-            {
-                return "# Copyright not specified";
-            }
-            else if (category.StartsWith("Datacentric"))
+            if (package == "datacentric")
             {
                 return dcCopyright + input;
             }
-            else throw new Exception($"Copyright header is not specified for module {category}.");
+            else throw new Exception($"Copyright header is not specified for module {package}.");
         }
     }
 }

@@ -56,6 +56,7 @@ namespace DataCentric.Cli
         [XmlElement]
         public TypeKind? Kind { get; set; }
 
+        /// <summary>Indicates if type is derived from Record.</summary>
         public bool IsRecord { get; set; }
 
         /// <summary>Parent type reference.</summary>

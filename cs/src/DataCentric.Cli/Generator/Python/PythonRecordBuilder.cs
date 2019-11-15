@@ -21,32 +21,31 @@ using Humanizer;
 
 namespace DataCentric.Cli
 {
+    /// <summary>
+    /// Builder for generated python classes.
+    /// </summary>
     public static class PythonRecordBuilder
     {
-        public static string Build(TypeDecl decl, Dictionary<string, string> declPathDict)
+        /// <summary>
+        /// Generate python classes from declaration.
+        /// </summary>
+        public static string Build(TypeDecl decl, List<IDecl> declarations)
         {
             var writer = new CodeWriter();
+
+            string name = decl.Name;
 
             // Determine if we are inside datacentric package
             // based on module name. This affects the imports
             // and namespace use.
-            string name = decl.Name;
-            bool insideDc = decl.Module.ModuleName == "DataCentric";
+            bool insideDc = PyExtensions.GetPackage(decl) == "datacentric";
 
             // If not generating for DataCentric package, use dc. namespace
             // in front of datacentric types, otherwise use no prefix
             string dcNamespacePrefix = insideDc ? "" : "dc.";
 
-            // Full package name and short namespace of the parent class,
-            // or null if there is no parent
-            bool parentClassInDifferentModule =
-                decl.Inherit != null && decl.Inherit.Module.ModuleName != decl.Module.ModuleName;
-            string parentClassNamespace = parentClassInDifferentModule ?
-                PythonImportsBuilder.GetPythonNamespace(decl.Inherit.Module.ModuleName) : null;
-            string parentClassNamespacePrefix = parentClassInDifferentModule ?
-                parentClassNamespace + "." : "";
 
-            PythonImportsBuilder.WriteImports(decl, declPathDict, writer);
+            PythonImportsBuilder.WriteImports(decl, declarations, writer);
 
             writer.AppendNewLineWithoutIndent();
             writer.AppendNewLineWithoutIndent();
@@ -69,7 +68,8 @@ namespace DataCentric.Cli
                 writer.AppendLine($"__slots__ = ({keySlots})");
                 writer.AppendNewLineWithoutIndent();
 
-                foreach (var element in keyElements) writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)}");
+                foreach (var element in keyElements)
+                    writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)}");
                 writer.AppendNewLineWithoutIndent();
 
                 writer.AppendLine("def __init__(self):");
@@ -92,14 +92,20 @@ namespace DataCentric.Cli
                 writer.AppendNewLineWithoutIndent();
             }
 
-            string abstractBase = "";
-            if (decl.Kind == TypeKind.Abstract)
-                abstractBase = ", ABC";
+            string abstractBase = decl.Kind == TypeKind.Abstract ? ", ABC" : "";
 
             if (decl.Keys.Any())
                 writer.AppendLine($"class {name}({dcNamespacePrefix}TypedRecord[{name}Key]{abstractBase}):");
             else if (decl.Inherit != null)
+            {
+                // Full package name and short namespace of the parent class,
+                // or null if there is no parent
+                bool parentClassInDifferentModule = !PyExtensions.IsPackageEquals(decl, decl.Inherit);
+                string parentPackage = PyExtensions.GetPackage(decl.Inherit);
+                string parentClassNamespacePrefix =
+                    parentClassInDifferentModule ? PyExtensions.GetAlias(parentPackage) + "." : "";
                 writer.AppendLine($"class {name}({parentClassNamespacePrefix}{decl.Inherit.Name}{abstractBase}):");
+            }
             else
                 writer.AppendLine($"class {name}({dcNamespacePrefix}Data{abstractBase}):");
 
@@ -114,7 +120,8 @@ namespace DataCentric.Cli
             writer.AppendLine($"__slots__ = ({slots})");
             writer.AppendNewLineWithoutIndent();
 
-            foreach (var element in decl.Elements) writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)}");
+            foreach (var element in decl.Elements)
+                writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)}");
             writer.AppendNewLineWithoutIndent();
 
             // Init start
@@ -131,6 +138,7 @@ namespace DataCentric.Cli
                 if (decl.Elements.IndexOf(element) != decl.Elements.Count - 1)
                     writer.AppendNewLineWithoutIndent();
             }
+
             // Init end
             writer.PopIndent();
 
@@ -150,7 +158,7 @@ namespace DataCentric.Cli
         {
             bool HasImplement(HandlerDeclareDecl declare)
             {
-                return decl.Implement?.Handlers.FirstOrDefault(t=>t.Name == declare.Name) == null;
+                return decl.Implement?.Handlers.FirstOrDefault(t => t.Name == declare.Name) == null;
             }
 
             var declarations = decl.Declare.Handlers;
@@ -182,37 +190,33 @@ namespace DataCentric.Cli
         {
             if (parameter.Value != null)
             {
-                bool insideDc = decl.Module.ModuleName == "DataCentric";
-                var result = GetValue(insideDc, parameter.Value);
-                if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
-                return result;
+                bool insideDc = PyExtensions.GetPackage(decl) == "datacentric";
+                string result = GetValue(insideDc, parameter.Value);
+                return parameter.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
             else if (parameter.Data != null)
             {
-                string paramNamespace = parameter.Data.Module.ModuleName != decl.Module.ModuleName
-                    ? PythonImportsBuilder.GetPythonNamespace(parameter.Data.Module.ModuleName) + "."
+                string paramNamespace = !PyExtensions.IsPackageEquals(decl, parameter.Data)
+                    ? PyExtensions.GetAlias(parameter.Data) + "."
                     : "";
-                var result = $"Optional[{paramNamespace}{parameter.Data.Name}]";
-                if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
-                return result;
+                string result = $"Optional[{paramNamespace}{parameter.Data.Name}]";
+                return parameter.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
             else if (parameter.Key != null)
             {
-                string paramNamespace = parameter.Key.Module.ModuleName != decl.Module.ModuleName
-                    ? PythonImportsBuilder.GetPythonNamespace(parameter.Key.Module.ModuleName) + "."
+                var paramNamespace = !PyExtensions.IsPackageEquals(decl, parameter.Key)
+                    ? PyExtensions.GetAlias(parameter.Key) + "."
                     : "";
                 var result = $"Optional[{paramNamespace}{parameter.Key.Name}Key]";
-                if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
-                return result;
+                return parameter.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
             else if (parameter.Enum != null)
             {
-                string paramNamespace = parameter.Enum.Module.ModuleName != decl.Module.ModuleName
-                    ? PythonImportsBuilder.GetPythonNamespace(parameter.Enum.Module.ModuleName) + "."
+                string paramNamespace = !PyExtensions.IsPackageEquals(decl, parameter.Enum)
+                    ? PyExtensions.GetAlias(parameter.Enum) + "."
                     : "";
-                var result = $"Optional[{paramNamespace}{parameter.Enum.Name}]";
-                if (parameter.Vector == YesNo.Y) result = $"List[{result}]";
-                return result;
+                string result = $"Optional[{paramNamespace}{parameter.Enum.Name}]";
+                return parameter.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
             else throw new ArgumentException("Can't deduct type");
         }
@@ -221,42 +225,35 @@ namespace DataCentric.Cli
         {
             if (element.Value != null)
             {
-                bool insideDc = decl.Module.ModuleName == "DataCentric";
+                bool insideDc = PyExtensions.GetPackage(decl) == "datacentric";
                 string result = GetValue(insideDc, element.Value);
                 return element.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
-
-            if (element.Data != null)
+            else if (element.Data != null)
             {
-                string paramNamespace = element.Data.Module.ModuleName != decl.Module.ModuleName
-                                            ? PythonImportsBuilder.GetPythonNamespace(element.Data.Module.ModuleName) + "."
-                                            : "";
-                var result = $"Optional[{paramNamespace}{element.Data.Name}]";
-                if (element.Vector == YesNo.Y) result = $"List[{result}]";
-                return result;
+                string paramNamespace = !PyExtensions.IsPackageEquals(decl, element.Data)
+                    ? PyExtensions.GetAlias(element.Data) + "."
+                    : "";
+                string result = $"Optional[{paramNamespace}{element.Data.Name}]";
+                return element.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
-
-            if (element.Key != null)
+            else if (element.Key != null)
             {
-                string paramNamespace = element.Key.Module.ModuleName != decl.Module.ModuleName
-                                            ? PythonImportsBuilder.GetPythonNamespace(element.Key.Module.ModuleName) + "."
-                                            : "";
+                var paramNamespace = !PyExtensions.IsPackageEquals(decl, element.Key)
+                    ? PyExtensions.GetAlias(element.Key) + "."
+                    : "";
                 var result = $"Optional[{paramNamespace}{element.Key.Name}Key]";
-                if (element.Vector == YesNo.Y) result = $"List[{result}]";
-                return result;
+                return element.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
-
-            if (element.Enum != null)
+            else if (element.Enum != null)
             {
-                string paramNamespace = element.Enum.Module.ModuleName != decl.Module.ModuleName
-                                            ? PythonImportsBuilder.GetPythonNamespace(element.Enum.Module.ModuleName) + "."
-                                            : "";
-                var result = $"Optional[{paramNamespace}{element.Enum.Name}]";
-                if (element.Vector == YesNo.Y) result = $"List[{result}]";
-                return result;
+                string paramNamespace = !PyExtensions.IsPackageEquals(decl, element.Enum)
+                    ? PyExtensions.GetAlias(element.Enum) + "."
+                    : "";
+                string result = $"Optional[{paramNamespace}{element.Enum.Name}]";
+                return element.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
-
-            throw new ArgumentException("Can't deduct type");
+            else throw new ArgumentException("Can't deduct type");
         }
 
         private static string GetValue(bool insideDc, ValueDecl valueDecl)

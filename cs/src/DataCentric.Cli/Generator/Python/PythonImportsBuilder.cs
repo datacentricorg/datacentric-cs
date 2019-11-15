@@ -21,9 +21,15 @@ using Humanizer;
 
 namespace DataCentric.Cli
 {
+    /// <summary>
+    /// Provides import statements for generated classes.
+    /// </summary>
     public static class PythonImportsBuilder
     {
-        public static void WriteImports(TypeDecl decl, Dictionary<string, string> declPathDict, CodeWriter writer)
+        /// <summary>
+        /// Add import statements for given declaration.
+        /// </summary>
+        public static void WriteImports(TypeDecl decl, List<IDecl> declarations, CodeWriter writer)
         {
             // If type is abstract - ABC import is needed
             if (decl.Kind == TypeKind.Abstract)
@@ -60,62 +66,23 @@ namespace DataCentric.Cli
             else if (hasOptional)
                 writer.AppendLine("from typing import Optional");
 
-            bool insideDc = decl.Module.ModuleName == "DataCentric";
+            bool insideDc = PyExtensions.GetPackage(decl) == "datacentric";
 
-            bool parentClassInDifferentModule =
-                decl.Inherit != null && decl.Inherit.Module.ModuleName != decl.Module.ModuleName;
-            string parentClassPackage = parentClassInDifferentModule
-                                            ? GetPythonPackage(decl.Inherit.Module.ModuleName) : null;
-            string parentClassNamespace = parentClassInDifferentModule
-                                              ? GetPythonNamespace(decl.Inherit.Module.ModuleName) : null;
+            List<string> packagesToImport = new List<string>();
+            List<string> individualImports = new List<string>();
 
-            // Import parent class package as its namespace, or if inside datacentric,
+            // Import parent class package as its namespace, or if inside the same package,
             // import individual class instead
             if (decl.Inherit != null)
             {
-                if (insideDc)
+                if (PyExtensions.IsPackageEquals(decl, decl.Inherit))
                 {
-                    // Import parent package namespace unless it is the same as
-                    // the namespace for the class itself
-                    if (decl.Module.ModuleName == decl.Inherit.Module.ModuleName)
-                    {
-                        // Parent class name and filename based on converting
-                        // class name to snake case
-                        string parentClassName = decl.Inherit.Name;
-                        string key = decl.Inherit.Module.ModuleName + "." + decl.Inherit.Name;
-                        string parentPythonFileName = declPathDict[key];
-
-                        // Import individual parent class if package namespace is
-                        // the same as parent class namespace. Use ? as the folder
-                        // is unknown, this will be corrected after the generation
-                        writer.AppendLine($"from {parentPythonFileName} import {parentClassName}");
-                    }
-                    else
-                        throw new Exception("When generating code for the datacentric package, " +
-                                            "parent packages should not be managed via a declaration.");
+                    IDecl parentDecl = declarations.FindByKey(decl.Inherit);
+                    individualImports.Add($"from {parentDecl.Category} import {decl.Inherit.Name}");
                 }
                 else
                 {
-                    // Import parent package namespace unless it is the same as
-                    // the namespace for the class itself
-                    if (decl.Module.ModuleName == decl.Inherit.Module.ModuleName)
-                    {
-                        // Parent class name and filename based on converting
-                        // class name to snake case
-                        string parentClassName = decl.Inherit.Name;
-                        string key = decl.Inherit.Module.ModuleName + "." + decl.Inherit.Name;
-                        string parentPythonFileName = declPathDict[key];
-
-                        // Import individual parent class if package namespace is
-                        // the same as parent class namespace. Use ? as the folder
-                        // is unknown, this will be corrected after the generation
-                        writer.AppendLine($"from {parentPythonFileName} import {parentClassName}");
-                    }
-                    else
-                    {
-                        // Otherwise import the entire package of the parent class
-                        writer.AppendLine($"import {parentClassPackage} as {parentClassNamespace}");
-                    }
+                    packagesToImport.Add(PyExtensions.GetPackage(decl.Inherit));
                 }
             }
             // Import datacentric package as dc, or if inside datacentric,
@@ -124,66 +91,68 @@ namespace DataCentric.Cli
             {
                 if (insideDc)
                 {
-                    writer.AppendLine("from datacentric.storage.typed_key import TypedKey");
-                    writer.AppendLine("from datacentric.storage.typed_record import TypedRecord");
+                    individualImports.Add("from datacentric.storage.typed_key import TypedKey");
+                    individualImports.Add("from datacentric.storage.typed_record import TypedRecord");
                 }
                 else
                 {
-                    writer.AppendLine("import datacentric as dc");
+                    packagesToImport.Add("datacentric");
                 }
             }
+            // First child class of Data
             else
             {
                 if (insideDc)
                 {
-                    writer.AppendLine("from datacentric.storage.data import Data");
+                    individualImports.Add("from datacentric.storage.data import Data");
                 }
                 else
                 {
-                    writer.AppendLine("import datacentric as dc");
+                    packagesToImport.Add("datacentric");
                 }
             }
 
-            var samePackageData = decl.Elements
-                                      .Where(e => e.Data != null &&
-                                                  e.Data.Module.ModuleName == decl.Module.ModuleName)
-                                      .GroupBy(e => e.Data.Name)
-                                      .Select(g => g.First().Data)
-                                      .ToList();
-
-            foreach (var dataElement in samePackageData)
+            foreach (var data in decl.Elements.Where(d => d.Data != null).Select(d => d.Data))
             {
-                string key = dataElement.Module.ModuleName + "." + dataElement.Name;
-                string elementModule = declPathDict[key];
-                writer.AppendLine($"from {elementModule} import {dataElement.Name}");
+                if (PyExtensions.IsPackageEquals(decl, data))
+                {
+                    IDecl dataDecl = declarations.FindByKey(data);
+                    individualImports.Add($"from {dataDecl.Category} import {data.Name}");
+                }
+                else
+                    packagesToImport.Add(PyExtensions.GetPackage(data));
+            }
+            
+            foreach (var key in decl.Elements.Where(d => d.Key != null).Select(d => d.Key))
+            {
+                if (PyExtensions.IsPackageEquals(decl, key))
+                {
+                    IDecl keyDecl = declarations.FindByKey(key);
+                    individualImports.Add($"from {keyDecl.Category} import {key.Name}Key");
+                }
+                else
+                    packagesToImport.Add(PyExtensions.GetPackage(key));
             }
 
-            var samePackageKeys = decl.Elements
-                                      .Where(e => e.Key != null &&
-                                                  e.Key.Module.ModuleName == decl.Module.ModuleName)
-                                      .GroupBy(e => e.Key.Name)
-                                      .Select(g => g.First().Key)
-                                      .ToList();
-
-            foreach (var element in samePackageKeys)
+            foreach (var enumElement in decl.Elements.Where(d => d.Enum != null).Select(d => d.Enum))
             {
-                string key = element.Module.ModuleName + "." + element.Name;
-                string elementModule = declPathDict[key];
-                writer.AppendLine($"from {elementModule} import {element.Name}Key");
+                if (PyExtensions.IsPackageEquals(decl, enumElement))
+                {
+                    IDecl enumDecl = declarations.FindByKey(enumElement);
+                    individualImports.Add($"from {enumDecl.Category} import {enumElement.Name}");
+                }
+                else
+                    packagesToImport.Add(PyExtensions.GetPackage(enumElement));
             }
 
-            var samePackageEnums = decl.Elements
-                                      .Where(e => e.Enum != null &&
-                                                  e.Enum.Module.ModuleName == decl.Module.ModuleName)
-                                      .GroupBy(e => e.Enum.Name)
-                                      .Select(g => g.First().Enum)
-                                      .ToList();
-
-            foreach (var element in samePackageEnums)
+            foreach (var package in packagesToImport.Distinct())
             {
-                string key = element.Module.ModuleName + "." + element.Name;
-                string elementModule = declPathDict[key];
-                writer.AppendLine($"from {elementModule} import {element.Name}");
+                writer.AppendLine($"import {package} as {PyExtensions.GetAlias(package)}");
+            }
+
+            foreach (var import in individualImports.Distinct())
+            {
+                writer.AppendLine(import);
             }
 
             // Import date-time classes
@@ -205,26 +174,6 @@ namespace DataCentric.Cli
                     writer.AppendLine("from datacentric.date_time.local_minute import LocalMinute");
                 if (atomicElements.Contains(AtomicType.Instant) || atomicElements.Contains(AtomicType.NullableInstant))
                     writer.AppendLine("from datacentric.date_time.instant import Instant");
-            }
-        }
-
-        public static string GetPythonPackage(string moduleName)
-        {
-            switch (moduleName)
-            {
-                case "DataCentric": return "datacentric";
-                case "Terra":       return "terra";
-                default:            return "unknown_module"; // TODO - resolve all and raise an error if not found
-            }
-        }
-
-        public static string GetPythonNamespace(string moduleName)
-        {
-            switch (moduleName)
-            {
-                case "DataCentric": return "dc";
-                case "Terra":       return "tr";
-                default:            return "unknown_module"; // TODO - resolve all and raise an error if not found
             }
         }
     }

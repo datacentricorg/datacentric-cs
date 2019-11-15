@@ -18,8 +18,14 @@ using Humanizer;
 
 namespace DataCentric.Cli
 {
+    /// <summary>
+    /// Builder for generated python enum.
+    /// </summary>
     public static class PythonEnumBuilder
     {
+        /// <summary>
+        /// Generate python enum from declaration.
+        /// </summary>
         public static string Build(EnumDecl decl)
         {
             var writer = new CodeWriter();

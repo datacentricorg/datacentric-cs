@@ -71,15 +71,6 @@ namespace DataCentric.Cli.Test
                         .Select(type => DeclarationConvertor.ToDecl(type, docNavigator, projNavigator)));
                 }
 
-                foreach (var decl in declarations)
-                {
-                    if (decl.Category != null && decl.Category.StartsWith("DataCentric"))
-                    {
-                        decl.Category = decl.Category.TrimStart("DataCentric");
-                        decl.Category = "Datacentric" + decl.Category;
-                    }
-                }
-
                 var converted = DeclarationToPythonConverter.ConvertSet(declarations);
 
                 var result = new Dictionary<string, string>();
