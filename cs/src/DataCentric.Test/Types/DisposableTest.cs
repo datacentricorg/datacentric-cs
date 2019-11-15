@@ -91,14 +91,14 @@ namespace DataCentric.Test
         }
     }
 
-    /// <summary>Unit tests for Disposable.</summary>
+    /// <summary>Unit test for Disposable.</summary>
     public class DisposableTest
     {
         /// <summary>Test disposing resources via the ``using'' clause.</summary>
         [Fact]
         public void Smoke()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 // Base class by its own reference
                 using (DisposableTestBaseSample obj = new DisposableTestBaseSample(context)) { }

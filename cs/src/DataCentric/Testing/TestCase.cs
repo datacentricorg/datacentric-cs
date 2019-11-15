@@ -30,7 +30,7 @@ namespace DataCentric
     /// environment but also on a deployed version of the application where
     /// access to the xUnit test runner is not available.
     /// </summary>
-    public abstract class TestCase : TypedRecord<TestCaseKey, TestCase>
+    public abstract class UnitTest : TypedRecord<UnitTestKey, UnitTest>
     {
         /// <summary>
         /// Unique test name.
@@ -39,7 +39,7 @@ namespace DataCentric
         /// in the constructor of this class.
         /// </summary>
         [BsonRequired]
-        public string TestCaseName { get; set; }
+        public string TestName { get; set; }
 
         /// <summary>
         /// Test complexity level.
@@ -55,11 +55,11 @@ namespace DataCentric
         /// <summary>
         /// The constructor assigns test name.
         /// </summary>
-        public TestCase()
+        public UnitTest()
         {
             // This element is set to the fully qualified test class name
             // in the Init(context) method of the base class.
-            TestCaseName = GetType().FullName;
+            TestName = GetType().FullName;
         }
 
         //--- METHODS
@@ -81,7 +81,7 @@ namespace DataCentric
 
             // This element is set to the fully qualified test class name
             // in the Init(context) method of the base class.
-            TestCaseName = GetType().FullName;
+            TestName = GetType().FullName;
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace DataCentric
         /// is created depends on how the test is invoked.
         ///
         /// When invoked inside xUnit test runner, Context will be null
-        /// and a new instance of TestCaseContext will be created.
+        /// and a new copy of unit test runner will be created.
         ///
         /// When invoked inside DataCentric, Init(context) will be called
         /// before this method and will set Context. This method will then
@@ -104,7 +104,7 @@ namespace DataCentric
         {
             if (Context == null)
             {
-                Context result = new TemporalMongoTestCaseContext(this, methodName, sourceFilePath);
+                Context result = new TemporalMongoUnitTestContext(this, methodName, sourceFilePath);
                 return result;
             }
             else

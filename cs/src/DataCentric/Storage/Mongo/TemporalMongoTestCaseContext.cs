@@ -20,11 +20,11 @@ using System.Runtime.CompilerServices;
 namespace DataCentric
 {
     /// <summary>
-    /// Specialization of MongoTestCaseContext for TemporalMongoDataSource.
+    /// Specialization of MongoUnitTestContext for TemporalMongoDataSource.
     ///
-    /// MongoTestCaseContext is the context for use in test fixtures that
+    /// MongoUnitTestContext is the context for use in test fixtures that
     /// require a data source, parameterized by data source type.
-    /// It extends TestCaseContext by creating an empty test
+    /// It extends UnitTestContext by creating an empty test
     /// database specific to the test method, and deleting
     /// it after the test exits. The context creates Common
     /// dataset in the database and assigns its TemporalId to
@@ -34,18 +34,18 @@ namespace DataCentric
     /// after the text exits. This data will be cleared on the
     /// next launch of the test.
     ///
-    /// For tests that do not require a data source, use TestCaseContext.
+    /// For tests that do not require a data source, use UnitTestContext.
     /// </summary>
-    public class TemporalMongoTestCaseContext : MongoTestCaseContext<TemporalMongoDataSource>
+    public class TemporalMongoUnitTestContext : MongoUnitTestContext<TemporalMongoDataSource>
     {
         /// <summary>
-        /// Test case context for the specified object for the Mongo
+        /// Unit test context for the specified object for the Mongo
         /// server running on the default port of localhost.
         ///
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
         /// </summary>
-        public TemporalMongoTestCaseContext(
+        public TemporalMongoUnitTestContext(
             object obj,
             [CallerMemberName] string methodName = null,
             [CallerFilePath] string sourceFilePath = null)
@@ -55,12 +55,12 @@ namespace DataCentric
         }
 
         /// <summary>
-        /// Test case context for the specified object and Mongo server URI.
+        /// Unit test context for the specified object and Mongo server URI.
         ///
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
         /// </summary>
-        public TemporalMongoTestCaseContext( // TODO - move to a separate class
+        public TemporalMongoUnitTestContext( // TODO - move to a separate class
             object classInstance,
             MongoServerKey mongoServerKey,
             [CallerMemberName] string methodName = null,

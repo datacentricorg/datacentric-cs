@@ -23,8 +23,8 @@ using DataCentric;
 
 namespace DataCentric.Test
 {
-    /// <summary>Unit tests for key serialization in Mongo 2.1 format.</summary>
-    public class MongoKeyTest : TestCase
+    /// <summary>Unit test for key serialization in Mongo 2.1 format.</summary>
+    public class MongoKeyTest : UnitTest
     {
         /// <summary>>Key class that has all of the permitted non-nullable key elements included.</summary>
         [Fact]

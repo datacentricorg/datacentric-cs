@@ -28,7 +28,7 @@ namespace DataCentric.Test
         [Fact]
         public void GenerateRandomStrings()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 // Two short strings, seed 0
                 List<string> result1 = TextUtil.GenerateRandomStrings(2, 3, 0);

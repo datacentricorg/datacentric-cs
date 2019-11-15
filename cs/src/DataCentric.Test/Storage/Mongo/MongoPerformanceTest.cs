@@ -27,7 +27,7 @@ using MongoDB.Driver.Linq;
 namespace DataCentric.Test
 {
     /// <summary>Unit tests for the native functionality of the MongoDB driver.</summary>
-    public class MongoPerformanceTest : TestCase
+    public class MongoPerformanceTest : UnitTest
     {
         private static int recordCount_ = 10; // 300_000;
         private static int dataSetCount_ = 2; //10;

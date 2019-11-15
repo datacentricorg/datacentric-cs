@@ -28,7 +28,7 @@ namespace DataCentric.Test
         [Fact]
         public void Empty()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 var empty = new Instant();
                 context.Log.Assert(empty == InstantUtil.Empty, "empty == InstantUtil.Empty");
@@ -42,7 +42,7 @@ namespace DataCentric.Test
         [Fact]
         public void DetectWhole()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 context.Log.Assert(InstantUtil.Utc(2003, 5, 1, 10, 15, 30).IsMillisecond(), "Whole milliseconds");
                 context.Log.Assert(!InstantUtil.Utc(2003, 5, 1, 10, 15, 30).PlusNanoseconds(100000).IsMillisecond(), "Fractional milliseconds");
@@ -57,7 +57,7 @@ namespace DataCentric.Test
         [Fact]
         public void Roundtrip()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 VerifyRoundtrip(context, new LocalDateTime(2003, 5, 1, 10, 15, 30).ToInstant(DateTimeZone.Utc));
                 VerifyRoundtrip(context, new LocalDateTime(2003, 5, 1, 10, 15, 30, 5).ToInstant(DateTimeZone.Utc));

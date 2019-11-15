@@ -25,13 +25,13 @@ namespace DataCentric
     /// <summary>
     /// Context for use in test fixtures that do not require MongoDB.
     ///
-    /// It extends TestCaseContext with approval test functionality.
+    /// It extends UnitTestContext with approval test functionality.
     /// Attempting to access DataSource using this context will cause
     /// an error.
     ///
     /// For tests that require MongoDB, use IDataTestDataContext.
     /// </summary>
-    public class TestCaseContext : Context
+    public class UnitTestContext : Context
     {
         /// <summary>
         /// Create with class name, method name, and source file path.
@@ -40,15 +40,15 @@ namespace DataCentric
         /// constructor, the latter two arguments are provided by
         /// the compiler.
         /// </summary>
-        public TestCaseContext(
+        public UnitTestContext(
             object classInstance,
             [CallerMemberName] string methodName = null,
             [CallerFilePath] string sourceFilePath = null)
         {
             // Check that properties required by the unit test are set
-            if (classInstance == null) throw new Exception("Method name passed to TestCaseContext is null.");
-            if (methodName == null) throw new Exception("Method name passed to TestCaseContext is null.");
-            if (sourceFilePath == null) throw new Exception("Source file path passed to TestCaseContext is null.");
+            if (classInstance == null) throw new Exception("Method name passed to UnitTestContext is null.");
+            if (methodName == null) throw new Exception("Method name passed to UnitTestContext is null.");
+            if (sourceFilePath == null) throw new Exception("Source file path passed to UnitTestContext is null.");
 
             // Split file path into test folder path and source filename
             string testFolderPath = Path.GetDirectoryName(sourceFilePath);

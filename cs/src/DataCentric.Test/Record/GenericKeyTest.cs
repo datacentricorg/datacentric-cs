@@ -28,7 +28,7 @@ namespace DataCentric.Test
         [Fact]
         public void SerializationRoundtrip()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 var key = new GenericKey {Table = "MyTable", Key = "Token1;Token2"};
                 var stringRepresentation = key.ToString();

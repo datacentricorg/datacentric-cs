@@ -28,7 +28,7 @@ namespace DataCentric.Test
         [Fact]
         public void Empty()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 var empty = new LocalDateTime();
                 context.Log.Assert(empty == LocalDateTimeUtil.Empty, "empty == LocalDateTimeUtil.Empty");
@@ -42,7 +42,7 @@ namespace DataCentric.Test
         [Fact]
         public void Roundtrip()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 VerifyRoundtrip(context, new LocalDateTime(2003, 5, 1, 10, 15, 30));
                 VerifyRoundtrip(context, new LocalDateTime(2003, 5, 1, 10, 15, 30, 5));

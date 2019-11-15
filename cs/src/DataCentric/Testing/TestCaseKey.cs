@@ -30,8 +30,8 @@ namespace DataCentric
     /// environment but also on a deployed version of the application where
     /// access to the xUnit test runner is not available.
     /// </summary>
-    [BsonSerializer(typeof(BsonKeySerializer<TestCaseKey>))]
-    public sealed class TestCaseKey : TypedKey<TestCaseKey, TestCase>
+    [BsonSerializer(typeof(BsonKeySerializer<UnitTestKey>))]
+    public sealed class UnitTestKey : TypedKey<UnitTestKey, UnitTest>
     {
         /// <summary>
         /// Unique test name.
@@ -39,6 +39,6 @@ namespace DataCentric
         /// The name is set to the fully qualified test class name
         /// in the constructor of this class.
         /// </summary>
-        public string TestCaseName { get; set; }
+        public string TestName { get; set; }
     }
 }

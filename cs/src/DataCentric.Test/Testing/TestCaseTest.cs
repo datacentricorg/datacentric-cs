@@ -20,14 +20,14 @@ using DataCentric;
 
 namespace DataCentric.Test
 {
-    /// <summary>Unit tests for TestCase.</summary>
-    public class TestCaseTest
+    /// <summary>Test the base class (fixture) for unit tests.</summary>
+    public class FixtureTest
     {
         /// <summary>Unit test of logging.</summary>
         [Fact]
         public void Logging()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 // Warning and Info entries
                 context.Log.Warning("Warning log entry.");
@@ -51,14 +51,14 @@ namespace DataCentric.Test
         [Fact]
         public void NativeException()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 // The test checks that the entry preceding exception is recorded
                 context.Log.Info("Normal status entry preceding exception");
 
                 try
                 {
-                    // Throw exception from the test method
+                    // Exception is not recorded to log in unit test
                     throw new Exception("Test exception message.");
                 }
                 catch (Exception e)

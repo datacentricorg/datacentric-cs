@@ -28,7 +28,7 @@ namespace DataCentric.Test
         [Fact]
         public void EmptyValue()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 context.Log.Assert(IsoDayOfWeek.None.IsEmpty() == true, "None.IsEmpty() == true");
                 context.Log.Assert(IsoDayOfWeek.Monday.IsEmpty() == false, "Monday.IsEmpty() == false");

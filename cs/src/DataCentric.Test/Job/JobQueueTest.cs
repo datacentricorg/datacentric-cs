@@ -23,8 +23,8 @@ using DataCentric;
 
 namespace DataCentric.Test
 {
-    /// <summary>Unit tests for JobQueue.</summary>
-    public class JobQueueTest : TestCase
+    /// <summary>Unit test for JobQueue.</summary>
+    public class JobQueueTest : UnitTest
     {
         public class SampleKey : TypedKey<SampleKey, SampleRecord>
         {

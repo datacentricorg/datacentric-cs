@@ -28,7 +28,7 @@ namespace DataCentric.Test
         [Fact]
         public void Roundtrip()
         {
-            using (var context = new TestCaseContext(this))
+            using (var context = new UnitTestContext(this))
             {
                 VerifyRoundtrip(context, new LocalMinute(0, 0));
                 VerifyRoundtrip(context, new LocalMinute(10, 15));

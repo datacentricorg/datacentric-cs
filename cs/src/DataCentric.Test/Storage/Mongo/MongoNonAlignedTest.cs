@@ -27,7 +27,7 @@ namespace DataCentric.Test
     /// Data type where key elements are not the first in the record, and/or
     /// not in the same order in the record as in the key.
     /// </summary>
-    public class MongoNonAlignedTest : TestCase
+    public class MongoNonAlignedTest : UnitTest
     {
         /// <summary>Smoke test.</summary>
         [Fact]

@@ -22,8 +22,8 @@ using DataCentric;
 
 namespace DataCentric.Test
 {
-    /// <summary>Unit tests for Query.</summary>
-    public class QueryTest : TestCase
+    /// <summary>Unit test for Query.</summary>
+    public class QueryTest : UnitTest
     {
         /// <summary>Query on all permitted nullable element types.</summary>
         [Fact]

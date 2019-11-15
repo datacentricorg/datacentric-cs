@@ -19,16 +19,16 @@ namespace DataCentric.Cli.Test
     /// <summary>
     /// Test generation of Python source code.
     ///
-    /// This unit test is not derived from TestCase because it
+    /// This unit test is not derived from UnitTest record because it
     /// uses CallerFilePath and cannot be invoked as a Handler.
     /// </summary>
-    public class PythonGeneratorTest // TODO - separate test and CLI command
+    public class PythonGeneratorTest
     {
         /// <summary>Smoke test for the generation of Python source code.</summary>
         [Fact]
         public void Smoke()
         {
-            using (var context = new TemporalMongoTestCaseContext(this))
+            using (var context = new TemporalMongoUnitTestContext(this))
             {
                 // Root of the C# source code of the DataCentric module
                 string testFolder = Path.GetDirectoryName(context.CallerFilePath);
