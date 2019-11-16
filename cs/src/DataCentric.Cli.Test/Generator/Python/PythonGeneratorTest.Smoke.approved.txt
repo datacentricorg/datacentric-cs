@@ -355,10 +355,10 @@ Verify: datacentric/job/job_status.py
     # See the License for the specific language governing permissions and
     # limitations under the License.
 
-    from enum import Enum
+    from enum import IntEnum
 
 
-    class JobStatus(Enum):
+    class JobStatus(IntEnum):
         """
         This enum is used to indicate job's progress from its initial Pending
         state through the Running state and ending in one of Completed, Failed,
