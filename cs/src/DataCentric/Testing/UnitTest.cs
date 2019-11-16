@@ -83,14 +83,16 @@ namespace DataCentric
         {
             if (Context == null)
             {
+                // If Context is null, the class is invoked via xUnit
+                // runner and we should create a unit test context
                 Context result = new TemporalMongoUnitTestContext(this, methodName, sourceFilePath);
                 return result;
             }
             else
             {
-                // Context is not null because Init(context) method was previously
-                // called by DataCentric. Create create a new dataset for each test
-                // method.
+                // If Context is not null, this means Init(context) method was previously
+                // called by DataCentric. We will then create a new dataset for each
+                // unit test method
                 throw new NotImplementedException();
             }
         }
