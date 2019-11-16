@@ -19,12 +19,12 @@ using System;
 namespace DataCentric
 {
     /// <summary>
-    /// Test complexity level.
+    /// Unit test complexity level.
     ///
     /// Higher complexity results in more comprehensive testing at
     /// the expect of longer test running times.
     /// </summary>
-    public enum TestComplexity
+    public enum UnitTestComplexity
     {
         /// <summary>Empty</summary>
         Empty,

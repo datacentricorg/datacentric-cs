@@ -23,13 +23,11 @@ using System.Runtime.CompilerServices;
 namespace DataCentric
 {
     /// <summary>
-    /// Context for use in test fixtures that do not require MongoDB.
+    /// Context for use in test fixtures that do not require a data
+    /// source. Attempting to access DataSource property using this
+    /// context will cause an error.
     ///
-    /// It extends UnitTestContext with approval test functionality.
-    /// Attempting to access DataSource using this context will cause
-    /// an error.
-    ///
-    /// For tests that require MongoDB, use IDataTestDataContext.
+    /// This class extends Context with approval test functionality.
     /// </summary>
     public class UnitTestContext : Context
     {
@@ -59,16 +57,22 @@ namespace DataCentric
             if (!sourceFileName.EndsWith(".cs")) throw new Exception($"Source filename '{sourceFileName}' does not end with '.cs'");
             string className = sourceFileName.Substring(0, sourceFileName.Length - 3);
 
-            // Use log file name format assName.MethodName.approved.txt from ApprovalTests.NET.
+            // Use log file name format className.MethodName.approved.txt from ApprovalTests.NET.
             string logFileName = String.Join(".", className, methodName, "approved.txt");
 
             // All properties must be set before initialization is performed
+            // Do not call Init(...) here because they will be initialized by
+            // inside the Context property setter
             OutputFolder = new DiskFolder { FolderPath = testFolderPath };
             Log = new FileLog { LogFilePath = logFileName };
             Progress = new NullProgress();
 
             // Increase log verbosity to Verify from its
-            // default level set in base class Context
+            // default level set in base class Context.
+            //
+            // DO NOT move this to FileLog initialization
+            // as it will get reset when Log.Init(...)
+            // is called by Context.Log setter.
             Log.Verbosity = LogVerbosity.Verify;
         }
     }

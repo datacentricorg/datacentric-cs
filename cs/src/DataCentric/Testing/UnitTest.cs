@@ -33,13 +33,13 @@ namespace DataCentric
     public abstract class UnitTest : TypedRecord<UnitTestKey, UnitTest>
     {
         /// <summary>
-        /// Unique test name.
+        /// Unique unit test name.
         ///
         /// The name is set to the fully qualified test class name
         /// in the constructor of this class.
         /// </summary>
         [BsonRequired]
-        public string TestName { get; set; }
+        public string UnitTestName { get; set; }
 
         /// <summary>
         /// Test complexity level.
@@ -48,18 +48,18 @@ namespace DataCentric
         /// the expect of longer test running times.
         /// </summary>
         [BsonRequired]
-        public TestComplexity? Complexity { get; set; } = TestComplexity.Smoke;
+        public UnitTestComplexity? Complexity { get; set; } = UnitTestComplexity.Smoke;
 
         //--- CONSTRUCTORS
 
         /// <summary>
         /// The constructor assigns test name.
         /// </summary>
-        public UnitTest()
+        protected UnitTest()
         {
             // This element is set to the fully qualified test class name
             // in the Init(context) method of the base class.
-            TestName = GetType().FullName;
+            UnitTestName = GetType().FullName;
         }
 
         //--- METHODS
@@ -81,7 +81,7 @@ namespace DataCentric
 
             // This element is set to the fully qualified test class name
             // in the Init(context) method of the base class.
-            TestName = GetType().FullName;
+            UnitTestName = GetType().FullName;
         }
 
         /// <summary>
