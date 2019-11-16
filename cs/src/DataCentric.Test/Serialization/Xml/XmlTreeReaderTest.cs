@@ -30,7 +30,7 @@ namespace DataCentric.Test
         {
             using (var context = new UnitTestContext(this))
             {
-                string eol = Environment.NewLine;
+                string eol = StringUtil.Eol;
                 string xmlText =
                     "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + eol +
                     "<firstElement attributeOfFirstElement1=\"AttributeValue1\" attributeOfFirstElement2=\"AttributeValue2\">" +

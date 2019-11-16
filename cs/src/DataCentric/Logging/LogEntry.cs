@@ -97,7 +97,7 @@ namespace DataCentric
         /// </summary>
         public override string ToString()
         {
-            string singleLineTitle = Title.Replace(Environment.NewLine, " ");
+            string singleLineTitle = Title.Replace(StringUtil.Eol, " ");
             string result = $"{Verbosity}: {singleLineTitle}";
             return result;
         }

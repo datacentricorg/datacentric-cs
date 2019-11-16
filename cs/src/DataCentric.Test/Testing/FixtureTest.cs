@@ -35,11 +35,11 @@ namespace DataCentric.Test
 
                 // Verify entries
                 context.Log.Verify("Single-line verify message.");
-                context.Log.Verify("Multi-line verify message." + Environment.NewLine + "Second line of message.");
+                context.Log.Verify("Multi-line verify message." + StringUtil.Eol + "Second line of message.");
                 context.Log.Verify("Single-line verify title", "Single-line verify body.");
                 context.Log.Verify(
-                    "Multi-line verify title." + Environment.NewLine + "Second line of title.",
-                    "Multi-line verify body." + Environment.NewLine + "Second line of body.");
+                    "Multi-line verify title." + StringUtil.Eol + "Second line of title.",
+                    "Multi-line verify body." + StringUtil.Eol + "Second line of body.");
 
                 // Asserts
                 context.Log.Assert(true, "Assert when condition is true.");

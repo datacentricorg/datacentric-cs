@@ -365,7 +365,7 @@ namespace DataCentric
         public override string ToString()
         {
             xmlTextWriter_.Flush();
-            string result = Encoding.UTF8.GetString(stream_.ToArray()) + Environment.NewLine;
+            string result = Encoding.UTF8.GetString(stream_.ToArray()) + StringUtil.Eol;
             return result;
         }
     }

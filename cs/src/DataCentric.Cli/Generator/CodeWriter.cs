@@ -44,7 +44,7 @@ namespace DataCentric.Cli
         {
             if (string.IsNullOrWhiteSpace(text)) return;
 
-            var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            var lines = text.Split(new[] { StringUtil.Eol }, StringSplitOptions.None);
             foreach (var line in lines)
             {
                 // Do not add spaces for empty line

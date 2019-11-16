@@ -73,7 +73,7 @@ namespace DataCentric.Cli
             List<XElement> nils = document.Descendants().Where(IsNilElement).ToList();
             foreach (var element in nils) element.Remove();
 
-            return string.Join(Environment.NewLine, document.Declaration, document.ToString());
+            return string.Join(StringUtil.Eol, document.Declaration, document.ToString());
         }
 
         /// <summary>

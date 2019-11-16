@@ -111,7 +111,7 @@ namespace DataCentric.Cli
                 {
                     FileName = "__init__.py",
                     FolderName = pair.Key,
-                    Content = string.Join(Environment.NewLine, pair.Value)
+                    Content = string.Join(StringUtil.Eol, pair.Value)
                 };
                 result.Add(init);
             }

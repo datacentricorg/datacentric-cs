@@ -91,8 +91,8 @@ namespace DataCentric.Cli
             if (value == null)
                 return null;
 
-            List<string> trimmed = value.Split(Environment.NewLine).Select(s => s.Trim(' ', '\t', '\r', '\n')).ToList();
-            return string.Join(Environment.NewLine, trimmed).Trim(' ', '\t', '\r', '\n');
+            List<string> trimmed = value.Split(StringUtil.Eol).Select(s => s.Trim(' ', '\t', '\r', '\n')).ToList();
+            return string.Join(StringUtil.Eol, trimmed).Trim(' ', '\t', '\r', '\n');
         }
     }
 }

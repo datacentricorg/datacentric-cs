@@ -26,18 +26,18 @@ namespace DataCentric.Cli
             if (!comment.HasNonWhiteSpaceValue())
                 return string.Empty;
 
-            comment = comment.Replace("\r\n","\n").Replace("\n", Environment.NewLine).TrimEnd(Environment.NewLine);
+            comment = comment.Replace("\r\n","\n").Replace("\n", StringUtil.Eol).TrimEnd(StringUtil.Eol);
 
             comment = $"{comment}";
 
             var sb = new StringBuilder();
-            var lines = comment.Split(new []{Environment.NewLine}, StringSplitOptions.None);
+            var lines = comment.Split(new []{StringUtil.Eol}, StringSplitOptions.None);
             foreach (var line in lines)
             {
                 sb.AppendLine(string.IsNullOrWhiteSpace(line) ? "///" : $"/// {line}");
             }
 
-            return sb.ToString().TrimEnd(Environment.NewLine);
+            return sb.ToString().TrimEnd(StringUtil.Eol);
         }
 
         public static string PyComment(string comment)
@@ -45,12 +45,12 @@ namespace DataCentric.Cli
             if (!comment.HasNonWhiteSpaceValue())
                 return string.Empty;
 
-            comment = comment.Replace("\r\n", "\n").Replace("\n", Environment.NewLine).TrimEnd(Environment.NewLine);
+            comment = comment.Replace("\r\n", "\n").Replace("\n", StringUtil.Eol).TrimEnd(StringUtil.Eol);
 
-            if (comment.Split(Environment.NewLine).Length < 2)
+            if (comment.Split(StringUtil.Eol).Length < 2)
                 comment = $"\"\"\"{comment}\"\"\"";
             else
-                comment = $"\"\"\"{Environment.NewLine}{comment}{Environment.NewLine}\"\"\"";
+                comment = $"\"\"\"{StringUtil.Eol}{comment}{StringUtil.Eol}\"\"\"";
 
 
             return comment;

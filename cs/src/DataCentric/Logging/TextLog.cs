@@ -98,7 +98,7 @@ namespace DataCentric
             if (logEntry.Verbosity <= Verbosity)
             {
                 // Title should not have line breaks; if found will be replaced by spaces
-                string titleWithNoLineBreaks = logEntry.Title.Replace(Environment.NewLine, " ");
+                string titleWithNoLineBreaks = logEntry.Title.Replace(StringUtil.Eol, " ");
                 string formattedTitle = $"{logEntry.Verbosity}: {titleWithNoLineBreaks}";
                 textWriter_.WriteLine(formattedTitle);
 
