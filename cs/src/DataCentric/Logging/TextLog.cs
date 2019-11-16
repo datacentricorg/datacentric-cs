@@ -27,6 +27,13 @@ namespace DataCentric
     {
         private readonly string indentString_ = new String(' ', 4);
         private readonly string[] lineSeparators_ = new string[] {"\r\n", "\r", "\n"};
+
+        /// <summary>
+        /// Text writer to which log output is directed.
+        ///
+        /// The value of this protected field must be set in derived classes
+        /// before the log is used.
+        /// </summary>
         protected TextWriter textWriter_;
 
         //--- METHODS
@@ -91,8 +98,8 @@ namespace DataCentric
             if (logEntry.Verbosity <= Verbosity)
             {
                 // Title should not have line breaks; if found will be replaced by spaces
-                string titleWithNoSpaces = logEntry.Title.Replace(Environment.NewLine, " ");
-                string formattedTitle = $"{logEntry.Verbosity}: {titleWithNoSpaces}";
+                string titleWithNoLineBreaks = logEntry.Title.Replace(Environment.NewLine, " ");
+                string formattedTitle = $"{logEntry.Verbosity}: {titleWithNoLineBreaks}";
                 textWriter_.WriteLine(formattedTitle);
 
                 // Skip if Description is not specified
