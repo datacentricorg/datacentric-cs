@@ -24,6 +24,12 @@ namespace DataCentric
     /// <summary>Extension methods for ICollection.</summary>
     public static class IListExtensions
     {
+        /// <summary>Returns 0 for null argument, and the length of list otherwise.</summary>
+        public static int GetCount(this IList obj)
+        {
+            return obj != null ? obj.Count : 0;
+        }
+
         /// <summary>Deserialize by reading element from the tree reader.</summary>
         public static void DeserializeFrom(this IList obj, string elementName, ITreeReader reader)
         {
