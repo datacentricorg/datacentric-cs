@@ -30,13 +30,13 @@ namespace DataCentric.Cli
         {
             var writer = new CodeWriter();
 
-            writer.AppendLine("from enum import Enum");
+            writer.AppendLine("from enum import IntEnum");
 
             writer.AppendNewLineWithoutIndent();
             writer.AppendNewLineWithoutIndent();
 
 
-            writer.AppendLine($"class {decl.Name}(Enum):");
+            writer.AppendLine($"class {decl.Name}(IntEnum):");
             writer.PushIndent();
             writer.AppendLines(CommentHelper.PyComment(decl.Comment));
             writer.AppendNewLineWithoutIndent();
