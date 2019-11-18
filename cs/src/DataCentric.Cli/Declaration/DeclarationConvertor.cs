@@ -138,8 +138,8 @@ namespace DataCentric.Cli
                 {
                     declares.Add(ToDeclare(method, navigator));
                 }
-                // Overriden methods are marked with override
-                else if (method.GetBaseDefinition() != method)
+                // Overriden methods are marked with ovveride
+                else if(method.GetBaseDefinition() != method)
                 {
                     // TODO: Temp adding declare to avoid signature search in bases.
                     declares.Add(ToDeclare(method, navigator));
@@ -154,8 +154,8 @@ namespace DataCentric.Cli
             }
 
             // Add method information to declaration
-            if (declares.Any()) decl.Declare = new HandlerDeclareBlockDecl { Handlers = declares };
-            if (implements.Any()) decl.Implement = new HandlerImplementBlockDecl { Handlers = implements };
+            if (declares.Any()) decl.Declare = new HandlerDeclareBlockDecl {Handlers = declares};
+            if (implements.Any()) decl.Implement = new HandlerImplementBlockDecl {Handlers = implements};
 
             List<PropertyInfo> dataProperties = type.GetProperties(PublicInstanceDeclaredFlags)
                                                     .Where(p => IsAllowedType(p.PropertyType))
@@ -286,10 +286,10 @@ namespace DataCentric.Cli
         private static TypeKind? GetKind(this Type type)
         {
             // Kind
-            return type.IsAbstract ? TypeKind.Abstract :
-                   type.IsSealed ? TypeKind.Final :
+            return type.IsAbstract                    ? TypeKind.Abstract :
+                   type.IsSealed                      ? TypeKind.Final :
                    !type.IsSubclassOf(typeof(Record)) ? TypeKind.Element :
-                                                        (TypeKind?)null;
+                                                        (TypeKind?) null;
         }
 
         /// <summary>
@@ -328,8 +328,7 @@ namespace DataCentric.Cli
             {
                 TypeIndex typeIndex = new TypeIndex
                 {
-                    Element = new List<TypeElementIndex>(),
-                    Name = attribute.Name
+                    Element = new List<TypeElementIndex>(), Name = attribute.Name
                 };
 
                 // Decompose string index definition "A, -B" to ordered list of tuples (ElementName,SortOrder): [("A",1), ("B",-1)]
@@ -337,7 +336,7 @@ namespace DataCentric.Cli
                                                   .GetMethod(nameof(IndexElementsAttribute.ParseDefinition),
                                                              BindingFlags.Static | BindingFlags.Public)
                                                  ?.MakeGenericMethod(type);
-                var definition = (List<(string, int)>)parseDefinitionMethod?.Invoke(null, new object[] { attribute.Definition });
+                var definition = (List<(string, int)>) parseDefinitionMethod?.Invoke(null, new object[] {attribute.Definition});
 
                 // Convert decomposed definition to declarations format
                 foreach ((string, int) tuple in definition)
@@ -380,7 +379,7 @@ namespace DataCentric.Cli
                 Label = method.GetLabelFromAttribute(),
                 Comment = method.GetCommentFromAttribute() ?? navigator?.GetXmlComment(method),
                 Hidden = method.IsHidden(),
-                Static = method.IsStatic ? YesNo.Y : (YesNo?)null,
+                Static = method.IsStatic ? YesNo.Y : (YesNo?) null,
                 Params = method.GetParameters().Select(ToHandlerParam).ToList(),
                 Return = method.ReturnType != typeof(void) ? ToReturnType(method.ReturnType) : null
             };
@@ -394,7 +393,7 @@ namespace DataCentric.Cli
             return new HandlerImplementDecl
             {
                 Name = method.Name,
-                Language = new LanguageKey { LanguageName = "cs" }
+                Language = new LanguageKey {LanguageName = "cs"}
             };
         }
 
@@ -436,14 +435,9 @@ namespace DataCentric.Cli
             element.Label = property.GetLabelFromAttribute();
             element.Comment = property.GetCommentFromAttribute() ?? navigator?.GetXmlComment(property);
             element.Viewer = property.GetCustomAttribute<DisplayAttribute>()?.GetGroupName();
-            element.Optional = property.GetCustomAttribute<BsonRequiredAttribute>() == null ? YesNo.Y : (YesNo?)null;
-            element.BsonIgnore = property.GetCustomAttribute<BsonIgnoreAttribute>() != null ? YesNo.Y : (YesNo?)null;
+            element.Optional = property.GetCustomAttribute<BsonRequiredAttribute>() == null ? YesNo.Y : (YesNo?) null;
+            element.BsonIgnore = property.GetCustomAttribute<BsonIgnoreAttribute>() != null ? YesNo.Y : (YesNo?) null;
             element.Hidden = property.IsHidden();
-            element.Category = property.GetCustomAttribute<CategoryAttribute>()?.Category;
-
-            // There is a custom requirement to set default category for Vector elements to "Data"
-            if (element.Category == null && element.Vector == YesNo.Y)
-                element.Category = "Data";
 
             return element;
         }
@@ -483,31 +477,31 @@ namespace DataCentric.Cli
                 typeDecl.Value.Type =
                     typeCode == TypeCode.String ? AtomicType.String :
                     // Basic value types
-                    typeCode == TypeCode.Boolean ? AtomicType.Bool :
+                    typeCode == TypeCode.Boolean  ? AtomicType.Bool :
                     typeCode == TypeCode.DateTime ? AtomicType.DateTime :
-                    typeCode == TypeCode.Double ? AtomicType.Double :
-                    typeCode == TypeCode.Int32 ? AtomicType.Int :
-                    typeCode == TypeCode.Int64 ? AtomicType.Long :
+                    typeCode == TypeCode.Double   ? AtomicType.Double :
+                    typeCode == TypeCode.Int32    ? AtomicType.Int :
+                    typeCode == TypeCode.Int64    ? AtomicType.Long :
                     // Basic nullable value types
-                    type == typeof(bool?) ? AtomicType.NullableBool :
+                    type == typeof(bool?)     ? AtomicType.NullableBool :
                     type == typeof(DateTime?) ? AtomicType.NullableDateTime :
-                    type == typeof(double?) ? AtomicType.NullableDouble :
-                    type == typeof(int?) ? AtomicType.NullableInt :
-                    type == typeof(long?) ? AtomicType.NullableLong :
+                    type == typeof(double?)   ? AtomicType.NullableDouble :
+                    type == typeof(int?)      ? AtomicType.NullableInt :
+                    type == typeof(long?)     ? AtomicType.NullableLong :
                     // Noda types
                     type == typeof(LocalDateTime) ? AtomicType.DateTime :
                     type == typeof(Instant) ? AtomicType.Instant :
-                    type == typeof(LocalDate) ? AtomicType.Date :
-                    type == typeof(LocalTime) ? AtomicType.Time :
-                    type == typeof(LocalMinute) ? AtomicType.Minute :
+                    type == typeof(LocalDate)     ? AtomicType.Date :
+                    type == typeof(LocalTime)     ? AtomicType.Time :
+                    type == typeof(LocalMinute)   ? AtomicType.Minute :
                     // Nullable Noda types
                     type == typeof(LocalDateTime?) ? AtomicType.NullableDateTime :
                     type == typeof(Instant?) ? AtomicType.NullableInstant :
-                    type == typeof(LocalDate?) ? AtomicType.NullableDate :
-                    type == typeof(LocalTime?) ? AtomicType.NullableTime :
-                    type == typeof(LocalMinute?) ? AtomicType.NullableMinute :
+                    type == typeof(LocalDate?)     ? AtomicType.NullableDate :
+                    type == typeof(LocalTime?)     ? AtomicType.NullableTime :
+                    type == typeof(LocalMinute?)   ? AtomicType.NullableMinute :
                     // TemporalId
-                    type == typeof(TemporalId) ? AtomicType.TemporalId :
+                    type == typeof(TemporalId)  ? AtomicType.TemporalId :
                     type == typeof(TemporalId?) ? AtomicType.NullableTemporalId :
                                                 throw new ArgumentException($"Unknown value type: {type.FullName}");
             }
@@ -545,7 +539,7 @@ namespace DataCentric.Cli
             bool isList = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
             bool isArray = type.IsArray;
 
-            return isList || isArray ? YesNo.Y : (YesNo?)null;
+            return isList || isArray ? YesNo.Y : (YesNo?) null;
         }
     }
 }

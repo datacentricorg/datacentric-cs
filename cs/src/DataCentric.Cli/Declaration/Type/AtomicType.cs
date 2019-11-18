@@ -17,7 +17,7 @@ limitations under the License.
 namespace DataCentric.Cli
 {
     /// <summary>List of values and immutable types, including string and binary.</summary>
-    public enum AtomicType // TODO Rename to ValuePropertyType or otherwise avoid name collision with DataCentric.AtomicType
+    public enum AtomicType
     {
         /// <summary>None value is defined.</summary>
         EnumNone = -1,
