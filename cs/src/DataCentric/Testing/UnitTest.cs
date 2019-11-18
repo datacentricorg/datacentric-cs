@@ -57,32 +57,11 @@ namespace DataCentric
         /// </summary>
         protected UnitTest()
         {
-            // This element is set to the fully qualified test class name
-            // in the Init(context) method of the base class.
+            // Set to fully qualified name of the test class
             UnitTestName = GetType().FullName;
         }
 
         //--- METHODS
-
-        /// <summary>
-        /// Set Context property and perform validation of the record's data,
-        /// then initialize any fields or properties that depend on that data.
-        ///
-        /// This method may be called multiple times for the same instance,
-        /// possibly with a different context parameter for each subsequent call.
-        ///
-        /// IMPORTANT - Every override of this method must call base.Init()
-        /// first, and only then execute the rest of the override method's code.
-        /// </summary>
-        public override void Init(Context context)
-        {
-            // Initialize base
-            base.Init(context);
-
-            // This element is set to the fully qualified test class name
-            // in the Init(context) method of the base class.
-            UnitTestName = GetType().FullName;
-        }
 
         /// <summary>
         /// Create a new context for the test method. The way the context
