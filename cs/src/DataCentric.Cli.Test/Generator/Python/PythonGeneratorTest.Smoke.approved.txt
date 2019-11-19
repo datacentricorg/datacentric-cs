@@ -42,9 +42,9 @@ Verify: datacentric/date_time/zone.py
 
         __slots__ = ('zone_name',)
 
-        zone_name: Optional[str]
+        zone_name: str
 
-        def __init__(self):
+        def __init__(self) -> None:
             super().__init__()
 
             self.zone_name = None
@@ -93,9 +93,9 @@ Verify: datacentric/date_time/zone.py
 
         __slots__ = ('zone_name',)
 
-        zone_name: Optional[str]
+        zone_name: str
 
-        def __init__(self):
+        def __init__(self) -> None:
             super().__init__()
 
             self.zone_name = None
@@ -206,7 +206,7 @@ Verify: datacentric/job/job.py
         __slots__ = ('id',)
 
 
-        def __init__(self):
+        def __init__(self) -> None:
             super().__init__()
 
 
@@ -275,15 +275,15 @@ Verify: datacentric/job/job.py
 
         __slots__ = ('queue', 'collection_name', 'record_id', 'method_name', 'param_names', 'param_values', 'prerequisites')
 
-        queue: Optional[JobQueueKey]
-        collection_name: Optional[str]
-        record_id: ObjectId
-        method_name: Optional[str]
-        param_names: List[Optional[str]]
-        param_values: List[Optional[str]]
-        prerequisites: List[Optional[JobKey]]
+        queue: JobQueueKey
+        collection_name: str
+        record_id: Optional[ObjectId]
+        method_name: str
+        param_names: Optional[List[Optional[str]]]
+        param_values: Optional[List[Optional[str]]]
+        prerequisites: Optional[List[Optional[JobKey]]]
 
-        def __init__(self):
+        def __init__(self) -> None:
             super().__init__()
 
             self.queue = None
