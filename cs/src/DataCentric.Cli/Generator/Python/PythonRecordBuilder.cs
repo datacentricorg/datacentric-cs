@@ -226,34 +226,34 @@ namespace DataCentric.Cli
             string GetParamNamespace(TypeDecl declaration, TypeDeclKey key) =>
                 !PyExtensions.IsPackageEquals(declaration, key) ? PyExtensions.GetAlias(key) + "." : "";
 
-            string GetFinalHint(string typeHint, bool isList, bool isOptional) =>
-                isOptional 
-                    ? isList ? $"Optional[List[Optional[{typeHint}]]]" : $"Optional[{typeHint}]"
-                    : isList ? $"List[{typeHint}]" : typeHint;
+            string GetFinalHint(string typeHint) =>
+                element.Optional == YesNo.Y 
+                    ? element.Vector == YesNo.Y ? $"Optional[List[Optional[{typeHint}]]]" : $"Optional[{typeHint}]"
+                    : element.Vector == YesNo.Y ? $"Optional[List[{typeHint}]]" : typeHint;
 
             if (element.Value != null)
             {
                 bool insideDc = PyExtensions.GetPackage(decl) == "datacentric";
                 string hint = GetValue(insideDc, element.Value);
-                return GetFinalHint(hint, element.Vector == YesNo.Y, element.Optional == YesNo.Y);
+                return GetFinalHint(hint);
             }
             else if (element.Data != null)
             {
                 string paramNamespace = GetParamNamespace(decl, element.Data);
                 string hint = $"{paramNamespace}{element.Data.Name}";
-                return GetFinalHint(hint, element.Vector == YesNo.Y, element.Optional == YesNo.Y);
+                return GetFinalHint(hint);
             }
             else if (element.Key != null)
             {
                 string paramNamespace = GetParamNamespace(decl, element.Key);
                 string hint = $"{paramNamespace}{element.Key.Name}Key";
-                return GetFinalHint(hint, element.Vector == YesNo.Y, element.Optional == YesNo.Y);
+                return GetFinalHint(hint);
             }
             else if (element.Enum != null)
             {
                 string paramNamespace = GetParamNamespace(decl, element.Enum);
                 string hint = $"{paramNamespace}{element.Enum.Name}";
-                return GetFinalHint(hint, element.Vector == YesNo.Y, element.Optional == YesNo.Y);
+                return GetFinalHint(hint);
             }
             else throw new ArgumentException("Can't deduct type");
         }
