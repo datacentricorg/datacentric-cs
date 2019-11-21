@@ -138,7 +138,7 @@ namespace DataCentric.Cli
                 {
                     declares.Add(ToDeclare(method, navigator));
                 }
-                // Overriden methods are marked with ovveride
+                // Overriden methods are marked with override
                 else if(method.GetBaseDefinition() != method)
                 {
                     // TODO: Temp adding declare to avoid signature search in bases.
