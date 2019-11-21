@@ -47,7 +47,7 @@ namespace DataCentric.Cli
 
             // Check imports from typing
             if (decl.Elements.Any(e=>e.Vector == YesNo.Y))
-                writer.AppendLine("from typing import List, Optional");
+                writer.AppendLine("from typing import List");
 
             bool insideDc = PyExtensions.GetPackage(decl) == "datacentric";
 
