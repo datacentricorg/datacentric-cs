@@ -31,6 +31,9 @@ namespace DataCentric.Cli
         /// </summary>
         public static void WriteImports(TypeDecl decl, List<IDecl> declarations, CodeWriter writer)
         {
+            // Always import attr module
+            writer.AppendLine("import attr");
+
             // If type is abstract - ABC import is needed
             if (decl.Kind == TypeKind.Abstract)
                 writer.AppendLine("from abc import ABC");

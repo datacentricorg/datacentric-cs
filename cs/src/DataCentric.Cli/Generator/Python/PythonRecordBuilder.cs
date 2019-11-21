@@ -54,46 +54,33 @@ namespace DataCentric.Cli
             {
                 var keyElements = decl.Elements.Where(e => decl.Keys.Contains(e.Name)).ToList();
 
+                writer.AppendLine("@attr.s(slots=True, auto_attribs=True)");
                 writer.AppendLine($"class {name}Key({dcNamespacePrefix}TypedKey['{name}']):");
 
                 // Same comment for the key and for the record
                 writer.PushIndent();
                 writer.AppendLines(CommentHelper.PyComment(decl.Comment));
+
                 writer.AppendNewLineWithoutIndent();
+                if (!keyElements.Any()) writer.AppendLine("pass");
 
-                var keySlots = string.Join(", ", decl.Keys.Select(t => $"'{t.Underscore()}'"));
-                if (decl.Keys.Count == 1)
-                    keySlots = keySlots + ",";
-
-                writer.AppendLine($"__slots__ = ({keySlots})");
-                writer.AppendNewLineWithoutIndent();
-
-                foreach (var element in keyElements)
-                    writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)}");
-                writer.AppendNewLineWithoutIndent();
-
-                writer.AppendLine("def __init__(self) -> None:");
-                writer.PushIndent();
-
-                writer.AppendLine("super().__init__()");
-                writer.AppendNewLineWithoutIndent();
                 foreach (var element in keyElements)
                 {
-                    writer.AppendLine($"self.{element.Name.Underscore()} = None");
+                    writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)} = attr.ib(default=None, kw_only=True{GetMetaData(element)})");
                     writer.AppendLines(CommentHelper.PyComment(element.Comment));
-                    if (keyElements.IndexOf(element) != keyElements.Count - 1)
+                    // Do not add new line after last item
+                    if (element != keyElements.Last())
                         writer.AppendNewLineWithoutIndent();
                 }
 
-                writer.PopIndent();
                 writer.PopIndent();
 
                 writer.AppendNewLineWithoutIndent();
                 writer.AppendNewLineWithoutIndent();
             }
 
+            writer.AppendLine("@attr.s(slots=True, auto_attribs=True)");
             string abstractBase = decl.Kind == TypeKind.Abstract ? ", ABC" : "";
-
             if (decl.Keys.Any())
                 writer.AppendLine($"class {name}({dcNamespacePrefix}TypedRecord[{name}Key]{abstractBase}):");
             else if (decl.Inherit != null)
@@ -112,35 +99,17 @@ namespace DataCentric.Cli
             // Same comment for the key and for the record
             writer.PushIndent();
             writer.AppendLines(CommentHelper.PyComment(decl.Comment));
-            writer.AppendNewLineWithoutIndent();
 
-            var slots = string.Join(", ", decl.Elements.Select(t => $"'{t.Name.Underscore()}'"));
-            if (decl.Elements.Count == 1)
-                slots = slots + ",";
-            writer.AppendLine($"__slots__ = ({slots})");
             writer.AppendNewLineWithoutIndent();
-
-            foreach (var element in decl.Elements)
-                writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)}");
-            writer.AppendNewLineWithoutIndent();
-
-            // Init start
-            writer.AppendLine("def __init__(self) -> None:");
-            writer.PushIndent();
-
-            writer.AppendLine("super().__init__()");
-            writer.AppendNewLineWithoutIndent();
+            if (!decl.Elements.Any()) writer.AppendLine("pass");
 
             foreach (var element in decl.Elements)
             {
-                writer.AppendLine($"self.{element.Name.Underscore()} = None");
+                writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)} = attr.ib(default=None, kw_only=True{GetMetaData(element)})");
                 writer.AppendLines(CommentHelper.PyComment(element.Comment));
-                if (decl.Elements.IndexOf(element) != decl.Elements.Count - 1)
+                if (element != decl.Elements.Last())
                     writer.AppendNewLineWithoutIndent();
             }
-
-            // Init end
-            writer.PopIndent();
 
             if (decl.Declare != null)
             {
@@ -152,6 +121,20 @@ namespace DataCentric.Cli
             writer.PopIndent();
 
             return writer.ToString();
+        }
+
+        private static string GetMetaData(TypeElementDecl element)
+        {
+            var meta = new List<string>();
+            if (element.Optional == YesNo.Y)
+                meta.Add("'optional': True");
+            if (element.Value != null && (element.Value.Type == AtomicType.Long ||
+                                          element.Value.Type == AtomicType.NullableLong))
+                meta.Add("'type': 'long'");
+
+            return meta.Any()
+                ? $", metadata={{{string.Join(", ", meta)}}}"
+                : "";
         }
 
         private static void WriteMethods(TypeDecl decl, CodeWriter writer)
@@ -227,7 +210,7 @@ namespace DataCentric.Cli
                 !PyExtensions.IsPackageEquals(declaration, key) ? PyExtensions.GetAlias(key) + "." : "";
 
             string GetFinalHint(string typeHint) =>
-                element.Optional == YesNo.Y 
+                element.Optional == YesNo.Y
                     ? element.Vector == YesNo.Y ? $"Optional[List[Optional[{typeHint}]]]" : $"Optional[{typeHint}]"
                     : element.Vector == YesNo.Y ? $"Optional[List[{typeHint}]]" : typeHint;
 
