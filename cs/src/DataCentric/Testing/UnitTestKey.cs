@@ -39,6 +39,6 @@ namespace DataCentric
         /// The name is set to the fully qualified test class name
         /// in the constructor of this class.
         /// </summary>
-        public string TestName { get; set; }
+        public string UnitTestName { get; set; }
     }
 }
