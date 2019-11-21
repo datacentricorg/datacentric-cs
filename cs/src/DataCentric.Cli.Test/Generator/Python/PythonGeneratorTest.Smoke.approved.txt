@@ -13,11 +13,12 @@ Verify: datacentric/date_time/zone.py
     # See the License for the specific language governing permissions and
     # limitations under the License.
 
-    from typing import Optional
+    import attr
     from datacentric.storage.typed_key import TypedKey
     from datacentric.storage.typed_record import TypedRecord
 
 
+    @attr.s(slots=True, auto_attribs=True)
     class ZoneKey(TypedKey['Zone']):
         """
         This class provides timezone conversion between UTC
@@ -40,35 +41,29 @@ Verify: datacentric/date_time/zone.py
         country and the other the city, for example America/New_York.
         """
 
-        __slots__ = ('zone_name',)
+        zone_name: str = attr.ib(default=None, kw_only=True)
+        """
+        Unique timezone name.
 
-        zone_name: str
+        Only the following timezone names are permitted:
 
-        def __init__(self) -> None:
-            super().__init__()
+        * UTC; and
+        * IANA city timezones such as America/New_York
 
-            self.zone_name = None
-            """
-            Unique timezone name.
+        Other 3-letter regional timezones such as EST or EDT are
+        not permitted because they do not handle the transition
+        between winter and summer time automatically for those
+        regions where winter time is defined.
 
-            Only the following timezone names are permitted:
-
-            * UTC; and
-            * IANA city timezones such as America/New_York
-
-            Other 3-letter regional timezones such as EST or EDT are
-            not permitted because they do not handle the transition
-            between winter and summer time automatically for those
-            regions where winter time is defined.
-
-            Because ZoneName is used to look up timezone conventions,
-            it must match either the string UTC or the code in IANA
-            timezone database precisely. The IANA city timezone code
-            has two slash-delimited tokens, the first referencing the
-            country and the other the city, for example America/New_York.
-            """
+        Because ZoneName is used to look up timezone conventions,
+        it must match either the string UTC or the code in IANA
+        timezone database precisely. The IANA city timezone code
+        has two slash-delimited tokens, the first referencing the
+        country and the other the city, for example America/New_York.
+        """
 
 
+    @attr.s(slots=True, auto_attribs=True)
     class Zone(TypedRecord[ZoneKey]):
         """
         This class provides timezone conversion between UTC
@@ -91,33 +86,26 @@ Verify: datacentric/date_time/zone.py
         country and the other the city, for example America/New_York.
         """
 
-        __slots__ = ('zone_name',)
+        zone_name: str = attr.ib(default=None, kw_only=True)
+        """
+        Unique timezone name.
 
-        zone_name: str
+        Only the following timezone names are permitted:
 
-        def __init__(self) -> None:
-            super().__init__()
+        * UTC; and
+        * IANA city timezones such as America/New_York
 
-            self.zone_name = None
-            """
-            Unique timezone name.
+        Other 3-letter regional timezones such as EST or EDT are
+        not permitted because they do not handle the transition
+        between winter and summer time automatically for those
+        regions where winter time is defined.
 
-            Only the following timezone names are permitted:
-
-            * UTC; and
-            * IANA city timezones such as America/New_York
-
-            Other 3-letter regional timezones such as EST or EDT are
-            not permitted because they do not handle the transition
-            between winter and summer time automatically for those
-            regions where winter time is defined.
-
-            Because ZoneName is used to look up timezone conventions,
-            it must match either the string UTC or the code in IANA
-            timezone database precisely. The IANA city timezone code
-            has two slash-delimited tokens, the first referencing the
-            country and the other the city, for example America/New_York.
-            """
+        Because ZoneName is used to look up timezone conventions,
+        it must match either the string UTC or the code in IANA
+        timezone database precisely. The IANA city timezone code
+        has two slash-delimited tokens, the first referencing the
+        country and the other the city, for example America/New_York.
+        """
 Verify: datacentric/job/job.py
     # Copyright (C) 2013-present The DataCentric Authors.
     #
@@ -133,14 +121,16 @@ Verify: datacentric/job/job.py
     # See the License for the specific language governing permissions and
     # limitations under the License.
 
+    import attr
     from bson import ObjectId
-    from typing import List, Optional
+    from typing import List
     from datacentric.storage.typed_key import TypedKey
     from datacentric.storage.typed_record import TypedRecord
     from datacentric.job.job_queue import JobQueueKey
     from datacentric.job.job import JobKey
 
 
+    @attr.s(slots=True, auto_attribs=True)
     class JobKey(TypedKey['Job']):
         """
         The job executes a method of the specified record using:
@@ -203,14 +193,10 @@ Verify: datacentric/job/job.py
         in each of these cases.
         """
 
-        __slots__ = ('id',)
+        pass
 
 
-        def __init__(self) -> None:
-            super().__init__()
-
-
-
+    @attr.s(slots=True, auto_attribs=True)
     class Job(TypedRecord[JobKey]):
         """
         The job executes a method of the specified record using:
@@ -273,73 +259,60 @@ Verify: datacentric/job/job.py
         in each of these cases.
         """
 
-        __slots__ = ('queue', 'collection_name', 'record_id', 'method_name', 'param_names', 'param_values', 'prerequisites')
+        queue: JobQueueKey = attr.ib(default=None, kw_only=True)
+        """Queue to which the job is submitted."""
 
-        queue: JobQueueKey
-        collection_name: str
-        record_id: Optional[ObjectId]
-        method_name: str
-        param_names: Optional[List[Optional[str]]]
-        param_values: Optional[List[Optional[str]]]
-        prerequisites: Optional[List[Optional[JobKey]]]
+        collection_name: str = attr.ib(default=None, kw_only=True)
+        """
+        Name of the collection where the referenced record is stored.
 
-        def __init__(self) -> None:
-            super().__init__()
+        Referenced record is the record in this collection whose
+        TemporalId is RecordId.
+        """
 
-            self.queue = None
-            """Queue to which the job is submitted."""
+        record_id: ObjectId = attr.ib(default=None, kw_only=True, metadata={'optional': True})
+        """
+        TemporalId of the referenced record.
 
-            self.collection_name = None
-            """
-            Name of the collection where the referenced record is stored.
+        This key is specific to the version of the referenced record.
+        When a new record is created for the same key, the view will
+        continue referencing the original version of the record where
+        Id=RecordId.
+        """
 
-            Referenced record is the record in this collection whose
-            TemporalId is RecordId.
-            """
+        method_name: str = attr.ib(default=None, kw_only=True)
+        """
+        Name of the method of the referenced record executed by the job.
 
-            self.record_id = None
-            """
-            TemporalId of the referenced record.
+        Referenced record is the record in collection with CollectionName
+        whose TemporalId is RecordId.
+        """
 
-            This key is specific to the version of the referenced record.
-            When a new record is created for the same key, the view will
-            continue referencing the original version of the record where
-            Id=RecordId.
-            """
+        param_names: List[str] = attr.ib(default=None, kw_only=True, metadata={'optional': True})
+        """
+        Method parameter names (optional).
 
-            self.method_name = None
-            """
-            Name of the method of the referenced record executed by the job.
+        The order of parameters in ParameterNames and ParameterValues
+        must match, but does not have to be the same as the order
+        of parameters in the method signature.
+        """
 
-            Referenced record is the record in collection with CollectionName
-            whose TemporalId is RecordId.
-            """
+        param_values: List[str] = attr.ib(default=None, kw_only=True, metadata={'optional': True})
+        """
+        Serialized method parameter values (optional).
 
-            self.param_names = None
-            """
-            Method parameter names (optional).
+        The order of parameters in ParameterNames and ParameterValues
+        must match, but does not have to be the same as the order
+        of parameters in the method signature.
+        """
 
-            The order of parameters in ParameterNames and ParameterValues
-            must match, but does not have to be the same as the order
-            of parameters in the method signature.
-            """
+        prerequisites: List[JobKey] = attr.ib(default=None, kw_only=True, metadata={'optional': True})
+        """
+        Optional list of prerequisite job keys.
 
-            self.param_values = None
-            """
-            Serialized method parameter values (optional).
-
-            The order of parameters in ParameterNames and ParameterValues
-            must match, but does not have to be the same as the order
-            of parameters in the method signature.
-            """
-
-            self.prerequisites = None
-            """
-            Optional list of prerequisite job keys.
-
-            The job will be executed after JobProgress record for each of
-            the prerequisite jobs has Completed status.
-            """
+        The job will be executed after JobProgress record for each of
+        the prerequisite jobs has Completed status.
+        """
 Verify: datacentric/job/job_status.py
     # Copyright (C) 2013-present The DataCentric Authors.
     #
