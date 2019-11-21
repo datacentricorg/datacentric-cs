@@ -45,29 +45,9 @@ namespace DataCentric.Cli
             if (hasObjectId)
                 writer.AppendLine("from bson import ObjectId");
 
-            bool hasList = decl.Elements.Any(e=>e.Vector == YesNo.Y);
-            bool hasOptionalValue = decl.Elements.Any(e => e.Value != null &&
-                                                      (e.Value.Type == AtomicType.String ||
-                                                       e.Value.Type == AtomicType.NullableBool ||
-                                                       e.Value.Type == AtomicType.NullableDate ||
-                                                       e.Value.Type == AtomicType.NullableDateTime ||
-                                                       e.Value.Type == AtomicType.NullableDecimal ||
-                                                       e.Value.Type == AtomicType.NullableDouble ||
-                                                       e.Value.Type == AtomicType.NullableInt ||
-                                                       e.Value.Type == AtomicType.NullableLong ||
-                                                       e.Value.Type == AtomicType.NullableMinute ||
-                                                       e.Value.Type == AtomicType.NullableTemporalId ||
-                                                       e.Value.Type == AtomicType.NullableTime));
-            bool hasDataEnumKey = decl.Elements.Any(e => e.Data != null || e.Enum != null || e.Key != null);
-            bool hasOptional = hasDataEnumKey || hasOptionalValue;
-
             // Check imports from typing
-            if (hasList && hasOptional)
+            if (decl.Elements.Any(e=>e.Vector == YesNo.Y))
                 writer.AppendLine("from typing import List, Optional");
-            else if (hasList)
-                writer.AppendLine("from typing import List");
-            else if (hasOptional)
-                writer.AppendLine("from typing import Optional");
 
             bool insideDc = PyExtensions.GetPackage(decl) == "datacentric";
 
@@ -125,7 +105,7 @@ namespace DataCentric.Cli
                 else
                     packagesToImport.Add(PyExtensions.GetPackage(data));
             }
-            
+
             foreach (var key in decl.Elements.Where(d => d.Key != null).Select(d => d.Key))
             {
                 if (PyExtensions.IsPackageEquals(decl, key))

@@ -182,7 +182,7 @@ namespace DataCentric.Cli
                 string paramNamespace = !PyExtensions.IsPackageEquals(decl, parameter.Data)
                     ? PyExtensions.GetAlias(parameter.Data) + "."
                     : "";
-                string result = $"Optional[{paramNamespace}{parameter.Data.Name}]";
+                string result = $"{paramNamespace}{parameter.Data.Name}";
                 return parameter.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
             else if (parameter.Key != null)
@@ -190,7 +190,7 @@ namespace DataCentric.Cli
                 var paramNamespace = !PyExtensions.IsPackageEquals(decl, parameter.Key)
                     ? PyExtensions.GetAlias(parameter.Key) + "."
                     : "";
-                var result = $"Optional[{paramNamespace}{parameter.Key.Name}Key]";
+                var result = $"{paramNamespace}{parameter.Key.Name}Key";
                 return parameter.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
             else if (parameter.Enum != null)
@@ -198,7 +198,7 @@ namespace DataCentric.Cli
                 string paramNamespace = !PyExtensions.IsPackageEquals(decl, parameter.Enum)
                     ? PyExtensions.GetAlias(parameter.Enum) + "."
                     : "";
-                string result = $"Optional[{paramNamespace}{parameter.Enum.Name}]";
+                string result = $"{paramNamespace}{parameter.Enum.Name}";
                 return parameter.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
             else throw new ArgumentException("Can't deduct type");
@@ -210,9 +210,7 @@ namespace DataCentric.Cli
                 !PyExtensions.IsPackageEquals(declaration, key) ? PyExtensions.GetAlias(key) + "." : "";
 
             string GetFinalHint(string typeHint) =>
-                element.Optional == YesNo.Y
-                    ? element.Vector == YesNo.Y ? $"Optional[List[Optional[{typeHint}]]]" : $"Optional[{typeHint}]"
-                    : element.Vector == YesNo.Y ? $"Optional[List[{typeHint}]]" : typeHint;
+                element.Vector == YesNo.Y ? $"List[{typeHint}]" : typeHint;
 
             if (element.Value != null)
             {
