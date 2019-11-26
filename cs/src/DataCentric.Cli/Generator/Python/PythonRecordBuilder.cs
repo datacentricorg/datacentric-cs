@@ -110,7 +110,10 @@ namespace DataCentric.Cli
 
             foreach (var element in decl.Elements)
             {
-                writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)} = attr.ib(default=None, kw_only=True{GetMetaData(element)})");
+                // TODO: Should be replaced with callable with specific format instead of skipping
+                string skipRepresentation = element.Vector == YesNo.Y ? ", repr=False" : "";
+
+                writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)} = attr.ib(default=None, kw_only=True{skipRepresentation}{GetMetaData(element)})");
                 writer.AppendLines(CommentHelper.PyComment(element.Comment));
                 if (element != decl.Elements.Last())
                     writer.AppendNewLineWithoutIndent();
