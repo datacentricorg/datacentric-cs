@@ -48,12 +48,14 @@ namespace DataCentric.Cli
             // Check imports from typing
             var hasList = decl.Elements.Any(e=>e.Vector == YesNo.Y);
             var hasFinal = decl.Keys.Any() || decl.Kind == TypeKind.Final;
-            if (hasList && hasFinal)
-                writer.AppendLine("from typing import List, final");
-            else if (hasList)
+            // Python 3.8
+            // if (hasList && hasFinal)
+            //     writer.AppendLine("from typing import List, final");
+            // else
+            if (hasList)
                 writer.AppendLine("from typing import List");
-            else if (hasFinal)
-                writer.AppendLine("from typing import final");
+            // else if (hasFinal)
+            //  writer.AppendLine("from typing import final");
 
             bool insideDc = PyExtensions.GetPackage(decl) == "datacentric";
 

@@ -54,7 +54,7 @@ namespace DataCentric.Cli
             {
                 var keyElements = decl.Elements.Where(e => decl.Keys.Contains(e.Name)).ToList();
 
-                writer.AppendLine("@final");
+                // Python 3.8: writer.AppendLine("@final");
                 writer.AppendLine("@attr.s(slots=True, auto_attribs=True)");
                 writer.AppendLine($"class {name}Key({dcNamespacePrefix}TypedKey['{name}']):");
 
@@ -80,8 +80,10 @@ namespace DataCentric.Cli
                 writer.AppendNewLineWithoutIndent();
             }
 
-            if (decl.Kind == TypeKind.Final)
-                writer.AppendLine("@final");
+            // Python 3.8:
+            // if (decl.Kind == TypeKind.Final)
+            // writer.AppendLine("@final");
+
             writer.AppendLine("@attr.s(slots=True, auto_attribs=True)");
             string abstractBase = decl.Kind == TypeKind.Abstract ? ", ABC" : "";
             if (decl.Keys.Any())
