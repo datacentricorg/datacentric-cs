@@ -288,7 +288,7 @@ Verify: datacentric/job/job.py
         whose TemporalId is RecordId.
         """
 
-        param_names: List[str] = attr.ib(default=None, kw_only=True, metadata={'optional': True})
+        param_names: List[str] = attr.ib(default=None, kw_only=True, repr=False, metadata={'optional': True})
         """
         Method parameter names (optional).
 
@@ -297,7 +297,7 @@ Verify: datacentric/job/job.py
         of parameters in the method signature.
         """
 
-        param_values: List[str] = attr.ib(default=None, kw_only=True, metadata={'optional': True})
+        param_values: List[str] = attr.ib(default=None, kw_only=True, repr=False, metadata={'optional': True})
         """
         Serialized method parameter values (optional).
 
@@ -306,7 +306,7 @@ Verify: datacentric/job/job.py
         of parameters in the method signature.
         """
 
-        prerequisites: List[JobKey] = attr.ib(default=None, kw_only=True, metadata={'optional': True})
+        prerequisites: List[JobKey] = attr.ib(default=None, kw_only=True, repr=False, metadata={'optional': True})
         """
         Optional list of prerequisite job keys.
 
