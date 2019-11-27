@@ -36,44 +36,43 @@ namespace DataCentric
     public class BsonLocalDateTimeSerializer : SerializerBase<LocalDateTime>
     {
         /// <summary>
-        /// Deserialize LocalDateTime from readable long in ISO 8601 format:
+        /// Deserialize LocalDateTime from readable long in ISO 8601 format
+        /// to millisecond precision:
         ///
-        /// 2003-04-21T11:10:00.000Z
+        /// 20030421110000000
         ///
-        /// All datetime values are assumed to be in UTC timezone
-        /// and serialized with suffix Z.
+        /// Local datetime values do not have timezone.
         ///
         /// Null value is handled via [BsonIgnoreIfNull] attribute and is not expected here.
         /// </summary>
         public override LocalDateTime Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
-            // Milliseconds since the Unix epoch
-            long unixEpochMillis = context.Reader.ReadDateTime();
+            // Local datetime in readable ISO long format
+            long isoDateTime = context.Reader.ReadInt64();
 
-            // Create LocalDateTime object by converting to DateTimeOffset and then to DateTime
-            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(unixEpochMillis);
-            DateTime utcDateTime = dateTimeOffset.UtcDateTime;
-            var result = LocalDateTime.FromDateTime(utcDateTime);
+            // Create LocalDateTime object by parsing readable long
+            var result = LocalDateTimeUtil.FromIsoLong(isoDateTime);
             return result;
         }
 
         /// <summary>
-        /// Serialize LocalDateTime to readable long in ISO 8601 format:
+        /// Serialize LocalDateTime from readable long in ISO 8601 format
+        /// to millisecond precision:
         ///
-        /// 2003-04-21T11:10:00.000Z
+        /// 20030421110000000
         ///
-        /// All datetime values are assumed to be in UTC timezone
-        /// and serialized with suffix Z.
+        /// Local datetime values do not have timezone.
         ///
         /// Null value is handled via [BsonIgnoreIfNull] attribute and is not expected here.
         /// </summary>
         public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, LocalDateTime value)
         {
-            // Convert to milliseconds since the Unix epoch
-            long unixEpochMillis = value.ToInstant(DateTimeZone.Utc).ToUnixTimeMilliseconds();
+            // LocalDateTime is serialized as readable long in ISO
+            // yyyymmddhhmmssfff format to millisecond precision
+            long isoDateTime = value.ToIsoLong();
 
-            // Write milliseconds since the Unix epoch to BSON
-            context.Writer.WriteDateTime(unixEpochMillis);
+            // Serialize as Int32
+            context.Writer.WriteInt64(isoDateTime);
         }
     }
 }
