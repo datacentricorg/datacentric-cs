@@ -35,13 +35,11 @@ namespace DataCentric
         /// <summary>
         /// The height of this item, relative to the other children of its parent in percent.
         /// </summary>
-        [BsonRequired]
         public double? Height { get; set; }
 
         /// <summary>
         /// The width of this item, relative to the other children of its parent in percent.
         /// </summary>
-        [BsonRequired]
         public double? Width { get; set; }
 
         /// <summary>

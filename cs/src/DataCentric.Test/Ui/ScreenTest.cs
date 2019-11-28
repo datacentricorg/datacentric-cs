@@ -49,6 +49,7 @@ namespace DataCentric.Test
         {
             return new ScreenSample()
             {
+                SampleScreenString = "ABCD",
                 Content = new List<UiItem>() {
                     new UiItem()
                     {
