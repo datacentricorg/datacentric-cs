@@ -34,7 +34,7 @@ namespace DataCentric
         [ThreadStatic] private static Dictionary<Type, DataTypeInfo> dict_; // Do not initialize ThreadStatic here, initializer will run in first thread only
 
         private readonly Type type_;
-        private readonly Type rootType_;
+        private readonly string collectionName_;
 
         //--- PROPERTIES
 
@@ -48,12 +48,12 @@ namespace DataCentric
         /// </summary>
         public string GetCollectionName()
         {
-            if (DataKind != DataKind.Record)
+            if (DataKind != DataKind.Key && DataKind != DataKind.Record)
                 throw new Exception(
                     $"GetCollectionName() method is called for {type_.Name} " +
-                    $"that is not derived from TypedRecord.");
+                    $"that is not derived from TypedKey or TypedRecord.");
 
-            return rootType_.Name;
+            return collectionName_;
         }
 
         /// <summary>Kind of the data type (record, key, or element).</summary>
@@ -179,18 +179,19 @@ namespace DataCentric
                 Type baseType = currentType.BaseType;
                 if (baseType == typeof(Data))
                 {
-                    if (rootType_ == null)
+                    if (collectionName_ == null)
                     {
                         DataKind = DataKind.Element;
-                        rootType_ = currentType;
                     }
                 }
                 else if (baseType.IsGenericType && baseType.GetGenericTypeDefinition() == typeof(TypedKey<,>))
                 {
-                    if (rootType_ == null)
+                    if (collectionName_ == null)
                     {
                         DataKind = DataKind.Key;
-                        rootType_ = currentType;
+
+                        // Collection name is type name of second argument to TypedKey(TKey, TRecord)
+                        collectionName_ = baseType.GenericTypeArguments[1].Name;
 
                         if (inheritanceChain.Count > 1)
                             throw new Exception(
@@ -200,10 +201,12 @@ namespace DataCentric
                 }
                 else if (baseType.IsGenericType && baseType.GetGenericTypeDefinition() == typeof(TypedRecord<,>))
                 {
-                    if (rootType_ == null)
+                    if (collectionName_ == null)
                     {
                         DataKind = DataKind.Record;
-                        rootType_ = currentType;
+
+                        // Collection name is type name of second argument to TypedRecord(TKey, TRecord)
+                        collectionName_ = baseType.GenericTypeArguments[1].Name;
                     }
                 }
 
