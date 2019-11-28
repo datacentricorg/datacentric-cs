@@ -23,7 +23,7 @@ namespace DataCentric
     /// <summary>
     /// Helper class for unit testing.
     /// </summary>
-    public static class TestUtil
+    public static class UnitTestUtil
     {
         /// <summary>
         /// Generates random seed using hashcode of class name and method name,
