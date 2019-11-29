@@ -46,16 +46,23 @@ namespace DataCentric.Cli
                 writer.AppendLine("from bson import ObjectId");
 
             // Check imports from typing
-            var hasList = decl.Elements.Any(e=>e.Vector == YesNo.Y);
-            var hasFinal = decl.Keys.Any() || decl.Kind == TypeKind.Final;
+            var typingImports = new List<string>();
+
             // Python 3.8
-            // if (hasList && hasFinal)
-            //     writer.AppendLine("from typing import List, final");
-            // else
-            if (hasList)
-                writer.AppendLine("from typing import List");
-            // else if (hasFinal)
-            //  writer.AppendLine("from typing import final");
+            // if (decl.Keys.Any() || decl.Kind == TypeKind.Final)
+            //     typingImports.Add("final");
+
+            if (decl.Elements.Any(e=>e.Vector == YesNo.Y))
+                typingImports.Add("List");
+
+            if (decl.Elements.Any(e => e.Key != null))
+                typingImports.Add("Union");
+
+            if (typingImports.Any())
+            {
+                var items = string.Join(", ", typingImports);
+                writer.AppendLine($"from typing import {items}");
+            }
 
             bool insideDc = PyExtensions.GetPackage(decl) == "datacentric";
 

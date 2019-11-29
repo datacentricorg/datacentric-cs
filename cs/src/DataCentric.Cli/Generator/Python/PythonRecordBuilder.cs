@@ -235,7 +235,7 @@ namespace DataCentric.Cli
             else if (element.Key != null)
             {
                 string paramNamespace = GetParamNamespace(decl, element.Key);
-                string hint = $"{paramNamespace}{element.Key.Name}Key";
+                string hint = $"Union[str, {paramNamespace}{element.Key.Name}Key]";
                 return GetFinalHint(hint);
             }
             else if (element.Enum != null)
