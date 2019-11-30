@@ -123,7 +123,7 @@ Verify: datacentric/job/job.py
 
     import attr
     from bson import ObjectId
-    from typing import List
+    from typing import List, Union
     from datacentric.storage.typed_key import TypedKey
     from datacentric.storage.typed_record import TypedRecord
     from datacentric.job.job_queue import JobQueueKey
@@ -259,7 +259,7 @@ Verify: datacentric/job/job.py
         in each of these cases.
         """
 
-        queue: JobQueueKey = attr.ib(default=None, kw_only=True)
+        queue: Union[str, JobQueueKey] = attr.ib(default=None, kw_only=True)
         """Queue to which the job is submitted."""
 
         collection_name: str = attr.ib(default=None, kw_only=True)
@@ -306,7 +306,7 @@ Verify: datacentric/job/job.py
         of parameters in the method signature.
         """
 
-        prerequisites: List[JobKey] = attr.ib(default=None, kw_only=True, repr=False, metadata={'optional': True})
+        prerequisites: List[Union[str, JobKey]] = attr.ib(default=None, kw_only=True, repr=False, metadata={'optional': True})
         """
         Optional list of prerequisite job keys.
 
