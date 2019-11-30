@@ -1,2 +1,5 @@
-Verify: Serialized key: abc;def;123;xyz
-Verify: Deserialized key: abc;def;123;xyz
+Verify: Serialized key: abc1;def1;123;xyz1
+Verify: Deserialized key: abc1;def1;123;xyz1
+Verify: Loaded key: abc1;def1;123;xyz1
+Verify: Loaded embedded simple key: def1;123
+Verify: Loaded embedded complex key: abc2;def2;456;xyz2

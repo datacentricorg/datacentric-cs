@@ -27,13 +27,16 @@ namespace DataCentric.Test
     /// <summary>Data type sample with composite key.</summary>
     public class CompositeKeySample : TypedRecord<CompositeKeySampleKey, CompositeKeySample>
     {
-        /// <summary>Sample element.</summary>
+        /// <summary>String key element.</summary>
         public string KeyElement1 { get; set; }
 
-        /// <summary>Sample element.</summary>
+        /// <summary>Another key.</summary>
         public BaseSampleKey KeyElement2 { get; set; }
 
-        /// <summary>Sample element.</summary>
+        /// <summary>String key element.</summary>
         public string KeyElement3 { get; set; }
+
+        /// <summary>Key to the same type.</summary>
+        public CompositeKeySampleKey Element4 { get; set; }
     }
 }

@@ -28,13 +28,13 @@ namespace DataCentric.Test
     [BsonSerializer(typeof(BsonKeySerializer<CompositeKeySampleKey>))]
     public sealed class CompositeKeySampleKey : TypedKey<CompositeKeySampleKey, CompositeKeySample>
     {
-        /// <summary>Sample element.</summary>
+        /// <summary>String key element.</summary>
         public string KeyElement1 { get; set; }
 
-        /// <summary>Sample element.</summary>
+        /// <summary>Another key.</summary>
         public BaseSampleKey KeyElement2 { get; set; }
 
-        /// <summary>Sample element.</summary>
+        /// <summary>String key element.</summary>
         public string KeyElement3 { get; set; }
     }
 }

@@ -27,19 +27,42 @@ namespace DataCentric
         public override TKey Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
             // Read key as string in semicolon delimited format
+            // with collection name followed by the equal sign
+            // as prefix, for example:
+            //
+            // CollectionName=KeyElement1;KeyElement2
             string str = context.Reader.ReadString();
 
-            // Deserialize key from semicolon delimited string
+            // Confirm that collection name prefix matches
+            // the expected collection name for the type
+            // followed by the equal sign (=).
+            string[] strTokens = str.Split(new char[] {'='}, 2);
+            string collectionName = DataTypeInfo.GetOrCreate(typeof(TKey)).GetCollectionName();
+            if (strTokens.Length != 2 || strTokens[0] != collectionName)
+                throw new Exception(
+                    $"Key {str} does not start from the expected " +
+                    $"collection name {collectionName} followed by the equal sign (=).");
+
+            // Deserialize key from the part of the string
+            // after the equal sign (=).
+            string keyStr = strTokens[1];
             var key = new TKey();
-            key.PopulateFrom(str);
+            key.PopulateFrom(keyStr);
             return key;
         }
 
         /// <summary>Null value is handled via [BsonIgnoreIfNull] attribute and is not expected here.</summary>
         public override void Serialize(BsonSerializationContext context, BsonSerializationArgs args, TKey value)
         {
-            // Serialize key in semicolon delimited format
-            context.Writer.WriteString(value.ToString());
+            // Serialize key in semicolon delimited format,
+            // with collection name followed by the equal sign
+            // as prefix, for example:
+            //
+            // CollectionName=KeyElement1;KeyElement2
+            string collectionName = DataTypeInfo.GetOrCreate(typeof(TKey)).GetCollectionName();
+            string keyStr = value.ToString();
+            string str = string.Join("=", collectionName, keyStr);
+            context.Writer.WriteString(str);
         }
     }
 }

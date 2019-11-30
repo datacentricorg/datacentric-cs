@@ -107,11 +107,17 @@ namespace DataCentric.Test
                 context.KeepTestData();
 
                 var rec = new CompositeKeySample();
-                rec.KeyElement1 = "abc";
+                rec.KeyElement1 = "abc1";
                 rec.KeyElement2 = new BaseSampleKey();
-                rec.KeyElement2.RecordName = "def";
+                rec.KeyElement2.RecordName = "def1";
                 rec.KeyElement2.RecordIndex = 123;
-                rec.KeyElement3 = "xyz";
+                rec.KeyElement3 = "xyz1";
+                rec.Element4 = new CompositeKeySampleKey();
+                rec.Element4.KeyElement1 = "abc2";
+                rec.Element4.KeyElement2 = new BaseSampleKey();
+                rec.Element4.KeyElement2.RecordName = "def2";
+                rec.Element4.KeyElement2.RecordIndex = 456;
+                rec.Element4.KeyElement3 = "xyz2";
 
                 // Verify key serialization
                 string keyValue = rec.ToKey().ToString();
@@ -121,6 +127,13 @@ namespace DataCentric.Test
                 var key = new CompositeKeySampleKey();
                 key.PopulateFrom(keyValue);
                 context.Log.Verify($"Deserialized key: {key}");
+
+                // Save record and load back
+                context.SaveOne(rec);
+                var loadedRec = context.Load(rec.ToKey());
+                context.Log.Verify($"Loaded key: {loadedRec.ToKey().Value}");
+                context.Log.Verify($"Loaded embedded simple key: {loadedRec.KeyElement2.Value}");
+                context.Log.Verify($"Loaded embedded complex key: {loadedRec.Element4.Value}");
             }
         }
 
