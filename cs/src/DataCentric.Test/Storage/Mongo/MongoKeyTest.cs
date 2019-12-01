@@ -32,6 +32,8 @@ namespace DataCentric.Test
         {
             using (var context = CreateMethodContext())
             {
+                context.KeepTestData();
+
                 var record = new NonNullableElementsSample();
                 record.DataSet = context.DataSet;
                 record.StringToken = "A";
@@ -67,6 +69,8 @@ namespace DataCentric.Test
         {
             using (var context = CreateMethodContext())
             {
+                context.KeepTestData();
+
                 var record = new NullableElementsSample();
                 record.DataSet = context.DataSet;
                 record.StringToken = "A";
