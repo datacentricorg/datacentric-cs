@@ -25,8 +25,13 @@ namespace DataCentric
 {
     /// <summary>
     /// Base class of records stored in data source.
+    ///
+    /// Note that BSON discriminator specifies its type
+    /// as Record and root class, rather than TypedRecord.
+    /// This is because generic types are not supported as
+    /// discriminators by MongoDB C# driver.
     /// </summary>
-    [BsonDiscriminator("TypedRecord")]
+    [BsonDiscriminator("Record", RootClass = true)]
     public abstract class TypedRecord<TKey, TRecord> : Record
         where TKey : TypedKey<TKey, TRecord>, new()
         where TRecord : TypedRecord<TKey, TRecord>

@@ -23,7 +23,6 @@ namespace DataCentric
     /// <summary>
     /// Base class of records stored in data source.
     /// </summary>
-    [BsonDiscriminator(RootClass = true)]
     public abstract class Record : Data
     {
         /// <summary>
