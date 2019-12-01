@@ -41,10 +41,10 @@ namespace DataCentric.Test
                 record.IntToken = 123;
                 record.LongToken = 12345678912345;
                 record.LocalDateToken = new LocalDate(2003, 5, 1);
-                record.LocalTimeToken = new LocalTime(10, 15, 30); // 10:15:30
+                record.LocalTimeToken = new LocalTime(10, 15, 30, 500); // 10:15:30.500
                 record.LocalMinuteToken = new LocalMinute(10, 15); // 10:15
-                record.LocalDateTimeToken = new LocalDateTime(2003, 5, 1, 10, 15); // 2003-05-01T10:15:00
-                record.InstantToken = new LocalDateTime(2003, 5, 1, 10, 15).ToInstant(DateTimeZone.Utc); // 2003-05-01T10:15:00
+                record.LocalDateTimeToken = new LocalDateTime(2003, 5, 1, 10, 15, 30, 500); // 2003-05-01T10:15:30.500
+                record.InstantToken = new LocalDateTime(2003, 5, 1, 10, 15, 30, 500).ToInstant(DateTimeZone.Utc); // 2003-05-01T10:15:30.500Z
                 record.EnumToken = SampleEnum.EnumValue2;
 
                 // Verify key serialization
@@ -78,10 +78,10 @@ namespace DataCentric.Test
                 record.IntToken = 123;
                 record.LongToken = 12345678912345;
                 record.LocalDateToken = new LocalDate(2003, 5, 1);
-                record.LocalTimeToken = new LocalTime(10, 15, 30); // 10:15:30
+                record.LocalTimeToken = new LocalTime(10, 15, 30, 500); // 10:15:30.500
                 record.LocalMinuteToken = new LocalMinute(10, 15); // 10:15
-                record.LocalDateTimeToken = new LocalDateTime(2003, 5, 1, 10, 15); // 2003-05-01T10:15:00
-                record.InstantToken = new LocalDateTime(2003, 5, 1, 10, 15).ToInstant(DateTimeZone.Utc); // 2003-05-01T10:15:00
+                record.LocalDateTimeToken = new LocalDateTime(2003, 5, 1, 10, 15, 30, 500); // 2003-05-01T10:15:30.500
+                record.InstantToken = new LocalDateTime(2003, 5, 1, 10, 15, 30, 500).ToInstant(DateTimeZone.Utc); // 2003-05-01T10:15:30.500Z
                 record.EnumToken = SampleEnum.EnumValue2;
 
                 // Verify key serialization
