@@ -261,16 +261,16 @@ namespace DataCentric.Cli
                 atomicType == AtomicType.NullableDouble ? "float" :
                 atomicType == AtomicType.NullableInt ? "int" :
                 atomicType == AtomicType.NullableLong ? "int" :
-                atomicType == AtomicType.DateTime ? $"{prefix}LocalDateTime" :
-                atomicType == AtomicType.Date ? $"{prefix}LocalDate" :
-                atomicType == AtomicType.Time ? $"{prefix}LocalTime" :
-                atomicType == AtomicType.Minute ? $"{prefix}LocalMinute" :
-                atomicType == AtomicType.Instant ? $"{prefix}Instant" :
-                atomicType == AtomicType.NullableDateTime ? $"{prefix}LocalDateTime" :
-                atomicType == AtomicType.NullableDate ? $"{prefix}LocalDate" :
-                atomicType == AtomicType.NullableTime ? $"{prefix}LocalTime" :
-                atomicType == AtomicType.NullableMinute ? $"{prefix}LocalMinute" :
-                atomicType == AtomicType.NullableInstant ? $"{prefix}Instant" :
+                atomicType == AtomicType.DateTime ? $"Union[int, {prefix}LocalDateTime]" :
+                atomicType == AtomicType.Date ? $"Union[int, {prefix}LocalDate]" :
+                atomicType == AtomicType.Time ? $"Union[int, {prefix}LocalTime]" :
+                atomicType == AtomicType.Minute ? $"Union[int, {prefix}LocalMinute]" :
+                atomicType == AtomicType.Instant ? $"Union[dt.datetime, {prefix}Instant]" :
+                atomicType == AtomicType.NullableDateTime ? $"Union[int, {prefix}LocalDateTime]" :
+                atomicType == AtomicType.NullableDate ? $"Union[int, {prefix}LocalDate]" :
+                atomicType == AtomicType.NullableTime ? $"Union[int, {prefix}LocalTime]" :
+                atomicType == AtomicType.NullableMinute ? $"Union[int, {prefix}LocalMinute]" :
+                atomicType == AtomicType.NullableInstant ? $"Union[dt.datetime, {prefix}Instant]" :
                 atomicType == AtomicType.TemporalId ? "ObjectId" :
                 atomicType == AtomicType.NullableTemporalId ? "ObjectId" :
                 throw new
