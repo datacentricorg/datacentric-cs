@@ -34,6 +34,12 @@ namespace DataCentric.Cli
             // Always import attr module
             writer.AppendLine("import attr");
 
+
+            // Instant is generated as Union[dt.datetime, dc.Instant] thus dt import is required
+            if (decl.Elements.Any(e => e.Value != null && (e.Value.Type == AtomicType.Instant ||
+                                                           e.Value.Type == AtomicType.NullableInstant)))
+                writer.AppendLine("import datetime as dt");
+
             // If type is abstract - ABC import is needed
             if (decl.Kind == TypeKind.Abstract)
                 writer.AppendLine("from abc import ABC");
