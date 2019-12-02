@@ -54,6 +54,14 @@ namespace DataCentric.Cli
             {
                 var keyElements = decl.Elements.Where(e => decl.Keys.Contains(e.Name)).ToList();
 
+                writer.AppendLine($"class {name}KeyHint:");
+                writer.PushIndent();
+                writer.AppendLine(CommentHelper.PyComment($"Hint for {name}Key."));
+                writer.AppendLine("pass");
+                writer.PopIndent();
+                writer.AppendNewLineWithoutIndent();
+                writer.AppendNewLineWithoutIndent();
+
                 // Python 3.8: writer.AppendLine("@final");
                 writer.AppendLine("@attr.s(slots=True, auto_attribs=True)");
                 writer.AppendLine($"class {name}Key({dcNamespacePrefix}TypedKey['{name}']):");
@@ -235,7 +243,7 @@ namespace DataCentric.Cli
             else if (element.Key != null)
             {
                 string paramNamespace = GetParamNamespace(decl, element.Key);
-                string hint = $"Union[str, {paramNamespace}{element.Key.Name}Key]";
+                string hint = $"Union[str, {paramNamespace}{element.Key.Name}KeyHint]";
                 return GetFinalHint(hint);
             }
             else if (element.Enum != null)
@@ -261,16 +269,16 @@ namespace DataCentric.Cli
                 atomicType == AtomicType.NullableDouble ? "float" :
                 atomicType == AtomicType.NullableInt ? "int" :
                 atomicType == AtomicType.NullableLong ? "int" :
-                atomicType == AtomicType.DateTime ? $"Union[int, {prefix}LocalDateTime]" :
-                atomicType == AtomicType.Date ? $"Union[int, {prefix}LocalDate]" :
-                atomicType == AtomicType.Time ? $"Union[int, {prefix}LocalTime]" :
-                atomicType == AtomicType.Minute ? $"Union[int, {prefix}LocalMinute]" :
-                atomicType == AtomicType.Instant ? $"Union[dt.datetime, {prefix}Instant]" :
-                atomicType == AtomicType.NullableDateTime ? $"Union[int, {prefix}LocalDateTime]" :
-                atomicType == AtomicType.NullableDate ? $"Union[int, {prefix}LocalDate]" :
-                atomicType == AtomicType.NullableTime ? $"Union[int, {prefix}LocalTime]" :
-                atomicType == AtomicType.NullableMinute ? $"Union[int, {prefix}LocalMinute]" :
-                atomicType == AtomicType.NullableInstant ? $"Union[dt.datetime, {prefix}Instant]" :
+                atomicType == AtomicType.DateTime ? $"Union[int, {prefix}LocalDateTimeHint]" :
+                atomicType == AtomicType.Date ? $"Union[int, {prefix}LocalDateHint]" :
+                atomicType == AtomicType.Time ? $"Union[int, {prefix}LocalTimeHint]" :
+                atomicType == AtomicType.Minute ? $"Union[int, {prefix}LocalMinuteHint]" :
+                atomicType == AtomicType.Instant ? $"Union[dt.datetime, {prefix}InstantHint]" :
+                atomicType == AtomicType.NullableDateTime ? $"Union[int, {prefix}LocalDateTimeHint]" :
+                atomicType == AtomicType.NullableDate ? $"Union[int, {prefix}LocalDateHint]" :
+                atomicType == AtomicType.NullableTime ? $"Union[int, {prefix}LocalTimeHint]" :
+                atomicType == AtomicType.NullableMinute ? $"Union[int, {prefix}LocalMinuteHint]" :
+                atomicType == AtomicType.NullableInstant ? $"Union[dt.datetime, {prefix}InstantHint]" :
                 atomicType == AtomicType.TemporalId ? "ObjectId" :
                 atomicType == AtomicType.NullableTemporalId ? "ObjectId" :
                 throw new

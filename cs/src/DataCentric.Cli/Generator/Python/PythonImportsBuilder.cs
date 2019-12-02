@@ -132,7 +132,7 @@ namespace DataCentric.Cli
                 if (PyExtensions.IsPackageEquals(decl, key))
                 {
                     IDecl keyDecl = declarations.FindByKey(key);
-                    individualImports.Add($"from {keyDecl.Category} import {key.Name}Key");
+                    individualImports.Add($"from {keyDecl.Category} import {key.Name}KeyHint");
                 }
                 else
                     packagesToImport.Add(PyExtensions.GetPackage(key));
@@ -169,15 +169,15 @@ namespace DataCentric.Cli
                                          .ToArray();
 
                 if (atomicElements.Contains(AtomicType.DateTime) || atomicElements.Contains(AtomicType.NullableDateTime))
-                    writer.AppendLine("from datacentric.date_time.local_date_time import LocalDateTime");
+                    writer.AppendLine("from datacentric.date_time.local_date_time import LocalDateTimeHint");
                 if (atomicElements.Contains(AtomicType.Date) || atomicElements.Contains(AtomicType.NullableDate))
-                    writer.AppendLine("from datacentric.date_time.local_date import LocalDate");
+                    writer.AppendLine("from datacentric.date_time.local_date import LocalDateHint");
                 if (atomicElements.Contains(AtomicType.Time) || atomicElements.Contains(AtomicType.NullableTime))
-                    writer.AppendLine("from datacentric.date_time.local_time import LocalTime");
+                    writer.AppendLine("from datacentric.date_time.local_time import LocalTimeHint");
                 if (atomicElements.Contains(AtomicType.Minute) || atomicElements.Contains(AtomicType.NullableMinute))
-                    writer.AppendLine("from datacentric.date_time.local_minute import LocalMinute");
+                    writer.AppendLine("from datacentric.date_time.local_minute import LocalMinuteHint");
                 if (atomicElements.Contains(AtomicType.Instant) || atomicElements.Contains(AtomicType.NullableInstant))
-                    writer.AppendLine("from datacentric.date_time.instant import Instant");
+                    writer.AppendLine("from datacentric.date_time.instant import InstantHint");
             }
         }
     }
