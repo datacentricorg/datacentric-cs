@@ -108,9 +108,27 @@ namespace DataCentric
                         $"Key element {elementInfo.Name} of type {obj.GetType().Name} has type Double. Elements " +
                         $"of this type cannot be part of key due to serialization format uncertainty.");
                 case LocalDate dateValue:
+                    // Serialize as readable int in yyyymmdd format, not in delimited ISO string format
+                    // Using int instead of string format permits sorting and more than/less than queries.
+                    result = dateValue.ToIsoInt().ToString();
+                    break;
                 case LocalTime timeValue:
+                    // Serialize as readable int in hhmmssfff format, not in delimited ISO string format
+                    // Using int instead of string format permits sorting and more than/less than queries.
+                    result = timeValue.ToIsoInt().ToString();
+                    break;
                 case LocalMinute minuteValue:
+                    // Serialize as readable int in hhmm format, not in delimited ISO string format
+                    // Using int instead of string format permits sorting and more than/less than queries.
+                    result = minuteValue.ToIsoInt().ToString();
+                    break;
                 case LocalDateTime dateTimeValue:
+                    // Serialize as readable long in yyyymmddhhmmssfff format, not in delimited ISO string
+                    // format to avoid mixing this type with Instant.
+                    //
+                    // Using long instead of string format permits sorting and more than/less than queries.
+                    result = dateTimeValue.ToIsoLong().ToString();
+                    break;
                 case Instant instantValue:
                 case bool boolValue:
                 case int intValue:
