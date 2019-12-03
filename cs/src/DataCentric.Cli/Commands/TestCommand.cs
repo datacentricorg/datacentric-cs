@@ -21,6 +21,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using CommandLine;
+using DataCentric.Schema.Extractor;
 using Xunit;
 
 namespace DataCentric.Cli

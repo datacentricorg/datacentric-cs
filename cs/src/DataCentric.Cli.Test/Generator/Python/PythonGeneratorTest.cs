@@ -12,6 +12,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using DataCentric.Schema.Declaration;
+using DataCentric.Schema.Declaration.Type;
+using DataCentric.Schema.Extractor;
+using DataCentric.Schema.Generator.Python;
 using Xunit;
 
 namespace DataCentric.Cli.Test
