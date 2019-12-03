@@ -56,7 +56,7 @@ namespace DataCentric.Cli
 
                 writer.AppendLine($"class {name}KeyHint:");
                 writer.PushIndent();
-                writer.AppendLine(CommentHelper.PyComment($"Hint for {name}Key."));
+                writer.AppendLines(CommentHelper.PyComment(decl.Comment));
                 writer.AppendLine("pass");
                 writer.PopIndent();
                 writer.AppendNewLineWithoutIndent();
