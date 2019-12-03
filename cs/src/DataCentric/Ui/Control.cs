@@ -27,7 +27,7 @@ namespace DataCentric
     /// This base type provides a standard way to position the
     /// control within its parent container.
     /// </summary>
-    public abstract class Control : UiItem
+    public class Control : UiItem
     {
         /// <summary>
         /// Provides information for positioning the control within its

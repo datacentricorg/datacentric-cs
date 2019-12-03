@@ -25,7 +25,7 @@ namespace DataCentric
     /// The method Action() is invoked when the
     /// button is pressed.
     /// </summary>
-    public abstract class Button : Control
+    public class Button : Control
     {
         /// <summary>
         /// Text is displayed on the button.
@@ -36,6 +36,10 @@ namespace DataCentric
         /// <summary>
         /// Method invoked when the button is pressed.
         /// </summary>
-        public abstract void Action();
+        [HandlerMethod]
+        public void Action()
+        {
+            // Base action does nothing. This functionality should be implemented in derived classes.
+        }
     }
 }
