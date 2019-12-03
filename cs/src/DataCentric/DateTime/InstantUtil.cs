@@ -31,7 +31,7 @@ namespace DataCentric
         ///
         /// yyyy-mm-ddThh:mm::ss.fffZ
         /// </summary>
-        public static InstantPattern Pattern { get; } = InstantPattern.CreateWithInvariantCulture("uuuu'-'MM'-'dd'T'HH':'mm':'ss.FFF'Z'");
+        public static InstantPattern Pattern { get; } = InstantPattern.CreateWithInvariantCulture("uuuu'-'MM'-'dd'T'HH':'mm':'ss.fff'Z'");
 
         /// <summary>
         /// Parse strict ISO 8601 datetime pattern to millisecond precision in UTC (Z) timezone:
