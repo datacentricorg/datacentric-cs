@@ -27,15 +27,18 @@ namespace DataCentric
         const string alphabet_ = "abcdefghijklmnopqrstuvwxyz";
 
         /// <summary>
-        /// Validates the format of pipe-delimited immutable name, and returns
+        /// Validates the format of dot-delimited immutable name, and returns
         /// its components as (string, int) tuple.
         ///
-        /// By convention, immutable name consists of two pipe delimited tokens.
+        /// By convention, immutable name consists of two dot delimited tokens.
         /// The first token is a string name prefix, and second token is integer
-        /// name version with the initial value of 1. This method raises an
+        /// name version with the initial value of 0. This method raises an
         /// error if the argument does not match the format.
-        /// 
-        /// For example, if the name is ABC|1, the returned tuple is (ABC,1).
+        ///
+        /// For example, if the name is ABC.0, the returned tuple is (ABC,0).
+        ///
+        /// Note that the first token may include additional dot symbols,
+        /// but the version token may not.
         ///
         /// This method takes the identifier of parsed variable as nameOf parameter
         /// to use in error messages. The recommended way to pass the identifier is
@@ -48,29 +51,35 @@ namespace DataCentric
 
             // By convention, immutable name consists of two pipe delimited tokens.
             // The first token is a string identifier, and second token is integer
-            // version number with the initial value of 1. This code raises an
+            // version number with the initial value of 0. This code raises an
             // error if the name does not match the format.
-            string[] nameTokens = name.Split('|');
-            if (nameTokens.Length != 2 ||
-                !int.TryParse(nameTokens[1], out int nameVersion) ||
-                nameVersion < 1)
+            //
+            // Note that the first token may include additional dot symbols,
+            // but the version token may not.
+            string[] nameTokens = name.Split('.');
+            if (nameTokens.Length < 2 ||
+                !int.TryParse(nameTokens[nameTokens.Length-1], out int nameVersion) ||
+                nameVersion < 0)
             {
                 throw new Exception(
-                    $"Immutable {nameOf}={name} must consist of two pipe-delimited " +
-                    $"tokens where  second token is a positive integer greater than zero, e.g. ABC|1.");
+                    $"Immutable {nameOf}={name} must consist of two dot-delimited " +
+                    $"tokens where second token is a non-negative integer, e.g. ABC.0");
             }
 
-            // If name is ABC|1, the returned tuple is (ABC,1)
-            return (nameTokens[0], nameVersion);
+            // If name is ABC.0, the returned tuple is (ABC,0)
+            string lastToken = nameTokens[nameTokens.Length - 1];
+            int firstTokenLength = name.Length - lastToken.Length - 1;
+            string firstToken = name.Substring(0, firstTokenLength);
+            return (firstToken, nameVersion);
         }
 
         /// <summary>
         /// Generate a random sequence of lowercase ASCII strings of specified length.
         /// This method generates pure alphabetical strings, without including numbers.
-        /// 
+        ///
         /// A total of stringLength strings with the length of stringLength will be
         /// generated.
-        /// 
+        ///
         /// No dictionary check is performed on the result to avoid unacceptable letter
         /// combinations; use with caution and always inspect the output.
         ///
