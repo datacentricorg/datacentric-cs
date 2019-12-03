@@ -1,8 +1,8 @@
-Verify: String roundtrip for 00:00:00 assert.
-Verify: Int roundtrip for 00:00:00 assert.
-Verify: String roundtrip for 00:00:00 assert.
-Verify: Int roundtrip for 00:00:00 assert.
-Verify: String roundtrip for 10:15:30 assert.
-Verify: Int roundtrip for 10:15:30 assert.
+Verify: String roundtrip for 00:00:00.000 assert.
+Verify: Int roundtrip for 00:00:00.000 assert.
+Verify: String roundtrip for 00:00:00.000 assert.
+Verify: Int roundtrip for 00:00:00.000 assert.
+Verify: String roundtrip for 10:15:30.000 assert.
+Verify: Int roundtrip for 10:15:30.000 assert.
 Verify: String roundtrip for 10:15:30.005 assert.
 Verify: Int roundtrip for 10:15:30.005 assert.

@@ -111,7 +111,7 @@ namespace DataCentric
             if (value != InstantUtil.Empty)
             {
                 // Use strict ISO 8601 datetime pattern to millisecond precision without timezone
-                string result = InstantUtil.Pattern.Format(value);
+                string result = InstantUtil.OutputPattern.Format(value);
                 return result;
             }
             else

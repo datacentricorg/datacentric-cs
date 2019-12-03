@@ -54,7 +54,7 @@ namespace DataCentric
         public static string ToIsoString(this LocalTime value)
         {
             // Use strict ISO 8601 time pattern to millisecond precision without timezone
-            string result = LocalTimeUtil.Pattern.Format(value);
+            string result = LocalTimeUtil.OutputPattern.Format(value);
             return result;
         }
 

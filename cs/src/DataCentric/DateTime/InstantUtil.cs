@@ -27,11 +27,25 @@ namespace DataCentric
         public static Instant Empty { get; } = default;
 
         /// <summary>
-        /// Strict ISO 8601 datetime pattern to millisecond precision in UTC timezone:
+        /// Strict ISO 8601 datetime pattern to millisecond precision in UTC timezone
+        /// provides exactly three digits after the decimal point for the second, even
+        /// if fewer digits are sufficient:
         ///
         /// yyyy-mm-ddThh:mm::ss.fffZ
+        ///
+        /// This pattern is used for the output.
         /// </summary>
-        public static InstantPattern Pattern { get; } = InstantPattern.CreateWithInvariantCulture("uuuu'-'MM'-'dd'T'HH':'mm':'ss.fff'Z'");
+        public static InstantPattern OutputPattern { get; } = InstantPattern.CreateWithInvariantCulture("uuuu'-'MM'-'dd'T'HH':'mm':'ss.fff'Z'");
+
+        /// <summary>
+        /// Lenient ISO 8601 datetime pattern in UTC timezone permits up to
+        /// 7 digits after the decimal point for the seconds.
+        ///
+        /// yyyy-mm-ddThh:mm::ss.FFFFFFFZ
+        ///
+        /// This pattern is used for the input.
+        /// </summary>
+        public static InstantPattern InputPattern { get; } = InstantPattern.CreateWithInvariantCulture("uuuu'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFF'Z'");
 
         /// <summary>
         /// Parse strict ISO 8601 datetime pattern to millisecond precision in UTC (Z) timezone:
@@ -53,8 +67,7 @@ namespace DataCentric
             else
                 throw new Exception(
                     $"Cannot parse serialized Instant {value} because it does not have " +
-                    $"strict ISO 8601 datetime pattern to millisecond precision in UTC timezone: " +
-                    $"yyyy-mm-ddThh:mm::ss.fffZ, or if timezone is not Z.");
+                    $"strict ISO 8601 format: yyyy-mm-ddThh:mm::ss.fffZ, or if timezone is not Z.");
         }
 
         /// <summary>
@@ -73,7 +86,7 @@ namespace DataCentric
         /// </summary>
         public static bool TryParse(string value, out Instant result)
         {
-            var parseResult = Pattern.Parse(value);
+            var parseResult = InputPattern.Parse(value);
             if (parseResult.TryGetValue(InstantUtil.Empty, out result))
             {
                 // Serialization of default constructed datetime is accepted.

@@ -29,8 +29,35 @@ namespace DataCentric
     /// </summary>
     public static class LocalTimeUtil
     {
-        /// <summary>Strict ISO 8601 time pattern with fractional seconds to millisecond precision.</summary>
-        public static LocalTimePattern Pattern { get; } = LocalTimePattern.CreateWithInvariantCulture("HH':'mm':'ss.FFF");
+        /// <summary>
+        /// Strict ISO 8601 time pattern to millisecond precision without timezone
+        /// provides exactly three digits after the decimal point for the second, even
+        /// if fewer digits are sufficient:
+        ///
+        /// hh:mm::ss.fff
+        ///
+        /// This pattern is used for the output.
+        /// </summary>
+        public static LocalTimePattern OutputPattern { get; } = LocalTimePattern.CreateWithInvariantCulture("HH':'mm':'ss.fff");
+
+        /// <summary>
+        /// Lenient ISO 8601 datetime pattern without timezone permits up to
+        /// 7 digits after the decimal point for the seconds.
+        ///
+        /// hh:mm::ss.FFFFFFF
+        ///
+        /// This pattern is used for the input.
+        /// </summary>
+        public static LocalTimePattern InputPattern { get; } = LocalTimePattern.CreateWithInvariantCulture("HH':'mm':'ss.FFFFFFF");
+
+        /// <summary>
+        /// Lenient ISO 8601 time pattern without timezone permits up to
+        /// 7 digits after the decimal point for the seconds.
+        ///
+        /// yyyy-mm-ddThh:mm::ss.FFF
+        ///
+        /// This pattern is used for the input.
+        /// </summary>
 
         /// <summary>
         /// Parse strict ISO 8601 time pattern to millisecond precision without timezone:
@@ -68,7 +95,7 @@ namespace DataCentric
         /// </summary>
         public static bool TryParse(string value, out LocalTime result)
         {
-            var parseResult = Pattern.Parse(value);
+            var parseResult = InputPattern.Parse(value);
             if (parseResult.TryGetValue(default, out result))
             {
                 return true;

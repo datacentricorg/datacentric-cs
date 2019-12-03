@@ -27,21 +27,33 @@ namespace DataCentric
         public static LocalDateTime Empty { get; } = default;
 
         /// <summary>
-        /// Strict ISO 8601 datetime pattern to millisecond precision without timezone:
+        /// Strict ISO 8601 datetime pattern to millisecond precision without timezone
+        /// provides exactly three digits after the decimal point for the second, even
+        /// if fewer digits are sufficient:
         ///
         /// yyyy-mm-ddThh:mm::ss.fff
+        ///
+        /// This pattern is used for the output.
         /// </summary>
-        public static LocalDateTimePattern Pattern { get; } = LocalDateTimePattern.CreateWithInvariantCulture("uuuu'-'MM'-'dd'T'HH':'mm':'ss.FFF");
+        public static LocalDateTimePattern OutputPattern { get; } = LocalDateTimePattern.CreateWithInvariantCulture("uuuu'-'MM'-'dd'T'HH':'mm':'ss.fff");
 
         /// <summary>
-        /// Parse strict ISO 8601 datetime pattern to millisecond precision without timezone:
+        /// Lenient ISO 8601 datetime pattern without timezone permits up to
+        /// 7 digits after the decimal point for the seconds.
         ///
-        /// yyyy-mm-ddThh:mm::ss.fff
+        /// yyyy-mm-ddThh:mm::ss.FFFFFFF
         ///
-        /// Error message if the string does not match format.
-        /// 
-        /// No variations from the standard format are accepted and no delimiters can be changed or omitted.
-        /// Specifically, ISO int-like string in yyyymmddhhmmssfff format without delimiters is not accepted.
+        /// This pattern is used for the input.
+        /// </summary>
+        public static LocalDateTimePattern InputPattern { get; } = LocalDateTimePattern.CreateWithInvariantCulture("uuuu'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFF");
+
+        /// <summary>
+        /// Lenient ISO 8601 datetime pattern without timezone permits any number
+        /// of digits after the decimal point for the seconds.
+        ///
+        /// yyyy-mm-ddThh:mm::ss.F
+        ///
+        /// This pattern is used for the input.
         /// </summary>
         public static LocalDateTime Parse(string value)
         {
@@ -69,7 +81,7 @@ namespace DataCentric
         /// </summary>
         public static bool TryParse(string value, out LocalDateTime result)
         {
-            var parseResult = Pattern.Parse(value);
+            var parseResult = InputPattern.Parse(value);
             if (parseResult.TryGetValue(LocalDateTimeUtil.Empty, out result))
             {
                 // Serialization of default constructed datetime is accepted.
