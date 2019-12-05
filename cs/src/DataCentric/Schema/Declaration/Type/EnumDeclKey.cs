@@ -16,16 +16,13 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Handler implementation data.</summary>
-    public class HandlerImplementDecl : Data
+    /// <summary>Key for a EnumDecl element.</summary>
+    public class EnumDeclKey : TypedKey<EnumDeclKey, EnumDecl>
     {
-        /// <summary>Handler name.</summary>
+        /// <summary>Module reference.</summary>
+        public ModuleKey Module { get; set; }
+
+        /// <summary>Enum name is unique when combined with module.</summary>
         public string Name { get; set; }
-
-        /// <summary>Programming language in which handler is implemented.</summary>
-        public LanguageKey Language { get; set; }
-
-        /// <summary>Override flag.</summary>
-        public YesNo? Override { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace DataCentric
     /// <summary>
     /// Specifies database index for the type.
     /// </summary>
-    public class TypeIndex
+    public class TypeIndex : Data
     {
         /// <summary>Element index definition.</summary>
         [XmlElement]

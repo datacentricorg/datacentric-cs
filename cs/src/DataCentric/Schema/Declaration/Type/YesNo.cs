@@ -19,6 +19,7 @@ namespace DataCentric
     /// <summary>Simplified clone of Bool for serialization purposes based on real Bool.ToString().</summary>
     public enum YesNo
     {
+        /// <summary>None.</summary>
         None = -1,
 
         /// <summary>True.</summary>

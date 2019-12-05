@@ -17,7 +17,7 @@ limitations under the License.
 namespace DataCentric
 {
     /// <summary>Key for a ModuleData element.</summary>
-    public class ModuleKey
+    public class ModuleKey : TypedKey<ModuleKey, Module>
     {
         /// <summary>Unique module name in dot delimited format.</summary>
         public string ModuleName { get; set; }

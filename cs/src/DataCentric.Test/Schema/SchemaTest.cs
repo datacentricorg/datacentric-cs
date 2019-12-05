@@ -14,18 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace DataCentric
+using Xunit;
+
+namespace DataCentric.Test
 {
-    /// <summary>Handler implementation data.</summary>
-    public class HandlerImplementDecl : Data
+    public class SchemaTest : UnitTest
     {
-        /// <summary>Handler name.</summary>
-        public string Name { get; set; }
+        [Fact]
+        public void GenerateTest()
+        {
+            using (var context = CreateMethodContext())
+            {
+                var schema = new Schema();
+                schema.Generate(context);
 
-        /// <summary>Programming language in which handler is implemented.</summary>
-        public LanguageKey Language { get; set; }
-
-        /// <summary>Override flag.</summary>
-        public YesNo? Override { get; set; }
+                var typeDecl = new TypeDecl();
+            }
+        }
     }
 }

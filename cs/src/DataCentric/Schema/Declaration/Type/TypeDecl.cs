@@ -24,7 +24,7 @@ namespace DataCentric
     /// The names of type elements and corresponding tags coincide.</summary>
     [Serializable]
     [XmlRoot]
-    public class TypeDecl : IDecl
+    public class TypeDecl : TypedRecord<TypeDeclKey, TypeDecl>, IDecl
     {
         /// <summary>Module reference.</summary>
         public ModuleKey Module { get; set; }

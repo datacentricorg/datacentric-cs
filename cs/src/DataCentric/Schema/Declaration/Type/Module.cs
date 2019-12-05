@@ -16,16 +16,9 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Handler implementation data.</summary>
-    public class HandlerImplementDecl : Data
+    public class Module : TypedRecord<ModuleKey, Module>
     {
-        /// <summary>Handler name.</summary>
-        public string Name { get; set; }
-
-        /// <summary>Programming language in which handler is implemented.</summary>
-        public LanguageKey Language { get; set; }
-
-        /// <summary>Override flag.</summary>
-        public YesNo? Override { get; set; }
+        /// <summary>Unique module name in dot delimited format.</summary>
+        public string ModuleName { get; set; }
     }
 }

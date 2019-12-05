@@ -17,7 +17,7 @@ limitations under the License.
 namespace DataCentric
 {
     /// <summary>Key for a LanguageData element.</summary>
-    public class LanguageKey
+    public class LanguageKey : Data
     {
         /// <summary>Unique language identifier.</summary>
         public string LanguageName { get; set; }

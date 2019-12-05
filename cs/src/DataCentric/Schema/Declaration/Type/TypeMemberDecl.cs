@@ -20,7 +20,7 @@ using System.Xml.Serialization;
 namespace DataCentric
 {
     /// <summary>Type argument declaration.</summary>
-    public class TypeMemberDecl
+    public class TypeMemberDecl : Data
     {
         /// <summary>Type Param</summary>
         public string TypeParam { get; set; }

@@ -17,7 +17,7 @@ limitations under the License.
 namespace DataCentric
 {
     /// <summary>Key for a TypeDecl element.</summary>
-    public class TypeDeclKey
+    public class TypeDeclKey : TypedKey<TypeDeclKey, TypeDecl>
     {
         /// <summary>Module reference.</summary>
         public ModuleKey Module { get; set; }

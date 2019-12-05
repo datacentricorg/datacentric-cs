@@ -20,7 +20,7 @@ using System.Xml.Serialization;
 namespace DataCentric
 {
     /// <summary>Handler declaration block in type declaration.</summary>
-    public class HandlerDeclareBlockDecl
+    public class HandlerDeclareBlockDecl : Data
     {
         /// <summary>Handler declaration data.</summary>
         [XmlElement]

@@ -17,7 +17,7 @@ limitations under the License.
 namespace DataCentric
 {
     /// <summary>Interface implementation data.</summary>
-    public class InterfaceImplementDecl
+    public class InterfaceImplementDecl : Data
     {
         /// <summary>Interface</summary>
         public TypeDeclKey Interface { get; set; }

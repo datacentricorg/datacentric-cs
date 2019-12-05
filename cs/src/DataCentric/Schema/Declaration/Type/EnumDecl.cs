@@ -23,9 +23,8 @@ namespace DataCentric
     /// <summary>Enum declaration.</summary>
     [Serializable]
     [XmlRoot]
-    public class EnumDecl : IDecl
+    public class EnumDecl : TypedRecord<EnumDeclKey, EnumDecl>, IDecl
     {
-
         /// <summary>Module reference.</summary>
         public ModuleKey Module { get; set; }
 
