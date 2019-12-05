@@ -59,7 +59,7 @@ namespace DataCentric
             if (decl.Elements.Any(e=>e.Vector == YesNo.Y))
                 typingImports.Add("List");
 
-            if (decl.Elements.Any(e => e.Key != null))
+            if (decl.Elements.Any(e => e.Key != null) || decl.Keys.Any())
                 typingImports.Add("Union");
 
             if (typingImports.Any())
