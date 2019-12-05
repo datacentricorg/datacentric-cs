@@ -19,7 +19,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Text;
 
-namespace DataCentric.Schema.Generator
+namespace DataCentric
 {
     public class CodeWriter
     {

@@ -17,10 +17,9 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DataCentric.Schema.Declaration.Type;
 using Humanizer;
 
-namespace DataCentric.Schema.Generator.Python
+namespace DataCentric
 {
     /// <summary>
     /// Converts declarations to generated python files.

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace DataCentric.Schema.Declaration.Type
+namespace DataCentric
 {
     /// <summary>List of values and immutable types, including string and binary.</summary>
     public enum AtomicType

@@ -20,7 +20,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace DataCentric.Schema.Generator
+namespace DataCentric
 {
     public class GeneratorSettings
     {

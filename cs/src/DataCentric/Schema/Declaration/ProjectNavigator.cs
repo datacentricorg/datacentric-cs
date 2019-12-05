@@ -19,7 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace DataCentric.Schema.Declaration
+namespace DataCentric
 {
     /// <summary>
     /// Helper class to determine project structure.

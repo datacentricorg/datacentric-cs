@@ -19,12 +19,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using DataCentric.Schema.Declaration.Type;
-using DataCentric.Schema.Extractor;
 using MongoDB.Bson.Serialization.Attributes;
 using NodaTime;
 
-namespace DataCentric.Schema.Declaration
+namespace DataCentric
 {
     /// <summary>
     /// Converts types to declarations.

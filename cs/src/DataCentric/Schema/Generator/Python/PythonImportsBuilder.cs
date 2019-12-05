@@ -16,9 +16,8 @@ limitations under the License.
 
 using System.Collections.Generic;
 using System.Linq;
-using DataCentric.Schema.Declaration.Type;
 
-namespace DataCentric.Schema.Generator.Python
+namespace DataCentric
 {
     /// <summary>
     /// Provides import statements for generated classes.

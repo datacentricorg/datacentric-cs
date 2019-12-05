@@ -21,7 +21,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace DataCentric.Schema.Extractor
+namespace DataCentric
 {
     /// <summary>
     /// Class to extract specific types from assemblies.

@@ -17,7 +17,7 @@ limitations under the License.
 using System;
 using System.Text;
 
-namespace DataCentric.Schema.Generator
+namespace DataCentric
 {
     public static class CommentHelper
     {

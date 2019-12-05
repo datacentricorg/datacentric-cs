@@ -15,10 +15,9 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
-using DataCentric.Schema.Declaration.Type;
 using Humanizer;
 
-namespace DataCentric.Schema.Generator
+namespace DataCentric
 {
     public static class CppEnumBuilder
     {

@@ -17,11 +17,9 @@ limitations under the License.
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DataCentric.Schema.Declaration;
-using DataCentric.Schema.Declaration.Type;
 using Humanizer;
 
-namespace DataCentric.Schema.Generator
+namespace DataCentric
 {
     public class FileInfo
     {

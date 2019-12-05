@@ -17,7 +17,6 @@ limitations under the License.
 using System;
 using System.IO;
 using CommandLine;
-using DataCentric.Schema.Generator;
 
 namespace DataCentric.Cli
 {

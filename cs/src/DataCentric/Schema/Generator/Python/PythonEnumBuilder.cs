@@ -14,9 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using DataCentric.Schema.Declaration.Type;
-
-namespace DataCentric.Schema.Generator.Python
+namespace DataCentric
 {
     /// <summary>
     /// Builder for generated python enum.

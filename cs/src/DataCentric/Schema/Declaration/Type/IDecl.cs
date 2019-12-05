@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-namespace DataCentric.Schema.Declaration.Type
+namespace DataCentric
 {
     /// <summary>
     /// Interface for basic declaration types.

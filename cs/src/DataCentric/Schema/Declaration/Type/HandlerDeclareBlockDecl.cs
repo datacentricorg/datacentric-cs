@@ -17,7 +17,7 @@ limitations under the License.
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace DataCentric.Schema.Declaration.Type
+namespace DataCentric
 {
     /// <summary>Handler declaration block in type declaration.</summary>
     public class HandlerDeclareBlockDecl

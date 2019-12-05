@@ -21,10 +21,8 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using DataCentric.Schema.Declaration.Type;
-using DataCentric.Schema.Generator;
 
-namespace DataCentric.Schema.Declaration
+namespace DataCentric
 {
     /// <summary>
     /// Serializer for declarations based in XmlSerializer implementation.

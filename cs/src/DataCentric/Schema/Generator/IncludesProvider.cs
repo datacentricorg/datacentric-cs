@@ -16,10 +16,9 @@ limitations under the License.
 
 using System.Collections.Generic;
 using System.Linq;
-using DataCentric.Schema.Declaration.Type;
 using Humanizer;
 
-namespace DataCentric.Schema.Generator
+namespace DataCentric
 {
     public static class IncludesProvider
     {

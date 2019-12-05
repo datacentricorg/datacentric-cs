@@ -22,7 +22,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml.XPath;
 
-namespace DataCentric.Schema.Declaration
+namespace DataCentric
 {
     /// <summary>
     /// Comment navigator class. Extracts comment info from XML file which is created alongside assembly.

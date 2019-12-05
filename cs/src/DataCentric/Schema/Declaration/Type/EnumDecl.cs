@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace DataCentric.Schema.Declaration.Type
+namespace DataCentric
 {
     /// <summary>Enum declaration.</summary>
     [Serializable]

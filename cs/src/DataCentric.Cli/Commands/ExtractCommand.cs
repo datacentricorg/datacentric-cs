@@ -19,9 +19,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using CommandLine;
-using DataCentric.Schema.Declaration;
-using DataCentric.Schema.Declaration.Type;
-using DataCentric.Schema.Extractor;
 
 namespace DataCentric.Cli
 {

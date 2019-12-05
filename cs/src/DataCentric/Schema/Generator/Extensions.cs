@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DataCentric.Schema.Generator
+namespace DataCentric
 {
     public static class Extensions
     {

@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace DataCentric.Schema.Declaration.Type
+namespace DataCentric
 {
     /// <summary>Defines type declaration. A tag of entity type XML representation corresponds to each element of the type.
     /// The names of type elements and corresponding tags coincide.</summary>
