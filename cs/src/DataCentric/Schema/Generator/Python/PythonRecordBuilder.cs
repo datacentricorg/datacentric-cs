@@ -108,15 +108,17 @@ namespace DataCentric
 
                 var namedParams = keyElements.Select(e=>$"{e.Name.Underscore()}: {GetTypeHint(decl, e)}").ToList();
                 var joinedNamedParams = string.Join(", ", namedParams);
-                if (joinedNamedParams.Length > 80)
+                string start = "def create_key(";
+
+                // Check if tokens should be separated by new line
+                if (4 + start.Length + joinedNamedParams.Length > 120)
                 {
-                    var indent = new string(' ', "def create_key(".Length);
-                    joinedNamedParams = string.Join(Environment.NewLine + indent, namedParams);
+                    var indent = new string(' ', start.Length);
+                    joinedNamedParams = string.Join("," + Environment.NewLine + indent, namedParams);
                 }
 
                 writer.AppendLine("@classmethod");
                 writer.AppendLines($"def create_key(cls, *, {joinedNamedParams}) -> Union[str, {decl.Name}Key]:");
-
 
                 writer.PushIndent();
                 writer.AppendLine(CommentHelper.PyComment($"Create {decl.Name} key."));
@@ -168,16 +170,19 @@ namespace DataCentric
                     throw new Exception($"Wrong key element type.");
             }
 
+            // Based on timeit test - for one parameter it is faster to concat two strings with +
             if (tokens.Count == 1)
                 return $" + {tokens[0]}";
             if (tokens.Count > 1)
             {
                 string start = $"return '{declName}=' + ';'.join([";
                 string joinedTokens = $" + ';'.join([{string.Join(", ", tokens)}])";
+
+                // Check if tokens should be separated by new line
                 if (8 + start.Length + joinedTokens.Length > 120)
                 {
                     var indent = new string(' ', start.Length);
-                    return $" + ';'.join([{string.Join(Environment.NewLine + indent, tokens)}])";
+                    return $" + ';'.join([{string.Join("," + Environment.NewLine + indent, tokens)}])";
                 }
 
                 return joinedTokens;
