@@ -101,17 +101,26 @@ namespace DataCentric
                 writer.AppendLine("def to_key(self) -> str:");
                 writer.PushIndent();
                 writer.AppendLine(CommentHelper.PyComment($"Get {decl.Name} key."));
-                writer.AppendLine($"return '{decl.Name}='{GetToKeyArgs(keyElements, true)}");
+                writer.AppendLines($"return '{decl.Name}='{GetToKeyArgs(decl.Name, keyElements, true)}");
                 writer.PopIndent();
 
                 writer.AppendNewLineWithoutIndent();
 
+                var namedParams = keyElements.Select(e=>$"{e.Name.Underscore()}: {GetTypeHint(decl, e)}").ToList();
+                var joinedNamedParams = string.Join(", ", namedParams);
+                if (joinedNamedParams.Length > 80)
+                {
+                    var indent = new string(' ', "def create_key(".Length);
+                    joinedNamedParams = string.Join(Environment.NewLine + indent, namedParams);
+                }
+
                 writer.AppendLine("@classmethod");
-                var namedParams = keyElements.Select(e=>$"{e.Name.Underscore()}: {GetTypeHint(decl, e)}");
-                writer.AppendLine($"def create_key(cls, *, {string.Join(", ", namedParams)}) -> Union[str, {decl.Name}Key]:");
+                writer.AppendLines($"def create_key(cls, *, {joinedNamedParams}) -> Union[str, {decl.Name}Key]:");
+
+
                 writer.PushIndent();
                 writer.AppendLine(CommentHelper.PyComment($"Create {decl.Name} key."));
-                writer.AppendLine($"return '{decl.Name}='{GetToKeyArgs(keyElements, false)}");
+                writer.AppendLines($"return '{decl.Name}='{GetToKeyArgs(decl.Name, keyElements, false)}");
                 writer.PopIndent();
             }
 
@@ -127,7 +136,7 @@ namespace DataCentric
             return writer.ToString();
         }
 
-        private static string GetToKeyArgs(IEnumerable<TypeElementDecl> keyElements, bool withSelf)
+        private static string GetToKeyArgs(string declName, IEnumerable<TypeElementDecl> keyElements, bool withSelf)
         {
             List<string> tokens = new List<string>();
             string self = withSelf ? "self." : "";
@@ -161,8 +170,19 @@ namespace DataCentric
 
             if (tokens.Count == 1)
                 return $" + {tokens[0]}";
-            if (tokens.Count>1)
-                return $" + ';'.join([{string.Join(", ", tokens)}])";
+            if (tokens.Count > 1)
+            {
+                string start = $"return '{declName}=' + ';'.join([";
+                string joinedTokens = $" + ';'.join([{string.Join(", ", tokens)}])";
+                if (8 + start.Length + joinedTokens.Length > 120)
+                {
+                    var indent = new string(' ', start.Length);
+                    return $" + ';'.join([{string.Join(Environment.NewLine + indent, tokens)}])";
+                }
+
+                return joinedTokens;
+            }
+
             return "";
         }
 
