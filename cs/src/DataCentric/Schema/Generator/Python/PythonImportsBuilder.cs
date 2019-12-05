@@ -93,12 +93,13 @@ namespace DataCentric
             {
                 if (insideDc)
                 {
-                    individualImports.Add("from datacentric.storage.typed_key import TypedKey");
-                    individualImports.Add("from datacentric.storage.typed_record import TypedRecord");
+                    individualImports.Add("from datacentric.storage.record import Record");
+                    individualImports.Add($"from {decl.Category}_key import {decl.Name}Key");
                 }
                 else
                 {
                     packagesToImport.Add("datacentric");
+                    individualImports.Add($"from {decl.Category}_key import {decl.Name}Key");
                 }
             }
             // First child class of Data
@@ -130,7 +131,7 @@ namespace DataCentric
                 if (PyExtensions.IsPackageEquals(decl, key))
                 {
                     IDecl keyDecl = declarations.FindByKey(key);
-                    individualImports.Add($"from {keyDecl.Category} import {key.Name}KeyHint");
+                    individualImports.Add($"from {keyDecl.Category}_key import {key.Name}Key");
                 }
                 else
                     packagesToImport.Add(PyExtensions.GetPackage(key));
@@ -167,15 +168,15 @@ namespace DataCentric
                                          .ToArray();
 
                 if (atomicElements.Contains(AtomicType.DateTime) || atomicElements.Contains(AtomicType.NullableDateTime))
-                    writer.AppendLine("from datacentric.date_time.local_date_time import LocalDateTimeHint");
+                    writer.AppendLine("from datacentric.date_time.local_date_time import LocalDateTime");
                 if (atomicElements.Contains(AtomicType.Date) || atomicElements.Contains(AtomicType.NullableDate))
-                    writer.AppendLine("from datacentric.date_time.local_date import LocalDateHint");
+                    writer.AppendLine("from datacentric.date_time.local_date import LocalDate");
                 if (atomicElements.Contains(AtomicType.Time) || atomicElements.Contains(AtomicType.NullableTime))
-                    writer.AppendLine("from datacentric.date_time.local_time import LocalTimeHint");
+                    writer.AppendLine("from datacentric.date_time.local_time import LocalTime");
                 if (atomicElements.Contains(AtomicType.Minute) || atomicElements.Contains(AtomicType.NullableMinute))
-                    writer.AppendLine("from datacentric.date_time.local_minute import LocalMinuteHint");
+                    writer.AppendLine("from datacentric.date_time.local_minute import LocalMinute");
                 if (atomicElements.Contains(AtomicType.Instant) || atomicElements.Contains(AtomicType.NullableInstant))
-                    writer.AppendLine("from datacentric.date_time.instant import InstantHint");
+                    writer.AppendLine("from datacentric.date_time.instant import Instant");
             }
         }
     }

@@ -44,58 +44,16 @@ namespace DataCentric
             // in front of datacentric types, otherwise use no prefix
             string dcNamespacePrefix = insideDc ? "" : "dc.";
 
-
             PythonImportsBuilder.WriteImports(decl, declarations, writer);
 
             writer.AppendNewLineWithoutIndent();
             writer.AppendNewLineWithoutIndent();
 
+            // Get base classes for current declaration
+            List<string> bases = new List<string>();
+
             if (decl.Keys.Any())
-            {
-                var keyElements = decl.Elements.Where(e => decl.Keys.Contains(e.Name)).ToList();
-
-                writer.AppendLine($"class {name}KeyHint:");
-                writer.PushIndent();
-                writer.AppendLines(CommentHelper.PyComment(decl.Comment));
-                writer.AppendLine("pass");
-                writer.PopIndent();
-                writer.AppendNewLineWithoutIndent();
-                writer.AppendNewLineWithoutIndent();
-
-                // Python 3.8: writer.AppendLine("@final");
-                writer.AppendLine("@attr.s(slots=True, auto_attribs=True)");
-                writer.AppendLine($"class {name}Key({dcNamespacePrefix}TypedKey['{name}']):");
-
-                // Same comment for the key and for the record
-                writer.PushIndent();
-                writer.AppendLines(CommentHelper.PyComment(decl.Comment));
-
-                writer.AppendNewLineWithoutIndent();
-                if (!keyElements.Any()) writer.AppendLine("pass");
-
-                foreach (var element in keyElements)
-                {
-                    writer.AppendLine($"{element.Name.Underscore()}: {GetTypeHint(decl, element)} = attr.ib(default=None, kw_only=True{GetMetaData(element)})");
-                    writer.AppendLines(CommentHelper.PyComment(element.Comment));
-                    // Do not add new line after last item
-                    if (element != keyElements.Last())
-                        writer.AppendNewLineWithoutIndent();
-                }
-
-                writer.PopIndent();
-
-                writer.AppendNewLineWithoutIndent();
-                writer.AppendNewLineWithoutIndent();
-            }
-
-            // Python 3.8:
-            // if (decl.Kind == TypeKind.Final)
-            // writer.AppendLine("@final");
-
-            writer.AppendLine("@attr.s(slots=True, auto_attribs=True)");
-            string abstractBase = decl.Kind == TypeKind.Abstract ? ", ABC" : "";
-            if (decl.Keys.Any())
-                writer.AppendLine($"class {name}({dcNamespacePrefix}TypedRecord[{name}Key]{abstractBase}):");
+                bases.Add(dcNamespacePrefix+"Record");
             else if (decl.Inherit != null)
             {
                 // Full package name and short namespace of the parent class,
@@ -104,12 +62,19 @@ namespace DataCentric
                 string parentPackage = PyExtensions.GetPackage(decl.Inherit);
                 string parentClassNamespacePrefix =
                     parentClassInDifferentModule ? PyExtensions.GetAlias(parentPackage) + "." : "";
-                writer.AppendLine($"class {name}({parentClassNamespacePrefix}{decl.Inherit.Name}{abstractBase}):");
+                bases.Add(parentClassNamespacePrefix + decl.Inherit.Name);
             }
             else
-                writer.AppendLine($"class {name}({dcNamespacePrefix}Data{abstractBase}):");
+                bases.Add(dcNamespacePrefix+"Data");
 
-            // Same comment for the key and for the record
+            if (decl.Kind == TypeKind.Abstract)
+                bases.Add("ABC");
+
+            // Python 3.8:
+            // if (decl.Kind == TypeKind.Final)
+            // writer.AppendLine("@final");
+            writer.AppendLine("@attr.s(slots=True, auto_attribs=True)");
+            writer.AppendLine($"class {name}({string.Join(", ", bases)}):");
             writer.PushIndent();
             writer.AppendLines(CommentHelper.PyComment(decl.Comment));
 
@@ -127,6 +92,29 @@ namespace DataCentric
                     writer.AppendNewLineWithoutIndent();
             }
 
+            // Add to_key and create_key() methods
+            if (decl.Keys != null)
+            {
+                var keyElements = decl.Elements.Where(e => decl.Keys.Contains(e.Name)).ToList();
+
+                writer.AppendNewLineWithoutIndent();
+                writer.AppendLine("def to_key(self) -> str:");
+                writer.PushIndent();
+                writer.AppendLine(CommentHelper.PyComment($"Get {decl.Name} key."));
+                writer.AppendLine($"return '{decl.Name}='{GetToKeyArgs(keyElements, true)}");
+                writer.PopIndent();
+
+                writer.AppendNewLineWithoutIndent();
+
+                writer.AppendLine("@classmethod");
+                var namedParams = keyElements.Select(e=>$"{e.Name.Underscore()}: {GetTypeHint(decl, e)}");
+                writer.AppendLine($"def create_key(cls, *, {string.Join(", ", namedParams)}) -> Union[str, {decl.Name}Key]:");
+                writer.PushIndent();
+                writer.AppendLine(CommentHelper.PyComment($"Create {decl.Name} key."));
+                writer.AppendLine($"return '{decl.Name}='{GetToKeyArgs(keyElements, false)}");
+                writer.PopIndent();
+            }
+
             if (decl.Declare != null)
             {
                 writer.AppendNewLineWithoutIndent();
@@ -137,6 +125,45 @@ namespace DataCentric
             writer.PopIndent();
 
             return writer.ToString();
+        }
+
+        private static string GetToKeyArgs(IEnumerable<TypeElementDecl> keyElements, bool withSelf)
+        {
+            List<string> tokens = new List<string>();
+            string self = withSelf ? "self." : "";
+
+            List<AtomicType> toStr = new List<AtomicType>()
+            {
+                AtomicType.Int, AtomicType.Long, AtomicType.NullableInt, AtomicType.NullableLong,
+                AtomicType.DateTime, AtomicType.Date, AtomicType.Time, AtomicType.Minute, AtomicType.Instant,
+                AtomicType.NullableDateTime, AtomicType.NullableDate, AtomicType.NullableTime,
+                AtomicType.NullableMinute, AtomicType.NullableInstant, AtomicType.TemporalId,
+                AtomicType.NullableTemporalId,
+            };
+
+            foreach (var element in keyElements)
+            {
+                string elementName = element.Name.Underscore();
+
+                if (element.Value?.Type != null && toStr.Contains(element.Value.Type.Value))
+                    tokens.Add($"str({self}{elementName})");
+                else if (element.Value != null && element.Value.Type == AtomicType.String)
+                    tokens.Add($"{self}{elementName}");
+                else if (element.Value != null && (element.Value.Type == AtomicType.Bool || element.Value.Type == AtomicType.NullableBool))
+                    tokens.Add($"str({self}{elementName}).lower()");
+                else if (element.Enum != null)
+                    tokens.Add($"{self}{elementName}.name");
+                else if (element.Key !=null)
+                    tokens.Add($"{self}{elementName}.split('=', 1)[1]");
+                else
+                    throw new Exception($"Wrong key element type.");
+            }
+
+            if (tokens.Count == 1)
+                return $" + {tokens[0]}";
+            if (tokens.Count>1)
+                return $" + ';'.join([{string.Join(", ", tokens)}])";
+            return "";
         }
 
         private static string GetMetaData(TypeElementDecl element)
@@ -243,7 +270,7 @@ namespace DataCentric
             else if (element.Key != null)
             {
                 string paramNamespace = GetParamNamespace(decl, element.Key);
-                string hint = $"Union[str, {paramNamespace}{element.Key.Name}KeyHint]";
+                string hint = $"Union[str, {paramNamespace}{element.Key.Name}Key]";
                 return GetFinalHint(hint);
             }
             else if (element.Enum != null)
@@ -269,16 +296,16 @@ namespace DataCentric
                 atomicType == AtomicType.NullableDouble ? "float" :
                 atomicType == AtomicType.NullableInt ? "int" :
                 atomicType == AtomicType.NullableLong ? "int" :
-                atomicType == AtomicType.DateTime ? $"Union[int, {prefix}LocalDateTimeHint]" :
-                atomicType == AtomicType.Date ? $"Union[int, {prefix}LocalDateHint]" :
-                atomicType == AtomicType.Time ? $"Union[int, {prefix}LocalTimeHint]" :
-                atomicType == AtomicType.Minute ? $"Union[int, {prefix}LocalMinuteHint]" :
-                atomicType == AtomicType.Instant ? $"Union[dt.datetime, {prefix}InstantHint]" :
-                atomicType == AtomicType.NullableDateTime ? $"Union[int, {prefix}LocalDateTimeHint]" :
-                atomicType == AtomicType.NullableDate ? $"Union[int, {prefix}LocalDateHint]" :
-                atomicType == AtomicType.NullableTime ? $"Union[int, {prefix}LocalTimeHint]" :
-                atomicType == AtomicType.NullableMinute ? $"Union[int, {prefix}LocalMinuteHint]" :
-                atomicType == AtomicType.NullableInstant ? $"Union[dt.datetime, {prefix}InstantHint]" :
+                atomicType == AtomicType.DateTime ? $"Union[int, {prefix}LocalDateTime]" :
+                atomicType == AtomicType.Date ? $"Union[int, {prefix}LocalDate]" :
+                atomicType == AtomicType.Time ? $"Union[int, {prefix}LocalTime]" :
+                atomicType == AtomicType.Minute ? $"Union[int, {prefix}LocalMinute]" :
+                atomicType == AtomicType.Instant ? $"Union[dt.datetime, {prefix}Instant]" :
+                atomicType == AtomicType.NullableDateTime ? $"Union[int, {prefix}LocalDateTime]" :
+                atomicType == AtomicType.NullableDate ? $"Union[int, {prefix}LocalDate]" :
+                atomicType == AtomicType.NullableTime ? $"Union[int, {prefix}LocalTime]" :
+                atomicType == AtomicType.NullableMinute ? $"Union[int, {prefix}LocalMinute]" :
+                atomicType == AtomicType.NullableInstant ? $"Union[dt.datetime, {prefix}Instant]" :
                 atomicType == AtomicType.TemporalId ? "ObjectId" :
                 atomicType == AtomicType.NullableTemporalId ? "ObjectId" :
                 throw new
