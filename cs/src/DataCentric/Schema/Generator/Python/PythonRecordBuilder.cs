@@ -93,7 +93,7 @@ namespace DataCentric
             }
 
             // Add to_key and create_key() methods
-            if (decl.Keys != null)
+            if (decl.Keys.Any())
             {
                 var keyElements = decl.Elements.Where(e => decl.Keys.Contains(e.Name)).ToList();
 
