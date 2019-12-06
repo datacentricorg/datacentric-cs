@@ -1,4 +1,4 @@
-Verify: datacentric/date_time/zone.py
+Verify: datacentric/date_time//zone.py
     # Copyright (C) 2013-present The DataCentric Authors.
     #
     # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,83 @@ Verify: datacentric/date_time/zone.py
     # limitations under the License.
 
     import attr
-    from datacentric.storage.typed_key import TypedKey
-    from datacentric.storage.typed_record import TypedRecord
+    from typing import Union
+    from datacentric.storage.record import Record
+    from datacentric.date_time..zone_key import ZoneKey
 
 
-    class ZoneKeyHint:
+    @attr.s(slots=True, auto_attribs=True)
+    class Zone(Record):
+        """
+        This class provides timezone conversion between UTC
+        and local datetime for the specified timezone.
+
+        Only the following timezone names are permitted:
+
+        * UTC; and
+        * IANA city timezones such as America/New_York
+
+        Other 3-letter regional timezones such as EST or EDT are
+        not permitted because they do not handle the transition
+        between winter and summer time automatically for those
+        regions where winter time is defined.
+
+        Because ZoneName is used to look up timezone conventions,
+        it must match either the string UTC or the code in IANA
+        timezone database precisely. The IANA city timezone code
+        has two slash-delimited tokens, the first referencing the
+        country and the other the city, for example America/New_York.
+        """
+
+        zone_name: str = attr.ib(default=None, kw_only=True)
+        """
+        Unique timezone name.
+
+        Only the following timezone names are permitted:
+
+        * UTC; and
+        * IANA city timezones such as America/New_York
+
+        Other 3-letter regional timezones such as EST or EDT are
+        not permitted because they do not handle the transition
+        between winter and summer time automatically for those
+        regions where winter time is defined.
+
+        Because ZoneName is used to look up timezone conventions,
+        it must match either the string UTC or the code in IANA
+        timezone database precisely. The IANA city timezone code
+        has two slash-delimited tokens, the first referencing the
+        country and the other the city, for example America/New_York.
+        """
+
+        def to_key(self) -> str:
+            """Get Zone key."""
+            return 'Zone=' + self.zone_name
+
+        @classmethod
+        def create_key(cls, *, zone_name: str) -> Union[str, ZoneKey]:
+            """Create Zone key."""
+            return 'Zone=' + zone_name
+Verify: datacentric/date_time//zone_key.py
+    # Copyright (C) 2013-present The DataCentric Authors.
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    # You may obtain a copy of the License at
+    #
+    #    http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+
+    from abc import ABC
+    from datacentric.storage.key import Key
+
+
+    class ZoneKey(Key, ABC):
         """
         This class provides timezone conversion between UTC
         and local datetime for the specified timezone.
@@ -40,97 +112,7 @@ Verify: datacentric/date_time/zone.py
         country and the other the city, for example America/New_York.
         """
         pass
-
-
-    @attr.s(slots=True, auto_attribs=True)
-    class ZoneKey(TypedKey['Zone']):
-        """
-        This class provides timezone conversion between UTC
-        and local datetime for the specified timezone.
-
-        Only the following timezone names are permitted:
-
-        * UTC; and
-        * IANA city timezones such as America/New_York
-
-        Other 3-letter regional timezones such as EST or EDT are
-        not permitted because they do not handle the transition
-        between winter and summer time automatically for those
-        regions where winter time is defined.
-
-        Because ZoneName is used to look up timezone conventions,
-        it must match either the string UTC or the code in IANA
-        timezone database precisely. The IANA city timezone code
-        has two slash-delimited tokens, the first referencing the
-        country and the other the city, for example America/New_York.
-        """
-
-        zone_name: str = attr.ib(default=None, kw_only=True)
-        """
-        Unique timezone name.
-
-        Only the following timezone names are permitted:
-
-        * UTC; and
-        * IANA city timezones such as America/New_York
-
-        Other 3-letter regional timezones such as EST or EDT are
-        not permitted because they do not handle the transition
-        between winter and summer time automatically for those
-        regions where winter time is defined.
-
-        Because ZoneName is used to look up timezone conventions,
-        it must match either the string UTC or the code in IANA
-        timezone database precisely. The IANA city timezone code
-        has two slash-delimited tokens, the first referencing the
-        country and the other the city, for example America/New_York.
-        """
-
-
-    @attr.s(slots=True, auto_attribs=True)
-    class Zone(TypedRecord[ZoneKey]):
-        """
-        This class provides timezone conversion between UTC
-        and local datetime for the specified timezone.
-
-        Only the following timezone names are permitted:
-
-        * UTC; and
-        * IANA city timezones such as America/New_York
-
-        Other 3-letter regional timezones such as EST or EDT are
-        not permitted because they do not handle the transition
-        between winter and summer time automatically for those
-        regions where winter time is defined.
-
-        Because ZoneName is used to look up timezone conventions,
-        it must match either the string UTC or the code in IANA
-        timezone database precisely. The IANA city timezone code
-        has two slash-delimited tokens, the first referencing the
-        country and the other the city, for example America/New_York.
-        """
-
-        zone_name: str = attr.ib(default=None, kw_only=True)
-        """
-        Unique timezone name.
-
-        Only the following timezone names are permitted:
-
-        * UTC; and
-        * IANA city timezones such as America/New_York
-
-        Other 3-letter regional timezones such as EST or EDT are
-        not permitted because they do not handle the transition
-        between winter and summer time automatically for those
-        regions where winter time is defined.
-
-        Because ZoneName is used to look up timezone conventions,
-        it must match either the string UTC or the code in IANA
-        timezone database precisely. The IANA city timezone code
-        has two slash-delimited tokens, the first referencing the
-        country and the other the city, for example America/New_York.
-        """
-Verify: datacentric/job/job.py
+Verify: datacentric/job//job.py
     # Copyright (C) 2013-present The DataCentric Authors.
     #
     # Licensed under the Apache License, Version 2.0 (the "License");
@@ -148,78 +130,13 @@ Verify: datacentric/job/job.py
     import attr
     from bson import ObjectId
     from typing import List, Union
-    from datacentric.storage.typed_key import TypedKey
-    from datacentric.storage.typed_record import TypedRecord
-    from datacentric.job.job_queue import JobQueueKeyHint
-    from datacentric.job.job import JobKeyHint
-
-
-    class JobKeyHint:
-        """
-        The job executes a method of the specified record using:
-
-        * CollectionName - collection where the record is stored
-        * RecordId - TemporalId of the record
-        * MethodName - method to be executed
-        * ParamNames - method parameter names (optional)
-        * ParamValues - serialized method parameter values (optional)
-
-        The method to be executed may take the following parameter types:
-
-        * Atomic type - serialized by AsString() method
-        * Enum - serialized as string value
-        * Key - serialized in semicolon delimited format without type
-
-        The order of parameters in ParameterNames and ParameterValues
-        must match, but does not have to be the same as the order
-        of parameters in the method signature.
-
-        The invoked method must return void.
-
-        A job can execute any public method of a class that returns void.
-        There is no requirement to mark the method by [HandlerMethod] or
-        [ViewerMethod] attribute.
-
-        The job may optionally provides the list of prerequisite job keys.
-        The job will be executed after JobProgress record for each of the
-        prerequisite jobs has Completed status.
-
-        After a job record is created, it is detected and scheduled for
-        execution by the queue specified by the record.JobQueue element.
-        It will have Pending status until all prerequisite jobs are
-        completed.
-
-        The queue updates the JobProgress record at least every time its
-        status changes, and optionally more often to update its progress
-        fraction and progress message. It also monitors the dataset where
-        it is running for JobCancellation records and writes log entries
-        to the log specified by the queue.
-
-        Because Job records reference the queue by its JobQueueName,
-        the existing jobs do not need to be resubmitted when a new
-        queue record is created for the same JobQueueName but it is
-        important to ensure that only one job with a given JobQueueName
-        is running at any given time.
-
-        To run the job, JobQueue executes the Run() method of Job which
-        in turn invokes method with MethodName in the referenced record
-        referenced by the job.
-
-        Depending on the type of queue, MethodName may be executed:
-
-        * In a different process or thread than the one that created the job
-        * On a different machine than the one where the job was created
-        * In parallel or out of sequence relative to other jobs
-
-        The job submitter must ensure that the specified method will have
-        access to the resources it needs and will be able to run successfully
-        in each of these cases.
-        """
-        pass
+    from datacentric.storage.record import Record
+    from datacentric.job..job_key import JobKey
+    from datacentric.job..job_queue_key import JobQueueKey
 
 
     @attr.s(slots=True, auto_attribs=True)
-    class JobKey(TypedKey['Job']):
+    class Job(Record):
         """
         The job executes a method of the specified record using:
 
@@ -281,73 +198,7 @@ Verify: datacentric/job/job.py
         in each of these cases.
         """
 
-        pass
-
-
-    @attr.s(slots=True, auto_attribs=True)
-    class Job(TypedRecord[JobKey]):
-        """
-        The job executes a method of the specified record using:
-
-        * CollectionName - collection where the record is stored
-        * RecordId - TemporalId of the record
-        * MethodName - method to be executed
-        * ParamNames - method parameter names (optional)
-        * ParamValues - serialized method parameter values (optional)
-
-        The method to be executed may take the following parameter types:
-
-        * Atomic type - serialized by AsString() method
-        * Enum - serialized as string value
-        * Key - serialized in semicolon delimited format without type
-
-        The order of parameters in ParameterNames and ParameterValues
-        must match, but does not have to be the same as the order
-        of parameters in the method signature.
-
-        The invoked method must return void.
-
-        A job can execute any public method of a class that returns void.
-        There is no requirement to mark the method by [HandlerMethod] or
-        [ViewerMethod] attribute.
-
-        The job may optionally provides the list of prerequisite job keys.
-        The job will be executed after JobProgress record for each of the
-        prerequisite jobs has Completed status.
-
-        After a job record is created, it is detected and scheduled for
-        execution by the queue specified by the record.JobQueue element.
-        It will have Pending status until all prerequisite jobs are
-        completed.
-
-        The queue updates the JobProgress record at least every time its
-        status changes, and optionally more often to update its progress
-        fraction and progress message. It also monitors the dataset where
-        it is running for JobCancellation records and writes log entries
-        to the log specified by the queue.
-
-        Because Job records reference the queue by its JobQueueName,
-        the existing jobs do not need to be resubmitted when a new
-        queue record is created for the same JobQueueName but it is
-        important to ensure that only one job with a given JobQueueName
-        is running at any given time.
-
-        To run the job, JobQueue executes the Run() method of Job which
-        in turn invokes method with MethodName in the referenced record
-        referenced by the job.
-
-        Depending on the type of queue, MethodName may be executed:
-
-        * In a different process or thread than the one that created the job
-        * On a different machine than the one where the job was created
-        * In parallel or out of sequence relative to other jobs
-
-        The job submitter must ensure that the specified method will have
-        access to the resources it needs and will be able to run successfully
-        in each of these cases.
-        """
-
-        queue: Union[str, JobQueueKeyHint] = attr.ib(default=None, kw_only=True)
+        queue: Union[str, JobQueueKey] = attr.ib(default=None, kw_only=True)
         """Queue to which the job is submitted."""
 
         collection_name: str = attr.ib(default=None, kw_only=True)
@@ -394,14 +245,104 @@ Verify: datacentric/job/job.py
         of parameters in the method signature.
         """
 
-        prerequisites: List[Union[str, JobKeyHint]] = attr.ib(default=None, kw_only=True, repr=False, metadata={'optional': True})
+        prerequisites: List[Union[str, JobKey]] = attr.ib(default=None, kw_only=True, repr=False, metadata={'optional': True})
         """
         Optional list of prerequisite job keys.
 
         The job will be executed after JobProgress record for each of
         the prerequisite jobs has Completed status.
         """
-Verify: datacentric/job/job_status.py
+
+        def to_key(self) -> str:
+            """Get Job key."""
+            return 'Job='
+
+        @classmethod
+        def create_key(cls, *, ) -> Union[str, JobKey]:
+            """Create Job key."""
+            return 'Job='
+Verify: datacentric/job//job_key.py
+    # Copyright (C) 2013-present The DataCentric Authors.
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    # You may obtain a copy of the License at
+    #
+    #    http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+
+    from abc import ABC
+    from datacentric.storage.key import Key
+
+
+    class JobKey(Key, ABC):
+        """
+        The job executes a method of the specified record using:
+
+        * CollectionName - collection where the record is stored
+        * RecordId - TemporalId of the record
+        * MethodName - method to be executed
+        * ParamNames - method parameter names (optional)
+        * ParamValues - serialized method parameter values (optional)
+
+        The method to be executed may take the following parameter types:
+
+        * Atomic type - serialized by AsString() method
+        * Enum - serialized as string value
+        * Key - serialized in semicolon delimited format without type
+
+        The order of parameters in ParameterNames and ParameterValues
+        must match, but does not have to be the same as the order
+        of parameters in the method signature.
+
+        The invoked method must return void.
+
+        A job can execute any public method of a class that returns void.
+        There is no requirement to mark the method by [HandlerMethod] or
+        [ViewerMethod] attribute.
+
+        The job may optionally provides the list of prerequisite job keys.
+        The job will be executed after JobProgress record for each of the
+        prerequisite jobs has Completed status.
+
+        After a job record is created, it is detected and scheduled for
+        execution by the queue specified by the record.JobQueue element.
+        It will have Pending status until all prerequisite jobs are
+        completed.
+
+        The queue updates the JobProgress record at least every time its
+        status changes, and optionally more often to update its progress
+        fraction and progress message. It also monitors the dataset where
+        it is running for JobCancellation records and writes log entries
+        to the log specified by the queue.
+
+        Because Job records reference the queue by its JobQueueName,
+        the existing jobs do not need to be resubmitted when a new
+        queue record is created for the same JobQueueName but it is
+        important to ensure that only one job with a given JobQueueName
+        is running at any given time.
+
+        To run the job, JobQueue executes the Run() method of Job which
+        in turn invokes method with MethodName in the referenced record
+        referenced by the job.
+
+        Depending on the type of queue, MethodName may be executed:
+
+        * In a different process or thread than the one that created the job
+        * On a different machine than the one where the job was created
+        * In parallel or out of sequence relative to other jobs
+
+        The job submitter must ensure that the specified method will have
+        access to the resources it needs and will be able to run successfully
+        in each of these cases.
+        """
+        pass
+Verify: datacentric/job//job_status.py
     # Copyright (C) 2013-present The DataCentric Authors.
     #
     # Licensed under the Apache License, Version 2.0 (the "License");
