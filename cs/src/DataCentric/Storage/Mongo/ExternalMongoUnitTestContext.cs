@@ -34,10 +34,10 @@ namespace DataCentric
         ///
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
-        public ExternalMongoUnitTestContext(object classInstance, string dbNameString,
+        public ExternalMongoUnitTestContext(object testObj, string dbNameString,
                                         [CallerMemberName] string methodName = null,
                                         [CallerFilePath] string sourceFilePath = null) :
-            this(classInstance, dbNameString, MongoServerKey.Default, methodName, sourceFilePath)
+            this(testObj, dbNameString, MongoServerKey.Default, methodName, sourceFilePath)
         {
         }
 
@@ -47,10 +47,10 @@ namespace DataCentric
         /// The last two arguments are provided by the compiler unless
         /// specified explicitly by the caller.
         /// </summary>
-        public ExternalMongoUnitTestContext(object classInstance, string dbNameString, MongoServerKey serverKey,
-                                        [CallerMemberName] string methodName = null,
-                                        [CallerFilePath] string sourceFilePath = null) :
-            base(classInstance, methodName, sourceFilePath)
+        public ExternalMongoUnitTestContext(object testObj, string dbNameString, MongoServerKey serverKey,
+                                        [CallerMemberName] string testMethodName = null,
+                                        [CallerFilePath] string testSourceFilePath = null) :
+            base(testObj, testMethodName, testSourceFilePath)
         {
             var dataSource = new TemporalMongoDataSource
             {

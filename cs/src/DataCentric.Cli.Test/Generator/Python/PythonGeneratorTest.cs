@@ -31,13 +31,12 @@ namespace DataCentric.Cli.Test
             using (var context = new TemporalMongoUnitTestContext(this))
             {
                 // Root of the C# source code of the DataCentric module
-                string testFolder = Path.GetDirectoryName(context.CallerFilePath);
-                string srcRootFolder = Path.Combine(testFolder, "..\\..\\..");
+                string srcRootFolder = Path.Combine(context.TestFolderPath, "..\\..\\..");
                 string libFolder = Path.Combine(srcRootFolder, "DataCentric.Test\\bin\\Debug\\netcoreapp2.1"); // TODO - support Linux and release modes
                 var options = new ExtractCommand
                 {
                     Assemblies = Directory.GetFiles(libFolder, "*.dll"),
-                    OutputFolder = testFolder,
+                    OutputFolder = context.TestFolderPath,
                     Types = new List<string>(),
                     ProjectPath = srcRootFolder
                 };

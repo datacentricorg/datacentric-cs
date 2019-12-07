@@ -35,42 +35,50 @@ namespace DataCentric
         /// Name of the unit test method obtained using [CallerMemberName]
         /// attribute of the unit test method signature.
         /// </summary>
-        public string CallerMemberName { get; set; }
+        public string TestMethodName { get; set; }
 
         /// <summary>
-        /// Path to the unit test source code file obtained using [CallerFilePath]
+        /// Test class name obtained by parsing the [CallerFilePath]
         /// attribute of the unit test method signature.
         /// </summary>
-        public string CallerFilePath { get; set; }
+        public string TestClassName { get; set; }
 
         /// <summary>
-        /// Create with class name, method name, and source file path.
-        ///
-        /// When ``this'' is passed as the the only argument to the
-        /// constructor, the latter two arguments are provided by
-        /// the compiler.
+        /// Test folder name obtained by parsing the [CallerFilePath]
+        /// attribute of the unit test method signature.
+        /// </summary>
+        public string TestFolderPath { get; set; }
+
+        /// <summary>
+        /// First argument is test object (instance of the unit test fixture).
+        /// The remaining two arguments are provided by the compiler.
         /// </summary>
         public UnitTestContext(
-            object classInstance,
-            [CallerMemberName] string methodName = null,
-            [CallerFilePath] string sourceFilePath = null)
+            object testObj,
+            [CallerMemberName] string callerMemberName = null,
+            [CallerFilePath] string callerFilePath = null)
         {
             // Check that properties required by the unit test are set
-            if (classInstance == null) throw new Exception("Method name passed to UnitTestContext is null.");
-            if (methodName == null) throw new Exception("Method name passed to UnitTestContext is null.");
-            if (sourceFilePath == null) throw new Exception("Source file path passed to UnitTestContext is null.");
+            if (testObj == null) throw new Exception("Class instance passed to UnitTestContext is null.");
+            if (callerMemberName == null) throw new Exception("Method name passed to UnitTestContext is null.");
+            if (callerFilePath == null) throw new Exception("Source file path passed to UnitTestContext is null.");
 
             // Split file path into test folder path and source filename
-            string testFolderPath = Path.GetDirectoryName(sourceFilePath);
-            string sourceFileName = Path.GetFileName(sourceFilePath);
+            string testFolderPath = Path.GetDirectoryName(callerFilePath);
+            string sourceFileName = Path.GetFileName(callerFilePath);
 
             // Test class path is the path to source file followed by
             // subfolder whose name is source file name without extension
             if (!sourceFileName.EndsWith(".cs")) throw new Exception($"Source filename '{sourceFileName}' does not end with '.cs'");
-            string className = sourceFileName.Substring(0, sourceFileName.Length - 3);
+            string testClassName = sourceFileName.Substring(0, sourceFileName.Length - 3);
+
+            // Set properties of the unit test class for use by derived classes
+            TestMethodName = callerMemberName;
+            TestClassName = testClassName;
+            TestFolderPath = testFolderPath;
 
             // Use log file name format className.MethodName.approved.txt from ApprovalTests.NET.
-            string logFileName = String.Join(".", className, methodName, "approved.txt");
+            string logFileName = String.Join(".", testClassName, callerMemberName, "approved.txt");
 
             // All properties must be set before initialization is performed
             // Do not call Init(...) here because they will be initialized by

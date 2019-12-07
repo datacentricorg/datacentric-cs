@@ -47,10 +47,10 @@ namespace DataCentric
         /// </summary>
         public TemporalMongoUnitTestContext(
             object obj,
-            [CallerMemberName] string methodName = null,
-            [CallerFilePath] string sourceFilePath = null)
+            [CallerMemberName] string callerMemberName = null,
+            [CallerFilePath] string callerFilePath = null)
             :
-            base(obj, methodName, sourceFilePath)
+            base(obj, callerMemberName, callerFilePath)
         {
         }
 
@@ -63,10 +63,10 @@ namespace DataCentric
         public TemporalMongoUnitTestContext( // TODO - move to a separate class
             object classInstance,
             MongoServerKey mongoServerKey,
-            [CallerMemberName] string methodName = null,
-            [CallerFilePath] string sourceFilePath = null)
+            [CallerMemberName] string callerMemberName = null,
+            [CallerFilePath] string callerFilePath = null)
             :
-            base(classInstance, mongoServerKey, methodName, sourceFilePath)
+            base(classInstance, mongoServerKey, callerMemberName, callerFilePath)
         {
         }
     }

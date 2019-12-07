@@ -46,12 +46,11 @@ namespace DataCentric
         /// </summary>
         public MongoUnitTestContext(
             object obj,
-            [CallerMemberName] string methodName = null,
-            [CallerFilePath] string sourceFilePath = null)
+            [CallerMemberName] string callerMemberName = null,
+            [CallerFilePath] string callerFilePath = null)
             :
-            this(obj, MongoServerKey.Default, methodName, sourceFilePath)
+            this(obj, MongoServerKey.Default, callerMemberName, callerFilePath)
         {
-            // Will use Mongo server running on the default port of localhost
         }
 
         /// <summary>
@@ -63,28 +62,17 @@ namespace DataCentric
         public MongoUnitTestContext(
             object obj,
             MongoServerKey mongoServerKey,
-            [CallerMemberName] string methodName = null,
-            [CallerFilePath] string sourceFilePath = null)
+            [CallerMemberName] string callerMemberName = null,
+            [CallerFilePath] string callerFilePath = null)
             :
-            base(obj, methodName, sourceFilePath)
+            base(obj, callerMemberName, callerFilePath)
         {
-            // Initialize properties of the method context
-            // that the unit test method may use.
-            CallerMemberName = methodName;
-            CallerFilePath = sourceFilePath;
-
-            // Create and initialize data source with TEST environment type.
-            //
-            // This does not create the database until the data source
-            // is actually used to access data.
-            string className = obj.GetType().Name;
-
             // Create data source specified as generic argument
-            DataSource = new TDataSource()
+            DataSource = new TDataSource
             {
                 EnvType = EnvType.Test,
-                EnvGroup = className,
-                EnvName = methodName,
+                EnvGroup = TestClassName,
+                EnvName = TestMethodName,
                 MongoServer = mongoServerKey
             };
 
