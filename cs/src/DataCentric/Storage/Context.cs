@@ -124,6 +124,22 @@ namespace DataCentric
             }
         }
 
+        /// <summary>
+        /// Set this property to true to keep test data after the
+        /// test method exits.
+        ///
+        /// When running under xUnit, the data in test database is not
+        /// erased on test method exit if KeepTestData() was invoked.
+        ///
+        /// When running under DataCentric, the test dataset will not
+        /// be deleted on test method exit if KeepTestData() was invoked.
+        ///
+        /// Note that test data is always erased when test method enters,
+        /// irrespective of any KeepTestData() calls and irrespective of
+        /// whether or not KeepTestData() has been called.
+        /// </summary>
+        public bool KeepTestData { get; set; }
+
         //--- METHODS
 
         /// <summary>
@@ -162,25 +178,6 @@ namespace DataCentric
             if (log_ != null) log_.Flush();
             if (progress_ != null) progress_.Flush();
             if (dataSource_ != null) dataSource_.Flush();
-        }
-
-        /// <summary>
-        /// Invoke this method to keep test data after the
-        /// test method exits.
-        ///
-        /// When running under xUnit, the data in test database is not
-        /// erased on test method exit if KeepTestData() was invoked.
-        ///
-        /// When running under DataCentric, the test dataset will not
-        /// be deleted on test method exit if KeepTestData() was invoked.
-        ///
-        /// Note that test data is always erased when test method enters,
-        /// irrespective of any KeepTestData() calls and irrespective of
-        /// whether or not KeepTestData() has been called.
-        /// </summary>
-        public virtual void KeepTestData()
-        {
-            throw new Exception("Method KeepTestData() invoked on a context that is not a unit test context.");
         }
     }
 

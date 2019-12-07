@@ -51,7 +51,7 @@ namespace DataCentric.Test
         {
             using (var context = CreateMethodContext())
             {
-                context.KeepTestData();
+                context.KeepTestData = true;
 
                 var recordOff = new FlagTestRecord() {Name = "Off"};
                 var recordOn = new FlagTestRecord() { Name = "On", FlagValue = Flag.True};

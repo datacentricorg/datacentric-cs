@@ -32,6 +32,18 @@ namespace DataCentric
     public class UnitTestContext : Context
     {
         /// <summary>
+        /// Name of the unit test method obtained using [CallerMemberName]
+        /// attribute of the unit test method signature.
+        /// </summary>
+        public string CallerMemberName { get; set; }
+
+        /// <summary>
+        /// Path to the unit test source code file obtained using [CallerFilePath]
+        /// attribute of the unit test method signature.
+        /// </summary>
+        public string CallerFilePath { get; set; }
+
+        /// <summary>
         /// Create with class name, method name, and source file path.
         ///
         /// When ``this'' is passed as the the only argument to the

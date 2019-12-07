@@ -29,7 +29,7 @@ namespace DataCentric.Test
         {
             using (var context = CreateMethodContext())
             {
-                context.KeepTestData();
+                context.KeepTestData = true;
 
                 // Create screen instance
                 Screen screenSample = GetScreenSample();

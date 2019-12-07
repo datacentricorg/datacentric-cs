@@ -32,7 +32,7 @@ namespace DataCentric.Test
         {
             using (var context = CreateMethodContext())
             {
-                context.KeepTestData();
+                context.KeepTestData = true;
 
                 var record = new NonNullableElementsSample();
                 record.DataSet = context.DataSet;
@@ -69,7 +69,7 @@ namespace DataCentric.Test
         {
             using (var context = CreateMethodContext())
             {
-                context.KeepTestData();
+                context.KeepTestData = true;
 
                 var record = new NullableElementsSample();
                 record.DataSet = context.DataSet;
@@ -108,7 +108,7 @@ namespace DataCentric.Test
         {
             using (var context = CreateMethodContext())
             {
-                context.KeepTestData();
+                context.KeepTestData = true;
 
                 var rec = new CompositeKeySample();
                 rec.KeyElement1 = "abc1";
@@ -149,7 +149,7 @@ namespace DataCentric.Test
         {
             using (var context = CreateMethodContext())
             {
-                context.KeepTestData();
+                context.KeepTestData = true;
 
                 var rec = new SingletonSample();
                 rec.StringElement = "abc";
@@ -173,7 +173,7 @@ namespace DataCentric.Test
         {
             using (var context = CreateMethodContext())
             {
-                context.KeepTestData();
+                context.KeepTestData = true;
 
                 // Create from timestamp
                 var createdTime = InstantUtil.Utc(2003, 5, 1, 10, 15, 0);
