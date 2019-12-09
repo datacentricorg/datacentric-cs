@@ -37,12 +37,6 @@ namespace DataCentric
         /// <summary>Key element declaration.</summary>
         public TypeDeclKey Key { get; set; }
 
-        /// <summary>Query element declaration.</summary>
-        public TypeDeclKey Query { get; set; }
-
-        /// <summary>Condition element declaration.</summary>
-        public TypeDeclKey Condition { get; set; }
-
         /// <summary>Type argument declaration.</summary>
         [XmlElement]
         public List<TypeArgumentDecl> TypeArguments { get; set; }

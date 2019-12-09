@@ -31,13 +31,7 @@ namespace DataCentric
         /// <summary>Key value.</summary>
         Key,
 
-        /// <summary>Query value.</summary>
-        Query,
-
         /// <summary>Data value.</summary>
         Data,
-
-        /// <summary>Condition value.</summary>
-        Condition
     }
 }
