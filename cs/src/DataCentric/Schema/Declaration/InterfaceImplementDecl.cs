@@ -19,7 +19,7 @@ namespace DataCentric
     /// <summary>Interface implementation data.</summary>
     public class InterfaceImplementDecl : Data
     {
-        /// <summary>Interface</summary>
+        /// <summary>Interface.</summary>
         public TypeDeclKey Interface { get; set; }
 
         /// <summary>Programming language in which handler is implemented.</summary>

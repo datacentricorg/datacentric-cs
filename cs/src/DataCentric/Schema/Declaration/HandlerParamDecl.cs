@@ -16,7 +16,7 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Handler parameter declaration.</summary>
+    /// <summary>Handler parameter block.</summary>
     public class HandlerParamDecl : HandlerVariableDecl
     {
         /// <summary>Parameter name.</summary>

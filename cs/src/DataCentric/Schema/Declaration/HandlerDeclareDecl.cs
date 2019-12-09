@@ -41,10 +41,10 @@ namespace DataCentric
         /// <summary>Handler return value.</summary>
         public HandlerVariableDecl Return { get; set; }
 
-        /// <summary>If set as true, handler will be static, elsewise non-static.</summary>
+        /// <summary>If this flag is set, handler will be static, otherwise it will be non-static.</summary>
         public YesNo? Static { get; set; }
 
-        /// <summary>If flag is set, handler will be hidden in UI in user mode.</summary>
+        /// <summary>If this flag is set, handler will be hidden in UI in user mode.</summary>
         public YesNo? Hidden { get; set; }
 
         /// <summary>Interactive Input</summary>

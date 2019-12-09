@@ -16,16 +16,29 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Element Modification Type.</summary>
+    /// <summary>
+    /// Indicates if the element is treated as input or output during
+    /// interactive edit.
+    /// </summary>
     public enum ElementModificationType
     {
-        /// <summary>None value is defined.</summary>
+        /// <summary>Indicates that notification type is not specified.</summary>
         EnumNone = -1,
 
-        /// <summary>In.</summary>
+        /// <summary>
+        /// Element is treated as input during interactive edit.
+        ///
+        /// Input elements cannot be specified by the user. They
+        /// will be shown as readonly in the user interface.
+        /// </summary>
         In,
 
-        /// <summary>Out.</summary>
+        /// <summary>
+        /// Element is treated as output during interactive edit.
+        ///
+        /// Output elements cannot be specified by the user. They
+        /// will be shown as readonly in the user interface.
+        /// </summary>
         Out
     }
 }

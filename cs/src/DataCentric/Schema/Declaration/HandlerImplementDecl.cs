@@ -16,7 +16,7 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Handler implementation data.</summary>
+    /// <summary>Handler implementation block.</summary>
     public class HandlerImplementDecl : Data
     {
         /// <summary>Handler name.</summary>

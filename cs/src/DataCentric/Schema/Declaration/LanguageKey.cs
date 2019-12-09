@@ -16,8 +16,20 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Key for a LanguageData element.</summary>
-    public class LanguageKey : Data
+    /// <summary>
+    /// Identifies the programming language in which a handler is implemented.
+    ///
+    /// By convention, language name is the same as source file suffix:
+    ///
+    /// * For Python, py
+    /// * For C++, cpp
+    /// * For C#, cs
+    ///
+    /// The language is used to select which DataCentric CLI to invoke to execute
+    /// the handler. For example, if language name is py, the CLI to invoke is
+    /// datacentric-py. 
+    /// </summary>
+    public class LanguageKey : Data // TODO - convert to record so key can be picked
     {
         /// <summary>Unique language identifier.</summary>
         public string LanguageName { get; set; }

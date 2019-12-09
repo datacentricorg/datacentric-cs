@@ -17,7 +17,10 @@ limitations under the License.
 namespace DataCentric
 {
     /// <summary>
-    /// Interface for basic declaration types.
+    /// Interface implemented by TypeDecl and EnumDecl records.
+    ///
+    /// TODO - derive TypeDecl and EnumDecl from one root and
+    /// eliminate this interface.
     /// </summary>
     public interface IDecl
     {

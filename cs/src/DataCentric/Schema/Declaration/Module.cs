@@ -16,6 +16,12 @@ limitations under the License.
 
 namespace DataCentric
 {
+    /// <summary>
+    /// Module is a way to organize a group of data types within a package.
+    ///
+    /// Module name is a dot delimited string which in most cases corresponds
+    /// to a code folder.
+    /// </summary>
     public class Module : TypedRecord<ModuleKey, Module>
     {
         /// <summary>Unique module name in dot delimited format.</summary>

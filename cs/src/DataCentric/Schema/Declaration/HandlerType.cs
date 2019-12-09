@@ -22,13 +22,26 @@ namespace DataCentric
         /// <summary>None value is defined.</summary>
         EnumNone = -1,
 
-        /// <summary>Job handler. Return type is allowed but will be discarded in case of invocation from the client. Input params are allowed</summary>
+        /// <summary>
+        /// Job handler is an action that can be invoked via the UI.
+        ///
+        /// Return type is not allowed. Input parameters are allowed.
+        /// </summary>
         Job,
 
-        /// <summary>Process handler. Return type is not allowed. Input params are allowed</summary>
+        /// <summary>
+        /// Process handler represents a process that can be launched
+        /// from the UI. Once launched, the process continues until it
+        /// terminates itself, or is terminated from the user interface.
+        ///
+        /// Return type is not allowed. Input params are allowed.</summary>
         Process,
 
-        /// <summary>Viewer handler. Return type is allowed. Input params are not allowed.</summary>
+        /// <summary>
+        /// Viewer handler.
+        ///
+        /// Return type is allowed. Input params are not allowed.
+        /// </summary>
         Viewer,
 
         /// <summary>Viewer Editor. Return type is allowed. Input params are not allowed.</summary>

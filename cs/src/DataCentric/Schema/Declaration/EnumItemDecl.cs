@@ -19,20 +19,24 @@ using System.Xml.Serialization;
 
 namespace DataCentric
 {
-    /// <summary>Enum item declaration.</summary>
+    /// <summary>Item in an enumeration</summary>
     public class EnumItemDecl
     {
-        /// <summary>Item name.</summary>
+        /// <summary>Name of the item will be used in the generated code.</summary>
         public string Name { get; set; }
 
-        /// <summary>Enum item aliases.</summary>
+        /// <summary>Alias for the enum item.</summary>
         [XmlElement]
-        public List<string> Aliases { get; set; }
+        public List<string> Aliases { get; set; } // TODO - consider removing
 
-        /// <summary>Itel label. If not specified, name is used instead.</summary>
+        /// <summary>
+        /// Optional label is used in the user interface, but not in serialization.
+        ///
+        /// If not specified, item name is used instead.
+        /// </summary>
         public string Label { get; set; }
 
-        /// <summary>Item additional information.</summary>
+        /// <summary>Detailed description of the item.</summary>
         public string Comment { get; set; }
     }
 }

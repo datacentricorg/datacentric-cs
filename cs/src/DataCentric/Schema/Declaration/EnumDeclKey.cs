@@ -16,7 +16,9 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Key for a EnumDecl element.</summary>
+    /// <summary>
+    /// Language neutral description of an enumeration.
+    /// </summary>
     public class EnumDeclKey : TypedKey<EnumDeclKey, EnumDecl>
     {
         /// <summary>Module reference.</summary>

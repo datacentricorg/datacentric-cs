@@ -60,14 +60,26 @@ namespace DataCentric
         /// <summary>Indicates if type is derived from Record.</summary>
         public bool IsRecord { get; set; }
 
-        /// <summary>Parent type reference.</summary>
+        /// <summary>
+        /// Reference to the parent type.
+        ///
+        /// The record can only have a single parent type,
+        /// however it can include multiple data interfaces.
+        /// </summary>
         public TypeDeclKey Inherit { get; set; }
 
         /// <summary>Inherit Type Argument.</summary>
         [XmlElement]
         public List<TypeArgumentDecl> InheritTypeArguments { get; set; }
 
-        /// <summary>Parent interfaces</summary>
+        /// <summary>
+        /// List of data interfaces included in this type.
+        /// 
+        /// In programming languages without multiple class
+        /// inheritance, the elements from data interfaces
+        /// will be included directly rather than by inheriting
+        /// from an interface class.
+        /// </summary>
         [XmlElement]
         public List<TypeDeclKey> Interfaces { get; set; }
 
@@ -85,41 +97,51 @@ namespace DataCentric
         [XmlElement]
         public List<string> Keys { get; set; }
 
-        /// <summary>Array of index definitions.</summary>
+        /// <summary>
+        /// Array of database index definitions, each item representing a single index.
+        /// </summary>
         [XmlElement]
         public List<TypeIndex> Index { get; set; }
 
         /// <summary>Immutable flag.</summary>
         public YesNo? Immutable { get; set; }
 
-        /// <summary>Flag indicating UiResponse.</summary>
+        /// <summary>Flag indicating if the type will provide UI response.</summary>
         public YesNo? UiResponse { get; set; }
 
-        /// <summary>Seed.</summary>
-        public int? Seed { get; set; }
+        /// <summary>
+        /// Seed used to generate unique hash values for the type.
+        ///
+        /// This value is used to resolve hash collisions between two types within
+        /// the same schema.
+        /// </summary>
+        public int? Seed { get; set; } // TODO - deprecated
 
-        /// <summary>Type Version</summary>
+        /// <summary>
+        /// Type version is used to make it possible for two classes with
+        /// the same name to coexist within the database.
+        /// </summary>
         public string Version { get; set; }
 
-        /// <summary>System.</summary>
+        /// <summary>Flag indicating if the type is a system type.</summary>
         public YesNo? System { get; set; }
 
         /// <summary>Enable cache flag.</summary>
         public YesNo? EnableCache { get; set; }
 
         /// <summary>Use IObjectContext Instead of Context</summary>
-        public YesNo? ObjectContext { get; set; }
+        public YesNo? ObjectContext { get; set; } // TODO - deprecated?
 
-        /// <summary>Creates object without context</summary>
-        public YesNo? ContextFree { get; set; }
+        /// <summary>Creates object without context.</summary>
+        public YesNo? ContextFree { get; set; } // TODO - deprecated?
 
         /// <summary>It is possible to split the code over two or more source files.</summary>
-        public YesNo? Partial { get; set; }
+        public YesNo? Partial { get; set; } // TODO - deprecated?
 
-        /// <summary>Interactive Edit</summary>
-        public YesNo? InteractiveEdit { get; set; }
+        /// <summary>Flag indicating if the type will support interactive editing.</summary>
+        public YesNo? InteractiveEdit { get; set; } // TODO - duplicate of UiResponse?
 
-        /// <summary>Save records always permanently.</summary>
+        /// <summary>Flag indicating a record that is always saved permanently.</summary>
         public YesNo? Permanent { get; set; }
     }
 }

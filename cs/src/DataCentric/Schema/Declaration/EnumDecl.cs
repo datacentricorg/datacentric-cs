@@ -20,7 +20,9 @@ using System.Xml.Serialization;
 
 namespace DataCentric
 {
-    /// <summary>Enum declaration.</summary>
+    /// <summary>
+    /// Language neutral description of an enumeration.
+    /// </summary>
     [Serializable]
     [XmlRoot]
     public class EnumDecl : TypedRecord<EnumDeclKey, EnumDecl>, IDecl
@@ -35,10 +37,14 @@ namespace DataCentric
         [XmlElement]
         public List<string> Aliases { get; set; }
 
-        /// <summary>Enum label.</summary>
+        /// <summary>
+        /// Optional label is used in the user interface, but not in serialization.
+        ///
+        /// If not specified, item name is used instead.
+        /// </summary>
         public string Label { get; set; }
 
-        /// <summary>Enum comment.</summary>
+        /// <summary>Detailed description of the enum.</summary>
         public string Comment { get; set; }
 
         /// <summary>Category.</summary>

@@ -43,14 +43,14 @@ namespace DataCentric
         /// <summary>Condition element declaration.</summary>
         public TypeDeclKey Condition { get; set; }
 
-        /// <summary>Type Argument.</summary>
+        /// <summary>Type argument declaration.</summary>
         [XmlElement]
         public List<TypeArgumentDecl> TypeArguments { get; set; }
 
         /// <summary>Interface element declaration.</summary>
         public TypeDeclKey Interface { get; set; }
 
-        /// <summary>HandlerArgs element declaration.</summary>
+        /// <summary>Handler arguments element declaration.</summary>
         public TypeDeclKey HandlerArgs { get; set; }
     }
 }

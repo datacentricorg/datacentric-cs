@@ -16,8 +16,14 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Type kind enumeration.</summary>
-    public enum TypeKind
+    /// <summary>
+    /// Identifies type kind.
+    ///
+    /// Some of the type kinds are mapped to class qualifier such as abstract, final, etc.
+    /// It can also identify the type as element (class derived from Data) rather than record
+    /// that is derived from Record.
+    /// </summary>
+    public enum TypeKind // TODO - convert to Flags or to individual binary elements so more than one can be specified
     {
         /// <summary>None value is defined.</summary>
         EnumNone = -1,

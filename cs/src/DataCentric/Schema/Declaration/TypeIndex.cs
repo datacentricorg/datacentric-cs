@@ -20,15 +20,17 @@ using System.Xml.Serialization;
 namespace DataCentric
 {
     /// <summary>
-    /// Specifies database index for the type.
+    /// Definition for a single database index defined for the type
+    ///
+    /// Multiple indexes may be defined for the type.
     /// </summary>
     public class TypeIndex : Data
     {
-        /// <summary>Element index definition.</summary>
-        [XmlElement]
-        public List<TypeElementIndex> Element { get; set; }
-
-        /// <summary>Index name.</summary>
+        /// <summary>Name of the index.</summary>
         public string Name { get; set; }
+
+        /// <summary>Elements within the index.</summary>
+        [XmlElement]
+        public List<TypeElementIndex> Element { get; set; } // TODO - change to Elements?
     }
 }

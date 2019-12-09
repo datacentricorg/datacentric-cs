@@ -16,16 +16,16 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Indicates the direction of element index.</summary>
+    /// <summary>Specifies the direction of element within a database index.</summary>
     public enum TypeElementIndexDirection
     {
         /// <summary>None value is defined.</summary>
         EnumNone = -1,
 
-        /// <summary>Ascending direction</summary>
+        /// <summary>Ascending direction.</summary>
         Ascending,
 
-        /// <summary>Descending direction</summary>
+        /// <summary>Descending direction.</summary>
         Descending
     }
 }
