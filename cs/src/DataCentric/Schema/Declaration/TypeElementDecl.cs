@@ -22,32 +22,6 @@ namespace DataCentric
     /// <summary>Element block within type declaration.</summary>
     public class TypeElementDecl : TypeMemberDecl
     {
-        /// <summary>Element name.</summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// If specified, will be used in the user interface instead of the name.
-        /// 
-        /// This field has no effect on the API and affects only the user interface.
-        /// </summary>
-        public string Label { get; set; }
-
-        /// <summary>Detailed description of the element.</summary>
-        public string Comment { get; set; }
-
-        /// <summary>
-        /// Specifies that the current element is a list.
-        /// </summary>
-        public YesNo? Vector { get; set; }
-
-        /// <summary>
-        /// Indicates that the element is optional.
-        ///
-        /// By default, all elements are required. Use this flag
-        /// to specify that an element is optional.
-        /// </summary>
-        public YesNo? Optional { get; set; }
-
         /// <summary>
         /// Secure flag.
         ///

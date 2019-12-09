@@ -22,6 +22,19 @@ namespace DataCentric
     /// <summary>Type argument declaration.</summary>
     public class TypeMemberDecl : Data
     {
+        /// <summary>Element name.</summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// If specified, will be used in the user interface instead of the name.
+        /// 
+        /// This field has no effect on the API and affects only the user interface.
+        /// </summary>
+        public string Label { get; set; }
+
+        /// <summary>Detailed description of the element.</summary>
+        public string Comment { get; set; }
+
         /// <summary>Parameters specific to the value element.</summary>
         public ValueDecl Value { get; set; }
 
@@ -46,5 +59,18 @@ namespace DataCentric
         /// The referenced type must not have TypeKind=Element.
         /// </summary>
         public TypeDeclKey Key { get; set; }
+
+        /// <summary>
+        /// Specifies that the current element is a list.
+        /// </summary>
+        public YesNo? Vector { get; set; }
+
+        /// <summary>
+        /// Indicates that the element is optional.
+        ///
+        /// By default, all elements are required. Use this flag
+        /// to specify that an element is optional.
+        /// </summary>
+        public YesNo? Optional { get; set; }
     }
 }

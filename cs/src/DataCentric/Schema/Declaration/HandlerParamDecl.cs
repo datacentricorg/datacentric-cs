@@ -19,25 +19,5 @@ namespace DataCentric
     /// <summary>Handler parameter or return variable block.</summary>
     public class HandlerParamDecl : TypeMemberDecl
     {
-        /// <summary>Parameter name.</summary>
-        public string Name { get; set; }
-
-        /// <summary>Flag indicating variable size array (vector) container.</summary>
-        public YesNo? Vector { get; set; }
-
-        /// <summary>Object element declaration.</summary>
-        public TypeDeclKey Object { get; set; }
-
-        /// <summary>Flag indicating optional element.</summary>
-        public YesNo? Optional { get; set; }
-
-        /// <summary>Flag indicating a hidden element. Hidden elements are visible in API but not in the UI.</summary>
-        public YesNo? Hidden { get; set; }
-
-        /// <summary>Parameter label.</summary>
-        public string Label { get; set; }
-
-        /// <summary>Parameter comment. Contains addition information about handler parameter.</summary>
-        public string Comment { get; set; }
     }
 }
