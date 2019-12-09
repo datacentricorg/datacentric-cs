@@ -65,7 +65,8 @@ namespace DataCentric.Cli
                 assemblies.AddFiles(Directory.EnumerateFiles(Environment.CurrentDirectory, "*.dll"));
             }
 
-            Directory.CreateDirectory(OutputFolder);
+            if (!Directory.Exists(OutputFolder))
+                Directory.CreateDirectory(OutputFolder);
 
             foreach (Assembly assembly in assemblies)
             {
