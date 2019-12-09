@@ -27,7 +27,13 @@ namespace DataCentric.Test
     /// <summary>Sample enum.</summary>
     public enum SampleEnum
     {
-        /// <summary>Empty</summary>
+        /// <summary>
+        /// Indicates that enum value is not set.
+        /// 
+        /// In programming languages where enum defaults to the first item when
+        /// not set, making Empty the first item prevents unintended assignment
+        /// of a meaningful value.
+        /// </summary>
         Empty,
 
         /// <summary>Sample enum item.</summary>

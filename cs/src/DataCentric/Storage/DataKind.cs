@@ -21,7 +21,13 @@ namespace DataCentric
     /// <summary>Kind of the data type (record, key, or element).</summary>
     public enum DataKind
     {
-        /// <summary>Empty</summary>
+        /// <summary>
+        /// Indicates that enum value is not set.
+        /// 
+        /// In programming languages where enum defaults to the first item when
+        /// not set, making Empty the first item prevents unintended assignment
+        /// of a meaningful value.
+        /// </summary>
         Empty,
 
         /// <summary>Data type is derived from Record.</summary>

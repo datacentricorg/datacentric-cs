@@ -21,7 +21,13 @@ namespace DataCentric
     /// <summary>Specifies how to open a file for reading.</summary>
     public enum FileReadMode
     {
-        /// <summary>Empty</summary>
+        /// <summary>
+        /// Indicates that enum value is not set.
+        /// 
+        /// In programming languages where enum defaults to the first item when
+        /// not set, making Empty the first item prevents unintended assignment
+        /// of a meaningful value.
+        /// </summary>
         Empty,
 
         /// <summary>Open an existing file. Exception if does not exist.</summary>
