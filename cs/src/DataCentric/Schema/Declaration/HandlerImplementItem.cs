@@ -28,7 +28,7 @@ namespace DataCentric
         public string Name { get; set; }
 
         /// <summary>Programming language in which handler is implemented.</summary>
-        public LanguageKey Language { get; set; }
+        public Language Language { get; set; }
 
         /// <summary>
         /// True if this implementation is an override of the

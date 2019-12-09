@@ -27,9 +27,11 @@ namespace DataCentric
     ///
     /// The language is used to select which DataCentric CLI to invoke to execute
     /// the handler. For example, if language name is py, the CLI to invoke is
-    /// datacentric-py. 
+    /// datacentric-py.
+    ///
+    /// TODO - convert to record so key can be picked
     /// </summary>
-    public class LanguageKey : Data // TODO - convert to record so key can be picked
+    public class Language : Data
     {
         /// <summary>Unique language identifier.</summary>
         public string LanguageName { get; set; }

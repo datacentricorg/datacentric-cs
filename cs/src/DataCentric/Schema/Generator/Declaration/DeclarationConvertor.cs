@@ -386,7 +386,7 @@ namespace DataCentric
             return new HandlerImplementItem
             {
                 Name = method.Name,
-                Language = new LanguageKey {LanguageName = "cs"}
+                Language = new Language {LanguageName = "cs"}
             };
         }
 
