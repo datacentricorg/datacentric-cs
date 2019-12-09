@@ -116,12 +116,5 @@ namespace DataCentric
         /// TODO - this duplicates Output, need to consolidate.
         /// </summary>
         public ElementModificationType? ModificationType { get; set; }
-
-        /// <summary>
-        /// Flag indicating BsonIgnore attribute.
-        ///
-        /// TODO - review if we need this
-        /// </summary>
-        public YesNo? BsonIgnore { get; set; }
     }
 }
