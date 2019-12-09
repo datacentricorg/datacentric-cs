@@ -74,20 +74,6 @@ namespace DataCentric
         /// </summary>
         public TypeDeclKey Inherit { get; set; }
 
-        /// <summary>
-        /// List of data interfaces included in this type.
-        ///
-        /// A data interface is a group of data elements
-        /// included in multiple type declarations.
-        /// 
-        /// In programming languages without multiple class
-        /// inheritance, the elements from data interfaces
-        /// will be included directly rather than by inheriting
-        /// from an interface class.
-        /// </summary>
-        [XmlElement]
-        public List<TypeDeclKey> Interfaces { get; set; }
-
         /// <summary>Handler declaration block.</summary>
         public HandlerDeclareBlockDecl Declare { get; set; }
 

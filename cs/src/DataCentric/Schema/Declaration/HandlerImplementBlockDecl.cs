@@ -33,9 +33,5 @@ namespace DataCentric
         /// </summary>
         [XmlElement]
         public List<HandlerImplementDecl> Handlers { get; set; }
-
-        /// <summary>Interface implementation data.</summary>
-        [XmlElement]
-        public List<InterfaceImplementDecl> Interfaces { get; set; }
     }
 }
