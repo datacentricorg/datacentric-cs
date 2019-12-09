@@ -45,10 +45,6 @@ namespace DataCentric
         /// <summary>Shortcut.</summary>
         public string Shortcut { get; set; }
 
-        /// <summary>Type Params</summary>
-        [XmlElement]
-        public List<TypeParamDecl> TypeParams { get; set; }
-
         /// <summary>Type aliases.</summary>
         [XmlElement]
         public List<string> Aliases { get; set; }
