@@ -25,13 +25,13 @@ namespace DataCentric
     ///
     /// TODO - we can remove this document level when switching from XML to JSON.
     /// </summary>
-    public class HandlerDeclareBlockDecl : Data
+    public class HandlerDeclareBlock : Data
     {
         /// <summary>
         /// Each element of this list provides declaration for a
         /// single handler.
         /// </summary>
         [XmlElement]
-        public List<HandlerDeclareDecl> Handlers { get; set; }
+        public List<HandlerDeclareItem> Handlers { get; set; }
     }
 }

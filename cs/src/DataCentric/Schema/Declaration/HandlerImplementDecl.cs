@@ -17,10 +17,12 @@ limitations under the License.
 namespace DataCentric
 {
     /// <summary>
-    /// Provides implementation for a handler that was declared
+    /// Represents a single item within handler implementation block.
+    /// 
+    /// Implementation must be provided for each handler that was declared
     /// in this class or its base.
     /// </summary>
-    public class HandlerImplementDecl : Data
+    public class HandlerImplementItem : Data
     {
         /// <summary>Handler name.</summary>
         public string Name { get; set; }

@@ -207,7 +207,7 @@ namespace DataCentric
 
         private static void WriteMethods(TypeDecl decl, CodeWriter writer)
         {
-            bool HasImplement(HandlerDeclareDecl declare)
+            bool HasImplement(HandlerDeclareItem declare)
             {
                 return decl.Implement?.Handlers.FirstOrDefault(t => t.Name == declare.Name) == null;
             }

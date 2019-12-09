@@ -128,8 +128,8 @@ namespace DataCentric
                                            .Where(IsProperHandler)
                                            .ToList();
 
-            var declares = new List<HandlerDeclareDecl>();
-            var implements = new List<HandlerImplementDecl>();
+            var declares = new List<HandlerDeclareItem>();
+            var implements = new List<HandlerImplementItem>();
             foreach (MethodInfo method in handlers)
             {
                 // Abstract methods have only declaration
@@ -153,8 +153,8 @@ namespace DataCentric
             }
 
             // Add method information to declaration
-            if (declares.Any()) decl.Declare = new HandlerDeclareBlockDecl {Handlers = declares};
-            if (implements.Any()) decl.Implement = new HandlerImplementBlockDecl {Handlers = implements};
+            if (declares.Any()) decl.Declare = new HandlerDeclareBlock {Handlers = declares};
+            if (implements.Any()) decl.Implement = new HandlerImplementBlock {Handlers = implements};
 
             List<PropertyInfo> dataProperties = type.GetProperties(PublicInstanceDeclaredFlags)
                                                     .Where(p => IsAllowedType(p.PropertyType))
@@ -364,9 +364,9 @@ namespace DataCentric
         /// <summary>
         /// Generates handler declare section which corresponds to given method.
         /// </summary>
-        private static HandlerDeclareDecl ToDeclare(MethodInfo method, CommentNavigator navigator)
+        private static HandlerDeclareItem ToDeclare(MethodInfo method, CommentNavigator navigator)
         {
-            return new HandlerDeclareDecl
+            return new HandlerDeclareItem
             {
                 Name = method.Name,
                 Type = HandlerType.Job,
@@ -381,9 +381,9 @@ namespace DataCentric
         /// <summary>
         /// Generates handler implement section which corresponds to given method.
         /// </summary>
-        private static HandlerImplementDecl ToImplement(MethodInfo method)
+        private static HandlerImplementItem ToImplement(MethodInfo method)
         {
-            return new HandlerImplementDecl
+            return new HandlerImplementItem
             {
                 Name = method.Name,
                 Language = new LanguageKey {LanguageName = "cs"}

@@ -75,10 +75,10 @@ namespace DataCentric
         public TypeDeclKey Inherit { get; set; }
 
         /// <summary>Handler declaration block.</summary>
-        public HandlerDeclareBlockDecl Declare { get; set; }
+        public HandlerDeclareBlock Declare { get; set; }
 
         /// <summary>Handler implementation block.</summary>
-        public HandlerImplementBlockDecl Implement { get; set; }
+        public HandlerImplementBlock Implement { get; set; }
 
         /// <summary>Element declaration block.</summary>
         [XmlElement]

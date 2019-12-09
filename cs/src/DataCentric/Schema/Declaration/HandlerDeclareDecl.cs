@@ -20,13 +20,13 @@ using System.Xml.Serialization;
 namespace DataCentric
 {
     /// <summary>
-    /// Provides handler declaration.
+    /// Represents a single item within handler declaration block.
     ///
     /// Every declared handler must be implemented in this
     /// class or its non-abstract descendant, error message
     /// otherwise.
     /// </summary>
-    public class HandlerDeclareDecl : Data
+    public class HandlerDeclareItem : Data
     {
         /// <summary>Handler name.</summary>
         public string Name { get; set; }
