@@ -22,8 +22,10 @@ namespace DataCentric
     /// Some of the type kinds are mapped to class qualifier such as abstract, final, etc.
     /// It can also identify the type as element (class derived from Data) rather than record
     /// that is derived from Record.
+    ///
+    /// TODO - convert to individual bool elements so more than one can be specified, because more than one can be set
     /// </summary>
-    public enum TypeKind // TODO - convert to Flags or to individual binary elements so more than one can be specified
+    public enum TypeKind
     {
         /// <summary>
         /// Indicates that enum value is not set.

@@ -415,7 +415,6 @@ namespace DataCentric
             element.Name = property.Name;
             element.Label = property.GetLabelFromAttribute();
             element.Comment = property.GetCommentFromAttribute() ?? navigator?.GetXmlComment(property);
-            element.Viewer = null; // TODO: specify attribute for viewer instead of 'property.GetCustomAttribute<DisplayAttribute>()?.GetGroupName()';
             element.Optional = property.GetCustomAttribute<BsonRequiredAttribute>() == null ? YesNo.Y : (YesNo?) null;
             element.Hidden = property.IsHidden();
 

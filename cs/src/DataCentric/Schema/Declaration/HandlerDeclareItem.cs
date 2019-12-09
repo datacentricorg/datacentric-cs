@@ -47,16 +47,13 @@ namespace DataCentric
         /// <summary>If this flag is set, handler will be static, otherwise it will be non-static.</summary>
         public YesNo? Static { get; set; }
 
-        /// <summary>If this flag is set, handler will be hidden in UI in user mode.</summary>
+        /// <summary>
+        /// If this flag is set, handler will be hidden in the user interface
+        /// except in developer mode.
+        /// </summary>
         public YesNo? Hidden { get; set; }
-
-        /// <summary>Interactive Input</summary>
-        public YesNo? InteractiveInput { get; set; }
 
         /// <summary>Category.</summary>
         public string Category { get; set; }
-
-        /// <summary>Use the flag to specify that a handler is asynchronous.</summary>
-        public YesNo? IsAsync { get; set; }
     }
 }

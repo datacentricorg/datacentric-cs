@@ -52,13 +52,6 @@ namespace DataCentric
         /// </summary>
         public string Category { get; set; }
 
-        /// <summary>
-        /// Shortcut.
-        ///
-        /// TODO - is this duplicate of Label?
-        /// </summary>
-        public string Shortcut { get; set; }
-
         /// <summary>Type kind.</summary>
         [XmlElement]
         public TypeKind? Kind { get; set; }
@@ -109,47 +102,6 @@ namespace DataCentric
         /// TODO - introduce an attribute to specify this flag in source code.
         /// </summary>
         public YesNo? Immutable { get; set; }
-
-        /// <summary>
-        /// Flag indicating if the type will provide UI response.
-        ///
-        /// TODO - duplicate of InteractiveEdit?
-        /// </summary>
-        public YesNo? UiResponse { get; set; }
-
-        /// <summary>
-        /// Seed used to generate unique hash values for the type.
-        ///
-        /// This value is used to resolve hash collisions between two types within
-        /// the same schema.
-        ///
-        /// TODO - consider removing
-        /// </summary>
-        public int? Seed { get; set; }
-
-        /// <summary>
-        /// Type version is used to make it possible for two classes with
-        /// the same name to coexist within the database.
-        /// </summary>
-        public string Version { get; set; }
-
-        /// <summary>Flag indicating if the type is a system type.</summary>
-        public YesNo? System { get; set; }
-
-        /// <summary>Enable cache flag.</summary>
-        public YesNo? EnableCache { get; set; }
-
-        /// <summary>Use IObjectContext Instead of Context</summary>
-        public YesNo? ObjectContext { get; set; } // TODO - deprecated?
-
-        /// <summary>Creates object without context.</summary>
-        public YesNo? ContextFree { get; set; } // TODO - deprecated?
-
-        /// <summary>It is possible to split the code over two or more source files.</summary>
-        public YesNo? Partial { get; set; } // TODO - deprecated?
-
-        /// <summary>Flag indicating if the type will support interactive editing.</summary>
-        public YesNo? InteractiveEdit { get; set; } // TODO - duplicate of UiResponse?
 
         /// <summary>
         /// Flag indicating a record that is always saved permanently.

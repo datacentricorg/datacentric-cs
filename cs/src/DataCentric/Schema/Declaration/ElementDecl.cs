@@ -23,20 +23,6 @@ namespace DataCentric
     public class ElementDecl : ParamDecl
     {
         /// <summary>
-        /// Secure flag.
-        ///
-        /// TODO - review use scenarios.
-        /// </summary>
-        public YesNo? Secure { get; set; }
-
-        /// <summary>
-        /// Flag indicating readonly element.
-        ///
-        /// TODO - overlaps with ModificationType, consolidate?
-        /// </summary>
-        public YesNo? ReadOnly { get; set; }
-
-        /// <summary>
         /// Flag indicating a hidden element.
         ///
         /// Hidden elements are present in the API but hidden in the user interface,
@@ -83,20 +69,5 @@ namespace DataCentric
         /// while the alternates have to be selected explicitly.
         /// </summary>
         public string AlternateOf { get; set; }
-
-        /// <summary>
-        /// When specified, this element will ne shown in a separate tab with the specified name.
-        ///
-        /// TODO - partially overlaps with category, consolidate?
-        /// </summary>
-        public string Viewer { get; set; }
-
-        /// <summary>
-        /// Indicates if the element is treated as input or output during
-        /// interactive edit.
-        ///
-        /// TODO - this duplicates Output, need to consolidate.
-        /// </summary>
-        public ElementModificationType? ModificationType { get; set; }
     }
 }
