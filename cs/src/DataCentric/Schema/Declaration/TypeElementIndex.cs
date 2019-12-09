@@ -17,10 +17,10 @@ limitations under the License.
 namespace DataCentric
 {
     /// <summary>
-    /// Identifies an element inside database index declaration,
-    /// and specifies its direction (ascending or descending).
+    /// Identifies a single element inside database index declaration,
+    /// for the type, and specifies its direction (ascending or descending).
     /// </summary>
-    public class TypeElementIndex : Data
+    public class IndexElement : Data
     {
         /// <summary>
         /// Element name.
@@ -34,6 +34,6 @@ namespace DataCentric
         /// Specifies direction of the element inside database
         /// index (ascending or descending).
         /// </summary>
-        public TypeElementIndexDirection? Direction { get; set; }
+        public IndexElementDirection? Direction { get; set; }
     }
 }

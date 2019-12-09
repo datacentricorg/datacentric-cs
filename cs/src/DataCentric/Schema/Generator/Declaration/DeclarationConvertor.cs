@@ -308,7 +308,7 @@ namespace DataCentric
         /// <summary>
         /// Extract type index info and add to declaration.
         /// </summary>
-        private static List<TypeIndex> GetIndexesFromAttributes(this System.Type type)
+        private static List<IndexElements> GetIndexesFromAttributes(this System.Type type)
         {
             var attributes = type.GetCustomAttributes<IndexElementsAttribute>().ToList();
 
@@ -316,14 +316,14 @@ namespace DataCentric
             if (!attributes.Any())
                 return null;
 
-            var result = new List<TypeIndex>();
+            var result = new List<IndexElements>();
 
             // Process each attribute
             foreach (var attribute in attributes)
             {
-                TypeIndex typeIndex = new TypeIndex
+                IndexElements indexElements = new IndexElements
                 {
-                    Element = new List<TypeElementIndex>(), Name = attribute.Name
+                    Element = new List<IndexElement>(), Name = attribute.Name
                 };
 
                 // Decompose string index definition "A, -B" to ordered list of tuples (ElementName,SortOrder): [("A",1), ("B",-1)]
@@ -336,18 +336,18 @@ namespace DataCentric
                 // Convert decomposed definition to declarations format
                 foreach ((string, int) tuple in definition)
                 {
-                    TypeElementIndex elementIndex = new TypeElementIndex
+                    IndexElement indexElement = new IndexElement
                     {
                         Name = tuple.Item1,
                         Direction = tuple.Item2 == -1
-                                        ? TypeElementIndexDirection.Descending
-                                        : TypeElementIndexDirection.Ascending
+                                        ? IndexElementDirection.Descending
+                                        : IndexElementDirection.Ascending
                     };
 
-                    typeIndex.Element.Add(elementIndex);
+                    indexElements.Element.Add(indexElement);
                 }
 
-                result.Add(typeIndex);
+                result.Add(indexElements);
             }
 
             return result;

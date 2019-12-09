@@ -101,7 +101,7 @@ namespace DataCentric
         /// Array of database index definitions, each item representing a single index.
         /// </summary>
         [XmlElement]
-        public List<TypeIndex> Index { get; set; }
+        public List<IndexElements> Index { get; set; }
 
         /// <summary>Immutable flag.</summary>
         public YesNo? Immutable { get; set; }
