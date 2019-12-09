@@ -25,16 +25,29 @@ namespace DataCentric
         /// <summary>Type Param</summary>
         public string TypeParam { get; set; }
 
-        /// <summary>Value or atomic element declaration.</summary>
+        /// <summary>Parameters specific to the value element.</summary>
         public ValueDecl Value { get; set; }
 
-        /// <summary>Enumeration element declaration.</summary>
-        public TypeDeclKey Enum { get; set; }
+        /// <summary>
+        /// Reference the declaration of enum contained
+        /// by the current element.
+        /// </summary>
+        public EnumDeclKey Enum { get; set; }
 
-        /// <summary>Data element declaration.</summary>
+        /// <summary>
+        /// Reference to declaration of the data type
+        /// contained by the current element.
+        ///
+        /// The referenced type must have TypeKind=Element.
+        /// </summary>
         public TypeDeclKey Data { get; set; }
 
-        /// <summary>Key element declaration.</summary>
+        /// <summary>
+        /// Reference to declaration of the data type for
+        /// which the key is contained by the current element.
+        ///
+        /// The referenced type must not have TypeKind=Element.
+        /// </summary>
         public TypeDeclKey Key { get; set; }
 
         /// <summary>Type argument declaration.</summary>

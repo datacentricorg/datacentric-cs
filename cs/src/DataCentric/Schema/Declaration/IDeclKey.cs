@@ -17,19 +17,16 @@ limitations under the License.
 namespace DataCentric
 {
     /// <summary>
-    /// Interface implemented by TypeDecl and EnumDecl records.
+    /// Interface implemented by TypeDeclKey and EnumDeclKey classes.
     ///
     /// TODO - derive TypeDecl and EnumDecl from one root and eliminate this interface.
     /// </summary>
-    public interface IDecl
+    public interface IDeclKey
     {
         /// <summary>Type name is unique when combined with module.</summary>
         string Name { get; set; }
 
         /// <summary>Module reference.</summary>
         ModuleKey Module { get; set; }
-
-        /// <summary>Category.</summary>
-        string Category { get; set; }
     }
 }

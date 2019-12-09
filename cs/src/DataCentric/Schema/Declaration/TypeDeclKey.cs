@@ -19,7 +19,7 @@ namespace DataCentric
     /// <summary>
     /// Language neutral description of a data class.
     /// </summary>
-    public class TypeDeclKey : TypedKey<TypeDeclKey, TypeDecl>
+    public class TypeDeclKey : TypedKey<TypeDeclKey, TypeDecl>, IDeclKey
     {
         /// <summary>Module reference.</summary>
         public ModuleKey Module { get; set; }

@@ -28,7 +28,7 @@ namespace DataCentric
         /// <summary>
         /// Check if provided entities belong to the same package.
         /// </summary>
-        public static bool IsPackageEquals(IDecl decl, TypeDeclKey declKey)
+        public static bool IsPackageEquals(IDecl decl, IDeclKey declKey)
         {
             return GetPackage(decl) == GetPackage(declKey);
         }
@@ -46,7 +46,7 @@ namespace DataCentric
         /// <summary>
         /// Return top level package name for a given declaration key.
         /// </summary>
-        public static string GetPackage(TypeDeclKey declKey)
+        public static string GetPackage(IDeclKey declKey)
         {
             if (declKey.Module.ModuleName.StartsWith("DataCentric"))
                 return "datacentric";
@@ -59,7 +59,7 @@ namespace DataCentric
         /// <summary>
         /// Returns alias for declaration key.
         /// </summary>
-        public static string GetAlias(TypeDeclKey declKey)
+        public static string GetAlias(IDeclKey declKey)
         {
             if (declKey.Module.ModuleName.StartsWith("DataCentric"))
                 return "dc";
@@ -84,7 +84,7 @@ namespace DataCentric
         /// <summary>
         /// Find single declaration by its module and name.
         /// </summary>
-        public static IDecl FindByKey(this List<IDecl> declarations, TypeDeclKey key)
+        public static IDecl FindByKey(this List<IDecl> declarations, IDeclKey key)
         {
             return declarations.Single(d => d.Module.ModuleName == key.Module.ModuleName && d.Name == key.Name);
         }

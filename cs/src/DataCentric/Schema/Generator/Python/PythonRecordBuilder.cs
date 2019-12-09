@@ -274,7 +274,7 @@ namespace DataCentric
 
         private static string GetTypeHint(TypeDecl decl, TypeElementDecl element)
         {
-            string GetParamNamespace(TypeDecl declaration, TypeDeclKey key) =>
+            string GetParamNamespace(TypeDecl declaration, IDeclKey key) =>
                 !PyExtensions.IsPackageEquals(declaration, key) ? PyExtensions.GetAlias(key) + "." : "";
 
             string GetFinalHint(string typeHint) =>

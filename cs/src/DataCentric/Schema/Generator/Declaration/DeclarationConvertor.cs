@@ -430,7 +430,6 @@ namespace DataCentric
             element.Comment = property.GetCommentFromAttribute() ?? navigator?.GetXmlComment(property);
             element.Viewer = null; // TODO: specify attribute for viewer instead of 'property.GetCustomAttribute<DisplayAttribute>()?.GetGroupName()';
             element.Optional = property.GetCustomAttribute<BsonRequiredAttribute>() == null ? YesNo.Y : (YesNo?) null;
-            element.BsonIgnore = property.GetCustomAttribute<BsonIgnoreAttribute>() != null ? YesNo.Y : (YesNo?) null;
             element.Hidden = property.IsHidden();
 
             return element;
@@ -461,7 +460,7 @@ namespace DataCentric
             var nonNullableType = GetNullableArgument(type);
             if (nonNullableType.IsEnum)
             {
-                typeDecl.Enum = CreateTypeDeclKey(nonNullableType.Namespace, nonNullableType.Name);
+                typeDecl.Enum = CreateEnumDeclKey(nonNullableType.Namespace, nonNullableType.Name);
             }
             else if (type.IsValueType || type == typeof(string))
             {
@@ -518,11 +517,19 @@ namespace DataCentric
         }
 
         /// <summary>
-        /// Simply creates type reference from type namespace and type name.
+        /// Creates type reference from type namespace and type name.
         /// </summary>
         private static TypeDeclKey CreateTypeDeclKey(string ns, string name)
         {
             return new TypeDeclKey { Name = name, Module = new ModuleKey { ModuleName = ns } };
+        }
+
+        /// <summary>
+        /// Creates enum reference from type namespace and type name.
+        /// </summary>
+        private static EnumDeclKey CreateEnumDeclKey(string ns, string name)
+        {
+            return new EnumDeclKey { Name = name, Module = new ModuleKey { ModuleName = ns } };
         }
 
         /// <summary>

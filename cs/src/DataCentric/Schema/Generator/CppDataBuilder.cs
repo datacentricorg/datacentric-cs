@@ -171,7 +171,7 @@ namespace DataCentric
             writer.PushIndent();
 
             writer.AppendLine($"dot::make_type_builder<self>(\"{settings.Namespace}\", \"{type}\")");
-            foreach (var element in decl.Elements.Where(e => e.BsonIgnore != YesNo.Y))
+            foreach (var element in decl.Elements)
             {
                 var name = element.Name.Underscore();
                 writer.AppendLine($"->with_field(\"{name}\", &self::{name})");
