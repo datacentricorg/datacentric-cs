@@ -425,9 +425,9 @@ namespace DataCentric
         /// <summary>
         /// Converts to enum item declaration.
         /// </summary>
-        private static EnumItemDecl ToEnumItem(FieldInfo field, CommentNavigator navigator)
+        private static EnumItem ToEnumItem(FieldInfo field, CommentNavigator navigator)
         {
-            var item = new EnumItemDecl();
+            var item = new EnumItem();
 
             item.Name = field.Name;
             item.Comment = navigator?.GetXmlComment(field);

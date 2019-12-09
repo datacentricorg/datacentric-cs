@@ -48,6 +48,6 @@ namespace DataCentric
 
         /// <summary>Array of enum items.</summary>
         [XmlElement]
-        public List<EnumItemDecl> Items { get; set; }
+        public List<EnumItem> Items { get; set; }
     }
 }

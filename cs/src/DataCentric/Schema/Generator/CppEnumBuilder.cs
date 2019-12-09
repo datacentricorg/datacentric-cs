@@ -97,7 +97,7 @@ namespace DataCentric
 
             writer.AppendLine("enum enum_type {");
             writer.PushIndent();
-            foreach (EnumItemDecl item in elements)
+            foreach (EnumItem item in elements)
             {
                 writer.AppendLines(CommentHelper.FormatComment(item.Comment));
                 writer.AppendLine($"{item.Name.Underscore()},");
@@ -167,7 +167,7 @@ dot::type_t {type}::type() {{ return typeof(); }}");
             writer.PushIndent();
             writer.PushIndent();
 
-            foreach (EnumItemDecl item in decl.Items)
+            foreach (EnumItem item in decl.Items)
             {
                 writer.AppendLine($"map_[\"{item.Name.Underscore()}\"] = {item.Name.Underscore()};");
             }

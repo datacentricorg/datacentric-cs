@@ -20,7 +20,7 @@ using System.Xml.Serialization;
 namespace DataCentric
 {
     /// <summary>Item in an enumeration</summary>
-    public class EnumItemDecl
+    public class EnumItem : Data
     {
         /// <summary>Name of the item will be used in the generated code.</summary>
         public string Name { get; set; }

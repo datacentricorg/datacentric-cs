@@ -42,7 +42,7 @@ namespace DataCentric
             var items = decl.Items;
             for (int index = 0; index < items.Count; index++)
             {
-                EnumItemDecl item = items[index];
+                EnumItem item = items[index];
 
                 writer.AppendLine($"{item.Name} = {index},");
                 writer.AppendLines(CommentHelper.PyComment(item.Comment));
