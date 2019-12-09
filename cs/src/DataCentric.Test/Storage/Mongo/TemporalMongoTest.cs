@@ -702,7 +702,7 @@ namespace DataCentric.Test
             SaveMinimalRecord(context, "DataSet3", "D", 1);
         }
 
-        /// <summary>Save record with minimal data for testing how the records are found. </summary>
+        /// <summary>Save record with minimal data for testing how the records are found.</summary>
         private TemporalId SaveMinimalRecord(Context context, string dataSetName, string recordName, int recordIndex, int? version = null)
         {
             var rec = new BaseSample();
@@ -716,7 +716,7 @@ namespace DataCentric.Test
             return rec.Id;
         }
 
-        /// <summary>Save base record</summary>
+        /// <summary>Save base record.</summary>
         private TemporalId SaveBaseRecord(Context context, string dataSetName, string recordName, int recordIndex)
         {
             var rec = new BaseSample();
@@ -735,7 +735,7 @@ namespace DataCentric.Test
             return rec.Id;
         }
 
-        /// <summary>Save derived record</summary>
+        /// <summary>Save derived record.</summary>
         private TemporalId SaveDerivedRecord(Context context, string dataSetName, string recordName, int recordIndex)
         {
             var rec = new DerivedSample();
