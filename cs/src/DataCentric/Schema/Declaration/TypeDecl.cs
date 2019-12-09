@@ -52,7 +52,11 @@ namespace DataCentric
         /// </summary>
         public string Category { get; set; }
 
-        /// <summary>Shortcut.</summary>
+        /// <summary>
+        /// Shortcut.
+        ///
+        /// TODO - is this duplicate of Label?
+        /// </summary>
         public string Shortcut { get; set; }
 
         /// <summary>Type kind.</summary>
@@ -80,7 +84,10 @@ namespace DataCentric
         /// <summary>Handler implementation block.</summary>
         public HandlerImplementBlock Implement { get; set; }
 
-        /// <summary>Element declaration block.</summary>
+        /// <summary>
+        /// Each item within this list specifies one element (field)
+        /// of the current type.
+        /// </summary>
         [XmlElement]
         public List<ElementDecl> Elements { get; set; }
 
@@ -90,14 +97,24 @@ namespace DataCentric
 
         /// <summary>
         /// Array of database index definitions, each item representing a single index.
+        ///
+        /// TODO - make plural when switching from XML to JSON
         /// </summary>
         [XmlElement]
         public List<IndexElements> Index { get; set; }
 
-        /// <summary>Immutable flag.</summary>
+        /// <summary>
+        /// Immutable flag.
+        ///
+        /// TODO - introduce an attribute to specify this flag in source code.
+        /// </summary>
         public YesNo? Immutable { get; set; }
 
-        /// <summary>Flag indicating if the type will provide UI response.</summary>
+        /// <summary>
+        /// Flag indicating if the type will provide UI response.
+        ///
+        /// TODO - duplicate of InteractiveEdit?
+        /// </summary>
         public YesNo? UiResponse { get; set; }
 
         /// <summary>
@@ -105,8 +122,10 @@ namespace DataCentric
         ///
         /// This value is used to resolve hash collisions between two types within
         /// the same schema.
+        ///
+        /// TODO - consider removing
         /// </summary>
-        public int? Seed { get; set; } // TODO - deprecated
+        public int? Seed { get; set; }
 
         /// <summary>
         /// Type version is used to make it possible for two classes with
@@ -132,7 +151,11 @@ namespace DataCentric
         /// <summary>Flag indicating if the type will support interactive editing.</summary>
         public YesNo? InteractiveEdit { get; set; } // TODO - duplicate of UiResponse?
 
-        /// <summary>Flag indicating a record that is always saved permanently.</summary>
+        /// <summary>
+        /// Flag indicating a record that is always saved permanently.
+        ///
+        /// TODO - introduce an attribute to specify this flag in source code.
+        /// </summary>
         public YesNo? Permanent { get; set; }
     }
 }

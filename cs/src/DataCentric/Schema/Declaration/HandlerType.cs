@@ -40,7 +40,8 @@ namespace DataCentric
         /// from the UI. Once launched, the process continues until it
         /// terminates itself, or is terminated from the user interface.
         ///
-        /// Return type is not allowed. Input params are allowed.</summary>
+        /// Return type is not allowed. Input params are allowed.
+        /// </summary>
         Process,
 
         /// <summary>
@@ -50,7 +51,11 @@ namespace DataCentric
         /// </summary>
         Viewer,
 
-        /// <summary>Viewer Editor. Return type is allowed. Input params are not allowed.</summary>
+        /// <summary>
+        /// Viewer Editor. Return type is allowed. Input params are not allowed.
+        ///
+        /// TODO - consider deprecating
+        /// </summary>
         Editor
     }
 }
