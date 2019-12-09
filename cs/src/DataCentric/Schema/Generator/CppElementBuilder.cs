@@ -50,27 +50,27 @@ namespace DataCentric
         {
             var atomicType = valueDecl.Type;
             return
-                atomicType == AtomicType.String           ? "dot::string" :
-                atomicType == AtomicType.Bool             ? "bool" :
-                atomicType == AtomicType.DateTime         ? "dot::local_date_time" :
-                atomicType == AtomicType.Double           ? "double" :
-                atomicType == AtomicType.Int              ? "int" :
-                atomicType == AtomicType.Long             ? "long" :
-                atomicType == AtomicType.NullableBool     ? "dot::nullable<bool>" :
-                atomicType == AtomicType.NullableDateTime ? "dot::nullable<dot::local_date_time>" :
-                atomicType == AtomicType.NullableDouble   ? "dot::nullable<double>" :
-                atomicType == AtomicType.NullableInt      ? "dot::nullable<int>" :
-                atomicType == AtomicType.NullableLong     ? "dot::nullable<long>" :
-                atomicType == AtomicType.DateTime         ? "dot::local_date_time" :
-                atomicType == AtomicType.Date             ? "dot::local_date" :
-                atomicType == AtomicType.Time             ? "dot::local_time" :
-                atomicType == AtomicType.Minute           ? "dot::local_minute" :
-                atomicType == AtomicType.NullableDateTime ? "dot::nullable<dot::local_date_time>" :
-                atomicType == AtomicType.NullableDate     ? "dot::nullable<dot::local_date>" :
-                atomicType == AtomicType.NullableTime     ? "dot::nullable<dot::local_time>" :
-                atomicType == AtomicType.NullableMinute   ? "dot::nullable<dot::local_minute>" :
-                atomicType == AtomicType.TemporalId         ? "dot::object_id" :
-                atomicType == AtomicType.NullableTemporalId ? "dot::nullable<dot::object_id>" :
+                atomicType == ValueParamType.String           ? "dot::string" :
+                atomicType == ValueParamType.Bool             ? "bool" :
+                atomicType == ValueParamType.DateTime         ? "dot::local_date_time" :
+                atomicType == ValueParamType.Double           ? "double" :
+                atomicType == ValueParamType.Int              ? "int" :
+                atomicType == ValueParamType.Long             ? "long" :
+                atomicType == ValueParamType.NullableBool     ? "dot::nullable<bool>" :
+                atomicType == ValueParamType.NullableDateTime ? "dot::nullable<dot::local_date_time>" :
+                atomicType == ValueParamType.NullableDouble   ? "dot::nullable<double>" :
+                atomicType == ValueParamType.NullableInt      ? "dot::nullable<int>" :
+                atomicType == ValueParamType.NullableLong     ? "dot::nullable<long>" :
+                atomicType == ValueParamType.DateTime         ? "dot::local_date_time" :
+                atomicType == ValueParamType.Date             ? "dot::local_date" :
+                atomicType == ValueParamType.Time             ? "dot::local_time" :
+                atomicType == ValueParamType.Minute           ? "dot::local_minute" :
+                atomicType == ValueParamType.NullableDateTime ? "dot::nullable<dot::local_date_time>" :
+                atomicType == ValueParamType.NullableDate     ? "dot::nullable<dot::local_date>" :
+                atomicType == ValueParamType.NullableTime     ? "dot::nullable<dot::local_time>" :
+                atomicType == ValueParamType.NullableMinute   ? "dot::nullable<dot::local_minute>" :
+                atomicType == ValueParamType.TemporalId         ? "dot::object_id" :
+                atomicType == ValueParamType.NullableTemporalId ? "dot::nullable<dot::object_id>" :
                                                             throw new
                                                                 ArgumentException($"Unknown value type: {atomicType.ToString()}");
         }

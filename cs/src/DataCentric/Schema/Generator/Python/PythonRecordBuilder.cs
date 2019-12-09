@@ -143,13 +143,13 @@ namespace DataCentric
             List<string> tokens = new List<string>();
             string self = withSelf ? "self." : "";
 
-            List<AtomicType> toStr = new List<AtomicType>()
+            List<ValueParamType> toStr = new List<ValueParamType>()
             {
-                AtomicType.Int, AtomicType.Long, AtomicType.NullableInt, AtomicType.NullableLong,
-                AtomicType.DateTime, AtomicType.Date, AtomicType.Time, AtomicType.Minute, AtomicType.Instant,
-                AtomicType.NullableDateTime, AtomicType.NullableDate, AtomicType.NullableTime,
-                AtomicType.NullableMinute, AtomicType.NullableInstant, AtomicType.TemporalId,
-                AtomicType.NullableTemporalId,
+                ValueParamType.Int, ValueParamType.Long, ValueParamType.NullableInt, ValueParamType.NullableLong,
+                ValueParamType.DateTime, ValueParamType.Date, ValueParamType.Time, ValueParamType.Minute, ValueParamType.Instant,
+                ValueParamType.NullableDateTime, ValueParamType.NullableDate, ValueParamType.NullableTime,
+                ValueParamType.NullableMinute, ValueParamType.NullableInstant, ValueParamType.TemporalId,
+                ValueParamType.NullableTemporalId,
             };
 
             foreach (var element in keyElements)
@@ -158,9 +158,9 @@ namespace DataCentric
 
                 if (element.Value?.Type != null && toStr.Contains(element.Value.Type.Value))
                     tokens.Add($"str({self}{elementName})");
-                else if (element.Value != null && element.Value.Type == AtomicType.String)
+                else if (element.Value != null && element.Value.Type == ValueParamType.String)
                     tokens.Add($"{self}{elementName}");
-                else if (element.Value != null && (element.Value.Type == AtomicType.Bool || element.Value.Type == AtomicType.NullableBool))
+                else if (element.Value != null && (element.Value.Type == ValueParamType.Bool || element.Value.Type == ValueParamType.NullableBool))
                     tokens.Add($"str({self}{elementName}).lower()");
                 else if (element.Enum != null)
                     tokens.Add($"{self}{elementName}.name");
@@ -196,8 +196,8 @@ namespace DataCentric
             var meta = new List<string>();
             if (element.Optional == YesNo.Y)
                 meta.Add("'optional': True");
-            if (element.Value != null && (element.Value.Type == AtomicType.Long ||
-                                          element.Value.Type == AtomicType.NullableLong))
+            if (element.Value != null && (element.Value.Type == ValueParamType.Long ||
+                                          element.Value.Type == ValueParamType.NullableLong))
                 meta.Add("'type': 'long'");
 
             return meta.Any()
@@ -312,27 +312,27 @@ namespace DataCentric
             string prefix = insideDc ? "" : "dc.";
             var atomicType = valueDecl.Type;
             return
-                atomicType == AtomicType.String ? "str" :
-                atomicType == AtomicType.Bool ? "bool" :
-                atomicType == AtomicType.Double ? "float" :
-                atomicType == AtomicType.Int ? "int" :
-                atomicType == AtomicType.Long ? "int" :
-                atomicType == AtomicType.NullableBool ? "bool" :
-                atomicType == AtomicType.NullableDouble ? "float" :
-                atomicType == AtomicType.NullableInt ? "int" :
-                atomicType == AtomicType.NullableLong ? "int" :
-                atomicType == AtomicType.DateTime ? $"Union[int, {prefix}LocalDateTime]" :
-                atomicType == AtomicType.Date ? $"Union[int, {prefix}LocalDate]" :
-                atomicType == AtomicType.Time ? $"Union[int, {prefix}LocalTime]" :
-                atomicType == AtomicType.Minute ? $"Union[int, {prefix}LocalMinute]" :
-                atomicType == AtomicType.Instant ? $"Union[dt.datetime, {prefix}Instant]" :
-                atomicType == AtomicType.NullableDateTime ? $"Union[int, {prefix}LocalDateTime]" :
-                atomicType == AtomicType.NullableDate ? $"Union[int, {prefix}LocalDate]" :
-                atomicType == AtomicType.NullableTime ? $"Union[int, {prefix}LocalTime]" :
-                atomicType == AtomicType.NullableMinute ? $"Union[int, {prefix}LocalMinute]" :
-                atomicType == AtomicType.NullableInstant ? $"Union[dt.datetime, {prefix}Instant]" :
-                atomicType == AtomicType.TemporalId ? "ObjectId" :
-                atomicType == AtomicType.NullableTemporalId ? "ObjectId" :
+                atomicType == ValueParamType.String ? "str" :
+                atomicType == ValueParamType.Bool ? "bool" :
+                atomicType == ValueParamType.Double ? "float" :
+                atomicType == ValueParamType.Int ? "int" :
+                atomicType == ValueParamType.Long ? "int" :
+                atomicType == ValueParamType.NullableBool ? "bool" :
+                atomicType == ValueParamType.NullableDouble ? "float" :
+                atomicType == ValueParamType.NullableInt ? "int" :
+                atomicType == ValueParamType.NullableLong ? "int" :
+                atomicType == ValueParamType.DateTime ? $"Union[int, {prefix}LocalDateTime]" :
+                atomicType == ValueParamType.Date ? $"Union[int, {prefix}LocalDate]" :
+                atomicType == ValueParamType.Time ? $"Union[int, {prefix}LocalTime]" :
+                atomicType == ValueParamType.Minute ? $"Union[int, {prefix}LocalMinute]" :
+                atomicType == ValueParamType.Instant ? $"Union[dt.datetime, {prefix}Instant]" :
+                atomicType == ValueParamType.NullableDateTime ? $"Union[int, {prefix}LocalDateTime]" :
+                atomicType == ValueParamType.NullableDate ? $"Union[int, {prefix}LocalDate]" :
+                atomicType == ValueParamType.NullableTime ? $"Union[int, {prefix}LocalTime]" :
+                atomicType == ValueParamType.NullableMinute ? $"Union[int, {prefix}LocalMinute]" :
+                atomicType == ValueParamType.NullableInstant ? $"Union[dt.datetime, {prefix}Instant]" :
+                atomicType == ValueParamType.TemporalId ? "ObjectId" :
+                atomicType == ValueParamType.NullableTemporalId ? "ObjectId" :
                 throw new
                     ArgumentException($"Unknown value type: {atomicType.ToString()}");
         }

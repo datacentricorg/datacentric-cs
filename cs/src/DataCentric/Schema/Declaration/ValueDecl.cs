@@ -20,6 +20,6 @@ namespace DataCentric
     public class ValueDecl
     {
         /// <summary>Value or atomic element type enumeration.</summary>
-        public AtomicType? Type { get; set; }
+        public ValueParamType? Type { get; set; }
     }
 }

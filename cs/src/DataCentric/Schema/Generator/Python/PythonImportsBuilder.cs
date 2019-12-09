@@ -34,8 +34,8 @@ namespace DataCentric
 
 
             // Instant is generated as Union[dt.datetime, dc.Instant] thus dt import is required
-            if (decl.Elements.Any(e => e.Value != null && (e.Value.Type == AtomicType.Instant ||
-                                                           e.Value.Type == AtomicType.NullableInstant)))
+            if (decl.Elements.Any(e => e.Value != null && (e.Value.Type == ValueParamType.Instant ||
+                                                           e.Value.Type == ValueParamType.NullableInstant)))
                 writer.AppendLine("import datetime as dt");
 
             // If type is abstract - ABC import is needed
@@ -44,8 +44,8 @@ namespace DataCentric
 
             // Check if ObjectId is used
             bool hasObjectId = decl.Elements.Any(e => e.Value != null &&
-                                                      (e.Value.Type == AtomicType.TemporalId ||
-                                                       e.Value.Type == AtomicType.NullableTemporalId));
+                                                      (e.Value.Type == ValueParamType.TemporalId ||
+                                                       e.Value.Type == ValueParamType.NullableTemporalId));
             if (hasObjectId)
                 writer.AppendLine("from bson import ObjectId");
 
@@ -167,15 +167,15 @@ namespace DataCentric
                                          .Select(g => g.First().Value.Type)
                                          .ToArray();
 
-                if (atomicElements.Contains(AtomicType.DateTime) || atomicElements.Contains(AtomicType.NullableDateTime))
+                if (atomicElements.Contains(ValueParamType.DateTime) || atomicElements.Contains(ValueParamType.NullableDateTime))
                     writer.AppendLine("from datacentric.date_time.local_date_time import LocalDateTime");
-                if (atomicElements.Contains(AtomicType.Date) || atomicElements.Contains(AtomicType.NullableDate))
+                if (atomicElements.Contains(ValueParamType.Date) || atomicElements.Contains(ValueParamType.NullableDate))
                     writer.AppendLine("from datacentric.date_time.local_date import LocalDate");
-                if (atomicElements.Contains(AtomicType.Time) || atomicElements.Contains(AtomicType.NullableTime))
+                if (atomicElements.Contains(ValueParamType.Time) || atomicElements.Contains(ValueParamType.NullableTime))
                     writer.AppendLine("from datacentric.date_time.local_time import LocalTime");
-                if (atomicElements.Contains(AtomicType.Minute) || atomicElements.Contains(AtomicType.NullableMinute))
+                if (atomicElements.Contains(ValueParamType.Minute) || atomicElements.Contains(ValueParamType.NullableMinute))
                     writer.AppendLine("from datacentric.date_time.local_minute import LocalMinute");
-                if (atomicElements.Contains(AtomicType.Instant) || atomicElements.Contains(AtomicType.NullableInstant))
+                if (atomicElements.Contains(ValueParamType.Instant) || atomicElements.Contains(ValueParamType.NullableInstant))
                     writer.AppendLine("from datacentric.date_time.instant import Instant");
             }
         }

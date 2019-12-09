@@ -455,34 +455,34 @@ namespace DataCentric
 
                 TypeCode typeCode = System.Type.GetTypeCode(type);
                 typeDecl.Value.Type =
-                    typeCode == TypeCode.String ? AtomicType.String :
+                    typeCode == TypeCode.String ? ValueParamType.String :
                     // Basic value types
-                    typeCode == TypeCode.Boolean  ? AtomicType.Bool :
-                    typeCode == TypeCode.DateTime ? AtomicType.DateTime :
-                    typeCode == TypeCode.Double   ? AtomicType.Double :
-                    typeCode == TypeCode.Int32    ? AtomicType.Int :
-                    typeCode == TypeCode.Int64    ? AtomicType.Long :
+                    typeCode == TypeCode.Boolean  ? ValueParamType.Bool :
+                    typeCode == TypeCode.DateTime ? ValueParamType.DateTime :
+                    typeCode == TypeCode.Double   ? ValueParamType.Double :
+                    typeCode == TypeCode.Int32    ? ValueParamType.Int :
+                    typeCode == TypeCode.Int64    ? ValueParamType.Long :
                     // Basic nullable value types
-                    type == typeof(bool?)     ? AtomicType.NullableBool :
-                    type == typeof(DateTime?) ? AtomicType.NullableDateTime :
-                    type == typeof(double?)   ? AtomicType.NullableDouble :
-                    type == typeof(int?)      ? AtomicType.NullableInt :
-                    type == typeof(long?)     ? AtomicType.NullableLong :
+                    type == typeof(bool?)     ? ValueParamType.NullableBool :
+                    type == typeof(DateTime?) ? ValueParamType.NullableDateTime :
+                    type == typeof(double?)   ? ValueParamType.NullableDouble :
+                    type == typeof(int?)      ? ValueParamType.NullableInt :
+                    type == typeof(long?)     ? ValueParamType.NullableLong :
                     // Noda types
-                    type == typeof(LocalDateTime) ? AtomicType.DateTime :
-                    type == typeof(Instant) ? AtomicType.Instant :
-                    type == typeof(LocalDate)     ? AtomicType.Date :
-                    type == typeof(LocalTime)     ? AtomicType.Time :
-                    type == typeof(LocalMinute)   ? AtomicType.Minute :
+                    type == typeof(LocalDateTime) ? ValueParamType.DateTime :
+                    type == typeof(Instant) ? ValueParamType.Instant :
+                    type == typeof(LocalDate)     ? ValueParamType.Date :
+                    type == typeof(LocalTime)     ? ValueParamType.Time :
+                    type == typeof(LocalMinute)   ? ValueParamType.Minute :
                     // Nullable Noda types
-                    type == typeof(LocalDateTime?) ? AtomicType.NullableDateTime :
-                    type == typeof(Instant?) ? AtomicType.NullableInstant :
-                    type == typeof(LocalDate?)     ? AtomicType.NullableDate :
-                    type == typeof(LocalTime?)     ? AtomicType.NullableTime :
-                    type == typeof(LocalMinute?)   ? AtomicType.NullableMinute :
+                    type == typeof(LocalDateTime?) ? ValueParamType.NullableDateTime :
+                    type == typeof(Instant?) ? ValueParamType.NullableInstant :
+                    type == typeof(LocalDate?)     ? ValueParamType.NullableDate :
+                    type == typeof(LocalTime?)     ? ValueParamType.NullableTime :
+                    type == typeof(LocalMinute?)   ? ValueParamType.NullableMinute :
                     // TemporalId
-                    type == typeof(TemporalId)  ? AtomicType.TemporalId :
-                    type == typeof(TemporalId?) ? AtomicType.NullableTemporalId :
+                    type == typeof(TemporalId)  ? ValueParamType.TemporalId :
+                    type == typeof(TemporalId?) ? ValueParamType.NullableTemporalId :
                                                 throw new ArgumentException($"Unknown value type: {type.FullName}");
             }
             else if (type.IsSubclassOf(typeof(Key)))

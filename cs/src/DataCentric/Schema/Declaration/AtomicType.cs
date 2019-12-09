@@ -16,8 +16,10 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>List of values and immutable types, including string and binary.</summary>
-    public enum AtomicType
+    /// <summary>
+    /// Primitive type of a handler parameter or type element.
+    /// </summary>
+    public enum ValueParamType
     {
         /// <summary>
         /// Indicates that enum value is not set.
