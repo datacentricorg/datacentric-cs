@@ -19,6 +19,8 @@ namespace DataCentric
     /// <summary>
     /// This enum can be used as a two-state boolean serialized into
     /// Y for true and N for false.
+    ///
+    /// TODO - replace by boolean.
     /// </summary>
     public enum YesNo
     {

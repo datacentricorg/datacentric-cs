@@ -16,7 +16,11 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Handler type enumeration.</summary>
+    /// <summary>
+    /// Handler type enumeration.
+    ///
+    /// TODO - rename both type and element name to HandlerKind
+    /// </summary>
     public enum HandlerType
     {
         /// <summary>

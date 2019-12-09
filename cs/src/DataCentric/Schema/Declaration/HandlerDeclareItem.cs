@@ -37,7 +37,11 @@ namespace DataCentric
         /// <summary>Handler comment.</summary>
         public string Comment { get; set; }
 
-        /// <summary>Handler type.</summary>
+        /// <summary>
+        /// Handler type.
+        ///
+        /// TODO - rename both type and element name to HandlerKind
+        /// </summary>
         public HandlerType? Type { get; set; }
 
         /// <summary>Handler parameters.</summary>
