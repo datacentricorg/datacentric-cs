@@ -26,7 +26,7 @@ namespace DataCentric
         {
             foreach (var declare in decl.Declare.Handlers)
             {
-                var @return = declare.Return != null ? GetType(declare.Return) : "void";
+                var @return = "void";
                 var @params = string.Join(", ", declare.Params.Select(param => $"{GetType(param)} {param.Name.Underscore()}"));
                 var function = $"{@return} {declare.Name.Underscore()}({@params})";
 
@@ -52,7 +52,7 @@ namespace DataCentric
             }
         }
 
-        public static string GetType(HandlerVariableDecl element)
+        public static string GetType(HandlerParamDecl element)
         {
             string type = element.Value != null ? CppElementBuilder.GetValue(element.Value) :
                           element.Data != null  ? $"{element.Data.Name.Underscore()}_data" :

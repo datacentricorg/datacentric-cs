@@ -17,8 +17,11 @@ limitations under the License.
 namespace DataCentric
 {
     /// <summary>Handler parameter or return variable block.</summary>
-    public class HandlerVariableDecl : TypeMemberDecl
+    public class HandlerParamDecl : TypeMemberDecl
     {
+        /// <summary>Parameter name.</summary>
+        public string Name { get; set; }
+
         /// <summary>Flag indicating variable size array (vector) container.</summary>
         public YesNo? Vector { get; set; }
 

@@ -374,8 +374,7 @@ namespace DataCentric
                 Comment = method.GetCommentFromAttribute() ?? navigator?.GetXmlComment(method),
                 Hidden = method.IsHidden(),
                 Static = method.IsStatic ? YesNo.Y : (YesNo?) null,
-                Params = method.GetParameters().Select(ToHandlerParam).ToList(),
-                Return = method.ReturnType != typeof(void) ? ToReturnType(method.ReturnType) : null
+                Params = method.GetParameters().Select(ToHandlerParam).ToList()
             };
         }
 
@@ -403,18 +402,6 @@ namespace DataCentric
             handlerParam.Vector = parameter.ParameterType.IsVector();
 
             return handlerParam;
-        }
-
-        /// <summary>
-        /// Converts method return type into corresponding handler return type declaration section.
-        /// </summary>
-        private static HandlerVariableDecl ToReturnType(System.Type type)
-        {
-            var returnType = ToTypeMember<HandlerVariableDecl>(type);
-
-            returnType.Vector = type.IsVector();
-
-            return returnType;
         }
 
         /// <summary>
