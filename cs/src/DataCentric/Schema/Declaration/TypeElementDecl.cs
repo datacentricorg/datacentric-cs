@@ -36,22 +36,27 @@ namespace DataCentric
         public string Comment { get; set; }
 
         /// <summary>
-        /// Indicate that the current element is a list of the specified type.
+        /// Specifies that the current element is a list.
         /// </summary>
         public YesNo? Vector { get; set; }
 
         /// <summary>
-        /// Indicates that the element is optional (elements are required by default).
+        /// Indicates that the element is optional (by default, all elements are required).
         /// </summary>
         public YesNo? Optional { get; set; }
 
-        /// <summary>Secure flag.</summary>
+        /// <summary>
+        /// Secure flag.
+        ///
+        /// TODO - review use scenarios.
+        /// </summary>
         public YesNo? Secure { get; set; }
 
-        /// <summary>Flag indicating filterable element.</summary>
-        public YesNo? Filterable { get; set; }
-
-        /// <summary>Flag indicating readonly element.</summary>
+        /// <summary>
+        /// Flag indicating readonly element.
+        ///
+        /// TODO - overlaps with ModificationType, consolidate?
+        /// </summary>
         public YesNo? ReadOnly { get; set; }
 
         /// <summary>
