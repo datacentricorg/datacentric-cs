@@ -22,7 +22,7 @@ namespace DataCentric
 {
     public static class CppElementBuilder
     {
-        public static void WriteElements(List<TypeElementDecl> elements, CodeWriter writer)
+        public static void WriteElements(List<ElementDecl> elements, CodeWriter writer)
         {
             foreach (var element in elements)
             {
@@ -35,7 +35,7 @@ namespace DataCentric
             }
         }
 
-        public static string GetType(TypeElementDecl element)
+        public static string GetType(ElementDecl element)
         {
             string type = element.Value != null ? GetValue(element.Value) :
                           element.Data != null  ? $"{element.Data.Name.Underscore()}_data" :

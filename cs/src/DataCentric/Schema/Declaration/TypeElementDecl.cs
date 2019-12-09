@@ -19,8 +19,8 @@ using System.Xml.Serialization;
 
 namespace DataCentric
 {
-    /// <summary>Element block within type declaration.</summary>
-    public class TypeElementDecl : TypeMemberDecl
+    /// <summary>Definition of a single element within type declaration.</summary>
+    public class ElementDecl : ParamDecl
     {
         /// <summary>
         /// Secure flag.

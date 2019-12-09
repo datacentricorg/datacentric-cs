@@ -138,7 +138,7 @@ namespace DataCentric
             return writer.ToString();
         }
 
-        private static string GetToKeyArgs(string declName, IEnumerable<TypeElementDecl> keyElements, bool withSelf)
+        private static string GetToKeyArgs(string declName, IEnumerable<ElementDecl> keyElements, bool withSelf)
         {
             List<string> tokens = new List<string>();
             string self = withSelf ? "self." : "";
@@ -191,7 +191,7 @@ namespace DataCentric
             return "";
         }
 
-        private static string GetMetaData(TypeElementDecl element)
+        private static string GetMetaData(ElementDecl element)
         {
             var meta = new List<string>();
             if (element.Optional == YesNo.Y)
@@ -237,7 +237,7 @@ namespace DataCentric
             }
         }
 
-        private static string GetTypeHint(TypeDecl decl, HandlerParamDecl parameter)
+        private static string GetTypeHint(TypeDecl decl, ParamDecl parameter)
         {
             if (parameter.Value != null)
             {
@@ -272,7 +272,7 @@ namespace DataCentric
             else throw new ArgumentException("Can't deduct type");
         }
 
-        private static string GetTypeHint(TypeDecl decl, TypeElementDecl element)
+        private static string GetTypeHint(TypeDecl decl, ElementDecl element)
         {
             string GetParamNamespace(TypeDecl declaration, IDeclKey key) =>
                 !PyExtensions.IsPackageEquals(declaration, key) ? PyExtensions.GetAlias(key) + "." : "";

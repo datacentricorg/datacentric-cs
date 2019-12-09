@@ -393,9 +393,9 @@ namespace DataCentric
         /// <summary>
         /// Converts method parameter into corresponding handler parameter declaration section.
         /// </summary>
-        private static HandlerParamDecl ToHandlerParam(ParameterInfo parameter)
+        private static ParamDecl ToHandlerParam(ParameterInfo parameter)
         {
-            var handlerParam = ToTypeMember<HandlerParamDecl>(parameter.ParameterType);
+            var handlerParam = ToTypeMember<ParamDecl>(parameter.ParameterType);
 
             handlerParam.Name = parameter.Name;
             handlerParam.Optional = parameter.IsOptional ? YesNo.Y : YesNo.N;
@@ -407,9 +407,9 @@ namespace DataCentric
         /// <summary>
         /// Converts given property into corresponding declaration element.
         /// </summary>
-        private static TypeElementDecl ToElement(PropertyInfo property, CommentNavigator navigator)
+        private static ElementDecl ToElement(PropertyInfo property, CommentNavigator navigator)
         {
-            var element = ToTypeMember<TypeElementDecl>(property.PropertyType);
+            var element = ToTypeMember<ElementDecl>(property.PropertyType);
 
             element.Vector = property.PropertyType.IsVector();
             element.Name = property.Name;
@@ -439,7 +439,7 @@ namespace DataCentric
         /// <summary>
         /// Creates type member declaration for the given type.
         /// </summary>
-        private static T ToTypeMember<T>(System.Type type) where T : TypeMemberDecl, new()
+        private static T ToTypeMember<T>(System.Type type) where T : ParamDecl, new()
         {
             var typeDecl = new T();
 

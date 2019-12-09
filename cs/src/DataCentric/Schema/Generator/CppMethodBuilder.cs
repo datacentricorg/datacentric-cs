@@ -52,7 +52,7 @@ namespace DataCentric
             }
         }
 
-        public static string GetType(HandlerParamDecl element)
+        public static string GetType(ParamDecl element)
         {
             string type = element.Value != null ? CppElementBuilder.GetValue(element.Value) :
                           element.Data != null  ? $"{element.Data.Name.Underscore()}_data" :

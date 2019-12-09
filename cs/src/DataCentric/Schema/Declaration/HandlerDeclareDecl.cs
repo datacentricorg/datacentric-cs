@@ -36,7 +36,7 @@ namespace DataCentric
 
         /// <summary>Handler parameters.</summary>
         [XmlElement]
-        public List<HandlerParamDecl> Params { get; set; }
+        public List<ParamDecl> Params { get; set; }
 
         /// <summary>If this flag is set, handler will be static, otherwise it will be non-static.</summary>
         public YesNo? Static { get; set; }

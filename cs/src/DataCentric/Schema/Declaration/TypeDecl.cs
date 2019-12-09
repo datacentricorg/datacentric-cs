@@ -96,7 +96,7 @@ namespace DataCentric
 
         /// <summary>Element declaration block.</summary>
         [XmlElement]
-        public List<TypeElementDecl> Elements { get; set; }
+        public List<ElementDecl> Elements { get; set; }
 
         /// <summary>Array of key element names.</summary>
         [XmlElement]

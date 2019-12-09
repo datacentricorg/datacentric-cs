@@ -19,8 +19,11 @@ using System.Xml.Serialization;
 
 namespace DataCentric
 {
-    /// <summary>Type argument declaration.</summary>
-    public class TypeMemberDecl : Data
+    /// <summary>
+    /// Definition of a handler parameter that is also used as
+    /// base class of element declaration.
+    /// </summary>
+    public class ParamDecl : Data
     {
         /// <summary>Element name.</summary>
         public string Name { get; set; }
