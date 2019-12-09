@@ -19,26 +19,40 @@ using System.Xml.Serialization;
 
 namespace DataCentric
 {
-    /// <summary>Type element declaration.</summary>
+    /// <summary>Element block within type declaration.</summary>
     public class TypeElementDecl : TypeMemberDecl
     {
         /// <summary>Element name.</summary>
         public string Name { get; set; }
 
-        /// <summary>Element label. If not specified, name is used instead.</summary>
+        /// <summary>
+        /// If specified, will be used in the user interface instead of the name.
+        /// 
+        /// This field has no effect on the API and affects only the user interface.
+        /// </summary>
         public string Label { get; set; }
 
-        /// <summary>Element comment. Contains addition information.</summary>
+        /// <summary>Detailed description of the element.</summary>
         public string Comment { get; set; }
 
-        /// <summary>Flag indicating variable size array (vector) container.</summary>
+        /// <summary>
+        /// Indicate that the current element is a list of the specified type.
+        /// </summary>
         public YesNo? Vector { get; set; }
 
-        /// <summary>Element aliases.</summary>
+        /// <summary>
+        /// Provides the ability to specify alternate names for the current element
+        /// when deserializing the data.
+        ///
+        /// This feature is used primarily to support backward compatibility for
+        /// API changes.
+        /// </summary>
         [XmlElement]
         public List<string> Aliases { get; set; }
 
-        /// <summary>Flag indicating optional element.</summary>
+        /// <summary>
+        /// Indicates that the element is optional (elements are required by default).
+        /// </summary>
         public YesNo? Optional { get; set; }
 
         /// <summary>Secure flag.</summary>
@@ -50,31 +64,74 @@ namespace DataCentric
         /// <summary>Flag indicating readonly element.</summary>
         public YesNo? ReadOnly { get; set; }
 
-        /// <summary>Flag indicating a hidden element. Hidden elements are visible in API but not in the UI.</summary>
+        /// <summary>
+        /// Flag indicating a hidden element.
+        ///
+        /// Hidden elements are present in the API but hidden in the user interface,
+        /// except in developer mode.
+        /// </summary>
         public YesNo? Hidden { get; set; }
 
-        /// <summary>Optional flag indicating if the element is additive and that the total column can be shown in the UI.</summary>
+        /// <summary>
+        /// Optional flag indicating if the element is additive. For additive elements,
+        /// total column can be shown in the user interface.
+        ///
+        /// This field has no effect on the API and affects only the user interface.
+        /// </summary>
         public YesNo? Additive { get; set; }
 
-        /// <summary>Category.</summary>
+        /// <summary>
+        /// Provides the ability to group the elements in the user interface.
+        ///
+        /// This field has no effect on the API and affects only the user interface.
+        /// </summary>
         public string Category { get; set; }
 
-        /// <summary>Specifies UI Format for the element.</summary>
+        /// <summary>
+        /// Formatting string for the element applied in the user interface.
+        ///
+        /// TODO - specify formatting convention and accepted format strings.
+        /// </summary>
         public string Format { get; set; }
 
-        /// <summary>Flag indicating output element. These elements will be readonly in UI and can be fulfilled by handlers.</summary>
+        /// <summary>
+        /// Flag indicating an output element.
+        ///
+        /// Output elements will be readonly in the user interface. They can only be populated through the API.
+        ///
+        /// TODO - this duplicates ModificationType, need to consolidate.
+        /// </summary>
         public YesNo? Output { get; set; }
 
-        /// <summary>Link current element to AlternateOf element. In the editor these elements will be treated as a choice.</summary>
+        /// <summary>
+        /// Specify the name of the element for which the current element as an alternate.
+        ///
+        /// In the user interface, only one of the alternate elements can be provided.
+        /// The default element to be provided is the one for which alternates are specified,
+        /// while the alternates have to be selected explicitly.
+        /// </summary>
         public string AlternateOf { get; set; }
 
-        /// <summary>The element will be viewed under specified tab.</summary>
+        /// <summary>
+        /// When specified, this element will ne shown in a separate tab with the specified name.
+        ///
+        /// TODO - partially overlaps with category, consolidate?
+        /// </summary>
         public string Viewer { get; set; }
 
-        /// <summary>Element Modification Type.</summary>
+        /// <summary>
+        /// Indicates if the element is treated as input or output during
+        /// interactive edit.
+        ///
+        /// TODO - this duplicates Output, need to consolidate.
+        /// </summary>
         public ElementModificationType? ModificationType { get; set; }
 
-        /// <summary>Flag indicating BsonIgnore attribute.</summary>
+        /// <summary>
+        /// Flag indicating BsonIgnore attribute.
+        ///
+        /// TODO - review if we need this
+        /// </summary>
         public YesNo? BsonIgnore { get; set; }
     }
 }
