@@ -16,7 +16,10 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Simplified clone of Bool for serialization purposes based on real Bool.ToString().</summary>
+    /// <summary>
+    /// This enum can be used as a two-state boolean serialized into
+    /// Y for true and N for false.
+    /// </summary>
     public enum YesNo
     {
         /// <summary>None.</summary>

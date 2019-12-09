@@ -16,11 +16,14 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Key for a TypeDecl element.</summary>
+    /// <summary>
+    /// Language neutral description of a data class.
+    /// </summary>
     public class TypeDeclKey : TypedKey<TypeDeclKey, TypeDecl>
     {
         /// <summary>Module reference.</summary>
         public ModuleKey Module { get; set; }
+
         /// <summary>Type name is unique when combined with module.</summary>
         public string Name { get; set; }
     }

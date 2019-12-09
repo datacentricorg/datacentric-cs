@@ -20,8 +20,9 @@ using System.Xml.Serialization;
 
 namespace DataCentric
 {
-    /// <summary>Defines type declaration. A tag of entity type XML representation corresponds to each element of the type.
-    /// The names of type elements and corresponding tags coincide.</summary>
+    /// <summary>
+    /// Language neutral description of a data class.
+    /// </summary>
     [Serializable]
     [XmlRoot]
     public class TypeDecl : TypedRecord<TypeDeclKey, TypeDecl>, IDecl
