@@ -19,8 +19,14 @@ namespace DataCentric
     /// <summary>Specifies the direction of element within a database index.</summary>
     public enum TypeElementIndexDirection
     {
-        /// <summary>None value is defined.</summary>
-        EnumNone = -1,
+        /// <summary>
+        /// Indicates that enum value is not set.
+        /// 
+        /// In programming languages where enum defaults to the first item when
+        /// not set, making Empty the first item prevents unintended assignment
+        /// of a meaningful value.
+        /// </summary>
+        Empty,
 
         /// <summary>Ascending direction.</summary>
         Ascending,
