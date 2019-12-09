@@ -22,9 +22,6 @@ namespace DataCentric
     /// <summary>Type argument declaration.</summary>
     public class TypeMemberDecl : Data
     {
-        /// <summary>Type Param</summary>
-        public string TypeParam { get; set; }
-
         /// <summary>Parameters specific to the value element.</summary>
         public ValueDecl Value { get; set; }
 
@@ -49,15 +46,5 @@ namespace DataCentric
         /// The referenced type must not have TypeKind=Element.
         /// </summary>
         public TypeDeclKey Key { get; set; }
-
-        /// <summary>Type argument declaration.</summary>
-        [XmlElement]
-        public List<TypeArgumentDecl> TypeArguments { get; set; }
-
-        /// <summary>Interface element declaration.</summary>
-        public TypeDeclKey Interface { get; set; }
-
-        /// <summary>Handler arguments element declaration.</summary>
-        public TypeDeclKey HandlerArgs { get; set; }
     }
 }

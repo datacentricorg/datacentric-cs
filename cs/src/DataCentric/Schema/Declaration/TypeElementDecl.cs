@@ -41,7 +41,10 @@ namespace DataCentric
         public YesNo? Vector { get; set; }
 
         /// <summary>
-        /// Indicates that the element is optional (by default, all elements are required).
+        /// Indicates that the element is optional.
+        ///
+        /// By default, all elements are required. Use this flag
+        /// to specify that an element is optional.
         /// </summary>
         public YesNo? Optional { get; set; }
 
