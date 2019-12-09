@@ -33,13 +33,23 @@ namespace DataCentric
         /// <summary>Type name is unique when combined with module.</summary>
         public string Name { get; set; }
 
-        /// <summary>Type label.</summary>
+        /// <summary>
+        /// If specified, will be used in the user interface instead of the name.
+        /// 
+        /// This field has no effect on the API and affects only the user interface.
+        /// </summary>
         public string Label { get; set; }
 
-        /// <summary>Type comment. Contains additional information.</summary>
+        /// <summary>Detailed description of the type.</summary>
         public string Comment { get; set; }
 
-        /// <summary>Category.</summary>
+        /// <summary>
+        /// Dot delimited category providing the ability to group the types inside
+        /// the module. Typically maps to the folder where source code for the
+        /// data type resides.
+        ///
+        /// This field has no effect on the API and affects only the user interface.
+        /// </summary>
         public string Category { get; set; }
 
         /// <summary>Shortcut.</summary>
@@ -53,7 +63,11 @@ namespace DataCentric
         [XmlElement]
         public TypeKind? Kind { get; set; }
 
-        /// <summary>Indicates if type is derived from Record.</summary>
+        /// <summary>
+        /// Indicates if type is derived from Record.
+        ///
+        /// TODO - overlaps with Kind, consolidate?
+        /// </summary>
         public bool IsRecord { get; set; }
 
         /// <summary>
@@ -64,12 +78,11 @@ namespace DataCentric
         /// </summary>
         public TypeDeclKey Inherit { get; set; }
 
-        /// <summary>Inherit Type Argument.</summary>
-        [XmlElement]
-        public List<TypeArgumentDecl> InheritTypeArguments { get; set; }
-
         /// <summary>
         /// List of data interfaces included in this type.
+        ///
+        /// A data interface is a group of data elements
+        /// included in multiple type declarations.
         /// 
         /// In programming languages without multiple class
         /// inheritance, the elements from data interfaces
