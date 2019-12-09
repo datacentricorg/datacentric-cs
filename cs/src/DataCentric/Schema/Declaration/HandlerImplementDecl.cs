@@ -16,7 +16,10 @@ limitations under the License.
 
 namespace DataCentric
 {
-    /// <summary>Handler implementation block.</summary>
+    /// <summary>
+    /// Provides implementation for a handler that was declared
+    /// in this class or its base.
+    /// </summary>
     public class HandlerImplementDecl : Data
     {
         /// <summary>Handler name.</summary>
@@ -25,7 +28,14 @@ namespace DataCentric
         /// <summary>Programming language in which handler is implemented.</summary>
         public LanguageKey Language { get; set; }
 
-        /// <summary>Override flag.</summary>
+        /// <summary>
+        /// True if this implementation is an override of the
+        /// implementation in base class.
+        ///
+        /// If this flag is false or not set, and base class
+        /// provides implementation of the same handler, an
+        /// error message will result.
+        /// </summary>
         public YesNo? Override { get; set; }
     }
 }

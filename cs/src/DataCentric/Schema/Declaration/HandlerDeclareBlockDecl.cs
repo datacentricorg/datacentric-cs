@@ -19,10 +19,18 @@ using System.Xml.Serialization;
 
 namespace DataCentric
 {
-    /// <summary>Handler declaration block in type declaration.</summary>
+    /// <summary>
+    /// Handler declarations are contained within this block
+    /// in type declaration.
+    ///
+    /// TODO - we can remove this document level when switching from XML to JSON.
+    /// </summary>
     public class HandlerDeclareBlockDecl : Data
     {
-        /// <summary>Handler declaration data.</summary>
+        /// <summary>
+        /// Each element of this list provides declaration for a
+        /// single handler.
+        /// </summary>
         [XmlElement]
         public List<HandlerDeclareDecl> Handlers { get; set; }
     }
