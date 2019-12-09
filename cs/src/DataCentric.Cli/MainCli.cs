@@ -42,7 +42,8 @@ namespace DataCentric.Cli
                         GenerateCommand,
                         HeadersCommand,
                         CsvConvertCommand,
-                        ExitCommand>(args);
+                        ExitCommand,
+                        WriteSchemaCommand>(args);
 
                     if (parseInteractiveResult is Parsed<object> parsedInteractive)
                     {
@@ -66,6 +67,9 @@ namespace DataCentric.Cli
                             case CsvConvertCommand convertOptions:
                                 convertOptions.Execute();
                                 break;
+                            case WriteSchemaCommand writeSchemaOptions:
+                                writeSchemaOptions.Execute();
+                                break;
                             case ExitCommand _:
                                 return 0;
                             default:
@@ -87,7 +91,8 @@ namespace DataCentric.Cli
                 GenerateCommand,
                 HeadersCommand,
                 CsvConvertCommand,
-                ExitCommand>(args);
+                WriteSchemaCommand,
+                ExitCommand >(args);
 
             if (parseResult is Parsed<object> parsed)
             {
@@ -110,6 +115,9 @@ namespace DataCentric.Cli
                         break;
                     case CsvConvertCommand convertOptions:
                         convertOptions.Execute();
+                        break;
+                    case WriteSchemaCommand writeSchemaOptions:
+                        writeSchemaOptions.Execute();
                         break;
                     case ExitCommand _:
                         return 0;

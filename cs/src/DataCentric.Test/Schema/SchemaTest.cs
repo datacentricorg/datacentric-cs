@@ -27,8 +27,6 @@ namespace DataCentric.Test
             {
                 var schema = new Schema();
                 schema.Generate(context);
-
-                var typeDecl = new TypeDecl();
             }
         }
     }

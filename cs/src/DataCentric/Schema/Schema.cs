@@ -26,8 +26,13 @@ namespace DataCentric
     [Configurable]
     public class Schema
     {
-        private readonly IEnumerable<string> assemblies_ = new[] {""};
+        private readonly IEnumerable<string> assemblies_;
         private readonly string projectPath_ = null;
+
+        public Schema(IEnumerable<string> fromAssemblie = null)
+        {
+            assemblies_ = fromAssemblie ?? new[] {""};
+        }
 
         public void Generate(Context context)
         {
