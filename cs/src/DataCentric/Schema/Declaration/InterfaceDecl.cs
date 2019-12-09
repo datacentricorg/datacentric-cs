@@ -34,10 +34,6 @@ namespace DataCentric
         /// <summary>Type comment. Contains additional information.</summary>
         public string Comment { get; set; }
 
-        /// <summary>Interface aliases.</summary>
-        [XmlElement]
-        public List<string> Aliases { get; set; }
-
         /// <summary>Parent interfaces</summary>
         [XmlElement]
         public List<InterfaceDeclKey> Interfaces { get; set; }

@@ -55,10 +55,6 @@ namespace DataCentric
         /// <summary>Shortcut.</summary>
         public string Shortcut { get; set; }
 
-        /// <summary>Type aliases.</summary>
-        [XmlElement]
-        public List<string> Aliases { get; set; }
-
         /// <summary>Type kind.</summary>
         [XmlElement]
         public TypeKind? Kind { get; set; }

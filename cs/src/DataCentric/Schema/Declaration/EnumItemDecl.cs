@@ -25,10 +25,6 @@ namespace DataCentric
         /// <summary>Name of the item will be used in the generated code.</summary>
         public string Name { get; set; }
 
-        /// <summary>Alias for the enum item.</summary>
-        [XmlElement]
-        public List<string> Aliases { get; set; } // TODO - consider removing
-
         /// <summary>
         /// Optional label is used in the user interface, but not in serialization.
         ///

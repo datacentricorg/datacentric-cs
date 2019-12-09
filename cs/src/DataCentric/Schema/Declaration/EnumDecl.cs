@@ -33,10 +33,6 @@ namespace DataCentric
         /// <summary>Enum name is unique when combined with module.</summary>
         public string Name { get; set; }
 
-        /// <summary>Enum aliases.</summary>
-        [XmlElement]
-        public List<string> Aliases { get; set; }
-
         /// <summary>
         /// Optional label is used in the user interface, but not in serialization.
         ///

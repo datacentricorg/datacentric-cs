@@ -41,16 +41,6 @@ namespace DataCentric
         public YesNo? Vector { get; set; }
 
         /// <summary>
-        /// Provides the ability to specify alternate names for the current element
-        /// when deserializing the data.
-        ///
-        /// This feature is used primarily to support backward compatibility for
-        /// API changes.
-        /// </summary>
-        [XmlElement]
-        public List<string> Aliases { get; set; }
-
-        /// <summary>
         /// Indicates that the element is optional (elements are required by default).
         /// </summary>
         public YesNo? Optional { get; set; }
