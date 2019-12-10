@@ -1,4 +1,4 @@
-Verify: datacentric/date_time//zone.py
+Verify: datacentric/date_time/zone.py
     # Copyright (C) 2013-present The DataCentric Authors.
     #
     # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@ Verify: datacentric/date_time//zone.py
     import attr
     from typing import Union
     from datacentric.storage.record import Record
-    from datacentric.date_time..zone_key import ZoneKey
+    from datacentric.date_time.zone_key import ZoneKey
 
 
     @attr.s(slots=True, auto_attribs=True)
@@ -71,7 +71,7 @@ Verify: datacentric/date_time//zone.py
         def create_key(cls, *, zone_name: str) -> Union[str, ZoneKey]:
             """Create Zone key."""
             return 'Zone=' + zone_name
-Verify: datacentric/date_time//zone_key.py
+Verify: datacentric/date_time/zone_key.py
     # Copyright (C) 2013-present The DataCentric Authors.
     #
     # Licensed under the Apache License, Version 2.0 (the "License");
@@ -112,7 +112,7 @@ Verify: datacentric/date_time//zone_key.py
         country and the other the city, for example America/New_York.
         """
         pass
-Verify: datacentric/job//job.py
+Verify: datacentric/job/job.py
     # Copyright (C) 2013-present The DataCentric Authors.
     #
     # Licensed under the Apache License, Version 2.0 (the "License");
@@ -131,8 +131,8 @@ Verify: datacentric/job//job.py
     from bson import ObjectId
     from typing import List, Union
     from datacentric.storage.record import Record
-    from datacentric.job..job_key import JobKey
-    from datacentric.job..job_queue_key import JobQueueKey
+    from datacentric.job.job_key import JobKey
+    from datacentric.job.job_queue_key import JobQueueKey
 
 
     @attr.s(slots=True, auto_attribs=True)
@@ -261,7 +261,7 @@ Verify: datacentric/job//job.py
         def create_key(cls, *, ) -> Union[str, JobKey]:
             """Create Job key."""
             return 'Job='
-Verify: datacentric/job//job_key.py
+Verify: datacentric/job/job_key.py
     # Copyright (C) 2013-present The DataCentric Authors.
     #
     # Licensed under the Apache License, Version 2.0 (the "License");
@@ -342,7 +342,7 @@ Verify: datacentric/job//job_key.py
         in each of these cases.
         """
         pass
-Verify: datacentric/job//job_status.py
+Verify: datacentric/job/job_status.py
     # Copyright (C) 2013-present The DataCentric Authors.
     #
     # Licensed under the Apache License, Version 2.0 (the "License");

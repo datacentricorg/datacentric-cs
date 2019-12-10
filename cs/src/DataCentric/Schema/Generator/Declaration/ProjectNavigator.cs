@@ -98,9 +98,14 @@ namespace DataCentric
             if (typeLocation == null)
                 return null;
 
+            // Replace both styles of directory separator by dot to get dot delimited path
             string fileDir = Path.GetDirectoryName(typeLocation);
             string relativePath = GetRelativePath(projectDir, fileDir);
-            return relativePath.Replace('\\', '.').Replace('/', '.');
+            string dotDelimitedPath = relativePath.Replace('\\', '.').Replace('/', '.');
+
+            // Replace trailing dot if present
+            if (dotDelimitedPath.EndsWith(".")) dotDelimitedPath = dotDelimitedPath.Substring(0, dotDelimitedPath.Length - 1);
+            return dotDelimitedPath;
         }
 
         /// <summary>
