@@ -23,17 +23,27 @@ using System.Reflection;
 
 namespace DataCentric
 {
-    [Configurable]
+    /// <summary>
+    /// Class to work with data types schema.
+    /// </summary>
     public class Schema
     {
+        /// <summary>
+        /// List of assemblies to extract schema from.
+        /// </summary>
         private readonly IEnumerable<string> assemblies_;
-        private readonly string projectPath_ = null;
 
-        public Schema(IEnumerable<string> fromAssemblie = null)
+        /// <summary>
+        /// Initialize an instance of Schema class using list of assemblies to extract schema.
+        /// </summary>
+        public Schema(IEnumerable<string> fromAssemblies = null)
         {
-            assemblies_ = fromAssemblie ?? new[] {""};
+            assemblies_ = fromAssemblies ?? new[] {""};
         }
 
+        /// <summary>
+        /// Writes data types schema into specified Context.
+        /// </summary>
         public void Generate(Context context)
         {
             var assemblies = GetAssemblies();
@@ -51,6 +61,9 @@ namespace DataCentric
             }
         }
 
+        /// <summary>
+        /// Extracts data types declarations from an assembly.
+        /// </summary>
         private List<TypeDecl> ExtractTypes(Assembly assembly, 
             CommentNavigator docNavigator, ProjectNavigator projNavigator)
         {
@@ -60,6 +73,9 @@ namespace DataCentric
                 .ToList();
         }
 
+        /// <summary>
+        /// Extracts enum declarations from an assembly.
+        /// </summary>
         private List<EnumDecl> ExtractEnums(Assembly assembly, 
             CommentNavigator docNavigator, ProjectNavigator projNavigator)
         {
@@ -69,6 +85,9 @@ namespace DataCentric
                 .ToList();
         }
         
+        /// <summary>
+        /// Returns assemblies container based on the list of assemblies passed to the class instance.
+        /// </summary>
         private AssemblyCache GetAssemblies()
         {
             var assemblies = new AssemblyCache();
