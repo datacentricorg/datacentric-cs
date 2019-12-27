@@ -59,9 +59,6 @@ namespace DataCentric
             if (decl.Elements.Any(e=>e.Vector == YesNo.Y))
                 typingImports.Add("List");
 
-            if (decl.Elements.Any(e => e.Key != null) || decl.Keys.Any())
-                typingImports.Add("Union");
-
             if (typingImports.Any())
             {
                 var items = string.Join(", ", typingImports);
@@ -94,12 +91,10 @@ namespace DataCentric
                 if (insideDc)
                 {
                     individualImports.Add("from datacentric.storage.record import Record");
-                    individualImports.Add($"from {decl.Category}_key import {decl.Name}Key");
                 }
                 else
                 {
                     packagesToImport.Add("datacentric");
-                    individualImports.Add($"from {decl.Category}_key import {decl.Name}Key");
                 }
             }
             // First child class of Data
@@ -126,17 +121,6 @@ namespace DataCentric
                     packagesToImport.Add(PyExtensions.GetPackage(data));
             }
 
-            foreach (var key in decl.Elements.Where(d => d.Key != null).Select(d => d.Key))
-            {
-                if (PyExtensions.IsPackageEquals(decl, key))
-                {
-                    IDecl keyDecl = declarations.FindByKey(key);
-                    individualImports.Add($"from {keyDecl.Category}_key import {key.Name}Key");
-                }
-                else
-                    packagesToImport.Add(PyExtensions.GetPackage(key));
-            }
-
             foreach (var enumElement in decl.Elements.Where(d => d.Enum != null).Select(d => d.Enum))
             {
                 if (PyExtensions.IsPackageEquals(decl, enumElement))
@@ -156,27 +140,6 @@ namespace DataCentric
             foreach (var import in individualImports.Distinct())
             {
                 writer.AppendLine(import);
-            }
-
-            // Import date-time classes
-            if (insideDc)
-            {
-                var atomicElements = decl.Elements
-                                         .Where(e => e.Value != null)
-                                         .GroupBy(e => e.Value.Type)
-                                         .Select(g => g.First().Value.Type)
-                                         .ToArray();
-
-                if (atomicElements.Contains(ValueParamType.DateTime) || atomicElements.Contains(ValueParamType.NullableDateTime))
-                    writer.AppendLine("from datacentric.date_time.local_date_time import LocalDateTime");
-                if (atomicElements.Contains(ValueParamType.Date) || atomicElements.Contains(ValueParamType.NullableDate))
-                    writer.AppendLine("from datacentric.date_time.local_date import LocalDate");
-                if (atomicElements.Contains(ValueParamType.Time) || atomicElements.Contains(ValueParamType.NullableTime))
-                    writer.AppendLine("from datacentric.date_time.local_time import LocalTime");
-                if (atomicElements.Contains(ValueParamType.Minute) || atomicElements.Contains(ValueParamType.NullableMinute))
-                    writer.AppendLine("from datacentric.date_time.local_minute import LocalMinute");
-                if (atomicElements.Contains(ValueParamType.Instant) || atomicElements.Contains(ValueParamType.NullableInstant))
-                    writer.AppendLine("from datacentric.date_time.instant import Instant");
             }
         }
     }

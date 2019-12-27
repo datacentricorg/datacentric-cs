@@ -118,7 +118,7 @@ namespace DataCentric
                 }
 
                 writer.AppendLine("@classmethod");
-                writer.AppendLines($"def create_key(cls, *, {joinedNamedParams}) -> Union[str, {decl.Name}Key]:");
+                writer.AppendLines($"def create_key(cls, *, {joinedNamedParams}) -> str:");
 
                 writer.PushIndent();
                 writer.AppendLine(CommentHelper.PyComment($"Create {decl.Name} key."));
@@ -196,9 +196,28 @@ namespace DataCentric
             var meta = new List<string>();
             if (element.Optional == YesNo.Y)
                 meta.Add("'optional': True");
+
             if (element.Value != null && (element.Value.Type == ValueParamType.Long ||
                                           element.Value.Type == ValueParamType.NullableLong))
                 meta.Add("'type': 'long'");
+            if (element.Value != null && (element.Value.Type == ValueParamType.Date ||
+                                          element.Value.Type == ValueParamType.NullableDate))
+                meta.Add("'type': 'LocalDate'");
+            if (element.Value != null && (element.Value.Type == ValueParamType.Minute ||
+                                          element.Value.Type == ValueParamType.NullableMinute))
+                meta.Add("'type': 'LocalMinute'");
+            if (element.Value != null && (element.Value.Type == ValueParamType.Time ||
+                                          element.Value.Type == ValueParamType.NullableTime))
+                meta.Add("'type': 'LocalTime'");
+            if (element.Value != null && (element.Value.Type == ValueParamType.DateTime ||
+                                          element.Value.Type == ValueParamType.NullableDateTime))
+                meta.Add("'type': 'LocalDateTime'");
+            if (element.Value != null && (element.Value.Type == ValueParamType.Instant ||
+                                          element.Value.Type == ValueParamType.NullableInstant))
+                meta.Add("'type': 'Instant'");
+
+            if (element.Key != null)
+                meta.Add($"'key': '{element.Key.Name}'");
 
             return meta.Any()
                 ? $", metadata={{{string.Join(", ", meta)}}}"
@@ -241,8 +260,7 @@ namespace DataCentric
         {
             if (parameter.Value != null)
             {
-                bool insideDc = PyExtensions.GetPackage(decl) == "datacentric";
-                string result = GetValue(insideDc, parameter.Value);
+                string result = GetValue(parameter.Value);
                 return parameter.Vector == YesNo.Y ? $"List[{result}]" : result;
             }
             else if (parameter.Data != null)
@@ -255,11 +273,7 @@ namespace DataCentric
             }
             else if (parameter.Key != null)
             {
-                var paramNamespace = !PyExtensions.IsPackageEquals(decl, parameter.Key)
-                    ? PyExtensions.GetAlias(parameter.Key) + "."
-                    : "";
-                var result = $"{paramNamespace}{parameter.Key.Name}Key";
-                return parameter.Vector == YesNo.Y ? $"List[{result}]" : result;
+                return parameter.Vector == YesNo.Y ? "List[str]" : "str";
             }
             else if (parameter.Enum != null)
             {
@@ -282,8 +296,7 @@ namespace DataCentric
 
             if (element.Value != null)
             {
-                bool insideDc = PyExtensions.GetPackage(decl) == "datacentric";
-                string hint = GetValue(insideDc, element.Value);
+                string hint = GetValue(element.Value);
                 return GetFinalHint(hint);
             }
             else if (element.Data != null)
@@ -294,9 +307,7 @@ namespace DataCentric
             }
             else if (element.Key != null)
             {
-                string paramNamespace = GetParamNamespace(decl, element.Key);
-                string hint = $"Union[str, {paramNamespace}{element.Key.Name}Key]";
-                return GetFinalHint(hint);
+                return GetFinalHint("str");
             }
             else if (element.Enum != null)
             {
@@ -307,34 +318,32 @@ namespace DataCentric
             else throw new ArgumentException("Can't deduct type");
         }
 
-        private static string GetValue(bool insideDc, ValueDecl valueDecl)
+        private static string GetValue(ValueDecl valueDecl)
         {
-            string prefix = insideDc ? "" : "dc.";
             var atomicType = valueDecl.Type;
             return
-                atomicType == ValueParamType.String ? "str" :
-                atomicType == ValueParamType.Bool ? "bool" :
-                atomicType == ValueParamType.Double ? "float" :
-                atomicType == ValueParamType.Int ? "int" :
-                atomicType == ValueParamType.Long ? "int" :
-                atomicType == ValueParamType.NullableBool ? "bool" :
-                atomicType == ValueParamType.NullableDouble ? "float" :
-                atomicType == ValueParamType.NullableInt ? "int" :
-                atomicType == ValueParamType.NullableLong ? "int" :
-                atomicType == ValueParamType.DateTime ? $"Union[int, {prefix}LocalDateTime]" :
-                atomicType == ValueParamType.Date ? $"Union[int, {prefix}LocalDate]" :
-                atomicType == ValueParamType.Time ? $"Union[int, {prefix}LocalTime]" :
-                atomicType == ValueParamType.Minute ? $"Union[int, {prefix}LocalMinute]" :
-                atomicType == ValueParamType.Instant ? $"Union[dt.datetime, {prefix}Instant]" :
-                atomicType == ValueParamType.NullableDateTime ? $"Union[int, {prefix}LocalDateTime]" :
-                atomicType == ValueParamType.NullableDate ? $"Union[int, {prefix}LocalDate]" :
-                atomicType == ValueParamType.NullableTime ? $"Union[int, {prefix}LocalTime]" :
-                atomicType == ValueParamType.NullableMinute ? $"Union[int, {prefix}LocalMinute]" :
-                atomicType == ValueParamType.NullableInstant ? $"Union[dt.datetime, {prefix}Instant]" :
-                atomicType == ValueParamType.TemporalId ? "ObjectId" :
+                atomicType == ValueParamType.String             ? "str" :
+                atomicType == ValueParamType.Bool               ? "bool" :
+                atomicType == ValueParamType.Double             ? "float" :
+                atomicType == ValueParamType.Int                ? "int" :
+                atomicType == ValueParamType.Long               ? "int" :
+                atomicType == ValueParamType.NullableBool       ? "bool" :
+                atomicType == ValueParamType.NullableDouble     ? "float" :
+                atomicType == ValueParamType.NullableInt        ? "int" :
+                atomicType == ValueParamType.NullableLong       ? "int" :
+                atomicType == ValueParamType.DateTime           ? "int" :
+                atomicType == ValueParamType.Date               ? "int" :
+                atomicType == ValueParamType.Time               ? "int" :
+                atomicType == ValueParamType.Minute             ? "int" :
+                atomicType == ValueParamType.Instant            ? "dt.datetime" :
+                atomicType == ValueParamType.NullableDateTime   ? "int" :
+                atomicType == ValueParamType.NullableDate       ? "int" :
+                atomicType == ValueParamType.NullableTime       ? "int" :
+                atomicType == ValueParamType.NullableMinute     ? "int" :
+                atomicType == ValueParamType.NullableInstant    ? "dt.datetime" :
+                atomicType == ValueParamType.TemporalId         ? "ObjectId" :
                 atomicType == ValueParamType.NullableTemporalId ? "ObjectId" :
-                throw new
-                    ArgumentException($"Unknown value type: {atomicType.ToString()}");
+                    throw new ArgumentException($"Unknown value type: {atomicType.ToString()}");
         }
     }
 }

@@ -69,11 +69,10 @@ namespace DataCentric
             List<EnumDecl> enumDecls = declarations.OfType<EnumDecl>().ToList();
 
             var types = typeDecls.Select(d => ConvertType(d, declarations));
-            var keys = typeDecls.Where(d=>d.Keys.Any()).Select(ConvertKey);
             var enums = enumDecls.Select(ConvertEnum);
             var init = GenerateInitFiles(declarations);
 
-            return types.Concat(keys).Concat(enums).Concat(init).ToList();
+            return types.Concat(enums).Concat(init).ToList();
         }
 
         private static List<FileInfo> GenerateInitFiles(List<IDecl> declarations)
@@ -135,23 +134,6 @@ namespace DataCentric
             };
 
             return dataFile;
-        }
-
-        private static FileInfo ConvertKey(TypeDecl decl)
-        {
-            // Decompose package to folder and file name.
-            int dotIndex = decl.Category.LastIndexOf('.');
-            string fileName = decl.Category.Substring(dotIndex+1) + "_key.py";
-            string folderName = decl.Category.Substring(0,dotIndex).Replace('.', '/');
-
-            var keyFile = new FileInfo
-            {
-                Content = PythonKeyBuilder.Build(decl).AppendCopyright(decl),
-                FileName = fileName,
-                FolderName = folderName
-            };
-
-            return keyFile;
         }
 
         private static FileInfo ConvertEnum(EnumDecl decl)
