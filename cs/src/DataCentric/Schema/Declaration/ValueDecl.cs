@@ -17,7 +17,7 @@ limitations under the License.
 namespace DataCentric
 {
     /// <summary>Value or atomic element declaration.</summary>
-    public class ValueDecl
+    public class ValueDecl : Data
     {
         /// <summary>Value or atomic element type enumeration.</summary>
         public ValueParamType? Type { get; set; }
