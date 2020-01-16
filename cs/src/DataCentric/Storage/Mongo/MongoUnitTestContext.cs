@@ -80,7 +80,7 @@ namespace DataCentric
             DataSource.DeleteDb();
 
             // Create common dataset and assign it to DataSet property of this context
-            DataSet = DataSource.CreateCommon();
+            DataSet = TemporalId.Empty;
         }
 
         //--- METHODS

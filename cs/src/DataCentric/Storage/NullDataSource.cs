@@ -171,7 +171,7 @@ namespace DataCentric
         ///
         /// Returns null if not found.
         /// </summary>
-        public override TemporalId? GetDataSetOrNull(string dataSetName, TemporalId loadFrom)
+        public override TemporalId? GetDataSetOrNull(string dataSetName)
         {
             throw MethodCalledForNullDataSourceError();
         }
@@ -185,7 +185,7 @@ namespace DataCentric
         ///
         /// This method updates in-memory cache to the saved dataset.
         /// </summary>
-        public override void SaveDataSet(DataSet dataSetRecord, TemporalId saveTo)
+        public override void SaveDataSet(DataSet dataSetRecord)
         {
             throw MethodCalledForNullDataSourceError();
         }

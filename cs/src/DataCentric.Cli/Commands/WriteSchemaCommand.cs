@@ -61,7 +61,7 @@ namespace DataCentric.Cli
             var context = new Context
             {
                 DataSource = dataSource, 
-                DataSet = dataSource.CreateCommon(),
+                DataSet = TemporalId.Empty
             };
 
             return context;

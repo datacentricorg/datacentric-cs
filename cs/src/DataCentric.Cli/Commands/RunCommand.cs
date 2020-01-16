@@ -99,7 +99,7 @@ namespace DataCentric.Cli
 
             var context = new Context();
             context.DataSource = dataSource;
-            context.DataSet = dataSource.GetCommon();
+            context.DataSet = TemporalId.Empty;
 
             object record = createHandlerMethod.Invoke(null, new object[] { context, this });
 
@@ -124,7 +124,7 @@ namespace DataCentric.Cli
             TKey key = Activator.CreateInstance<TKey>();
             key.PopulateFrom(command.Key);
 
-            TemporalId dataSet = context.GetDataSet(command.Dataset, context.DataSet);
+            TemporalId dataSet = context.GetDataSet(command.Dataset);
             TRecord record = (TRecord) context.LoadOrNull(key, dataSet);
 
             record.Init(context);

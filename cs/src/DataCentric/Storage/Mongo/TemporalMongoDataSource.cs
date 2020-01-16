@@ -42,8 +42,6 @@ namespace DataCentric
         /// <summary>Dictionary of collections indexed by type T.</summary>
         private ConcurrentDictionary<Type, object> collectionDict_ = new ConcurrentDictionary<Type, object>();
         private Dictionary<string, TemporalId> dataSetDict_ { get; } = new Dictionary<string, TemporalId>();
-        private Dictionary<TemporalId, TemporalId> dataSetParentDict_ { get; } = new Dictionary<TemporalId, TemporalId>();
-        private Dictionary<TemporalId, DataSetDetail> dataSetDetailDict_ { get; } = new Dictionary<TemporalId, DataSetDetail>();
         private Dictionary<TemporalId, HashSet<TemporalId>> importDict_ { get; } = new Dictionary<TemporalId, HashSet<TemporalId>>();
 
         //--- ELEMENTS
@@ -79,15 +77,10 @@ namespace DataCentric
         /// </summary>
         public override TRecord LoadOrNull<TRecord>(TemporalId id)
         {
-            // This is a preliminary check for CutoffTime of the data source
-            // to avoid unnecessary loading. Once the record is loaded, we 
-            // will perform full check using GetCutoffTime(...) method
-            // that takes into account both CutoffTime of the data source
-            // and CutoffTime of the dataset.
             if (CutoffTime != null)
             {
-                // Return null for any record that has TemporalId
-                // that is greater than or equal to CutoffTime.
+                // Return null if argument TemporalId is greater than
+                // or equal to CutoffTime.
                 if (id >= CutoffTime.Value) return null;
             }
 
@@ -101,15 +94,6 @@ namespace DataCentric
             // Check not only for null but also for the DeletedRecord
             if (baseResult != null && !baseResult.Is<DeletedRecord>())
             {
-                // Now we use GetCutoffTime() for the full check
-                TemporalId? cutoffTime = GetCutoffTime(baseResult.DataSet);
-                if (cutoffTime != null)
-                {
-                    // Return null for any record that has TemporalId
-                    // that is greater than or equal to CutoffTime.
-                    if (id >= cutoffTime.Value) return null;
-                }
-
                 // Record is found but we do not yet know if it has the right type.
                 // Attempt to cast Record to TRecord and check if the result is null.
                 TRecord result = baseResult.As<TRecord>();
@@ -244,9 +228,6 @@ namespace DataCentric
         /// </summary>
         public override void SaveMany<TRecord>(IEnumerable<TRecord> records, TemporalId saveTo)
         {
-            // Error message if data source and/or dataset is readonly
-            CheckNotReadOnly(saveTo);
-
             // Get collection
             var collection = GetOrCreateCollection<TRecord>();
 
@@ -284,7 +265,7 @@ namespace DataCentric
                 record.Init(Context);
             }
 
-            if (IsNonTemporal<TRecord>(saveTo))
+            if (IsNonTemporal<TRecord>())
             {
                 // Replace the record if exists, or insert if it does not 
                 collection.TypedCollection.InsertMany(recordsList); // TODO - replace by Upsert
@@ -309,8 +290,6 @@ namespace DataCentric
         /// </summary>
         public override void Delete<TKey, TRecord>(TypedKey<TKey, TRecord> key, TemporalId deleteIn)
         {
-            CheckNotReadOnly(deleteIn);
-
             // Create DeletedRecord with the specified key
             var record = new DeletedRecord {Key = key.Value};
 
@@ -358,10 +337,9 @@ namespace DataCentric
             //
             // The property savedBy_ is set using either CutoffTime element.
             // Only one of these two elements can be set at a given time.
-            TemporalId? cutoffTime = GetCutoffTime(loadFrom);
-            if (cutoffTime != null)
+            if (CutoffTime != null)
             {
-                result = result.Where(p => p.Id < cutoffTime.Value);
+                result = result.Where(p => p.Id < CutoffTime.Value);
             }
 
             return result;
@@ -377,7 +355,7 @@ namespace DataCentric
         ///
         /// Returns null if not found.
         /// </summary>
-        public override TemporalId? GetDataSetOrNull(string dataSetName, TemporalId loadFrom)
+        public override TemporalId? GetDataSetOrNull(string dataSetName)
         {
             if (dataSetDict_.TryGetValue(dataSetName, out TemporalId result))
             {
@@ -388,14 +366,13 @@ namespace DataCentric
             {
                 // Otherwise load from storage (this also updates the dictionaries)
                 DataSetKey dataSetKey = new DataSetKey() { DataSetName = dataSetName };
-                DataSet dataSetRecord = this.LoadOrNull(dataSetKey, loadFrom);
+                DataSet dataSetRecord = this.LoadOrNull(dataSetKey, TemporalId.Empty);
 
                 // If not found, return TemporalId.Empty
                 if (dataSetRecord == null) return null;
 
                 // Cache TemporalId for the dataset and its parent
                 dataSetDict_[dataSetName] = dataSetRecord.Id;
-                dataSetParentDict_[dataSetRecord.Id] = dataSetRecord.DataSet;
 
                 // Build and cache dataset lookup list if not found
                 if (!importDict_.TryGetValue(dataSetRecord.Id, out HashSet<TemporalId> importSet))
@@ -417,15 +394,14 @@ namespace DataCentric
         ///
         /// This method updates in-memory cache to the saved dataset.
         /// </summary>
-        public override void SaveDataSet(DataSet dataSetRecord, TemporalId saveTo)
+        public override void SaveDataSet(DataSet dataSetRecord)
         {
             // Save dataset to storage. This updates its Id
             // to the new TemporalId created during save
-            this.SaveOne<DataSet>(dataSetRecord, saveTo);
+            this.SaveOne<DataSet>(dataSetRecord, TemporalId.Empty);
 
             // Cache TemporalId for the dataset and its parent
             dataSetDict_[dataSetRecord.Key] = dataSetRecord.Id;
-            dataSetParentDict_[dataSetRecord.Id] = dataSetRecord.DataSet;
 
             // Update lookup list dictionary
             var lookupList = BuildDataSetLookupList(dataSetRecord);
@@ -475,56 +451,13 @@ namespace DataCentric
         }
 
         /// <summary>
-        /// Get detail of the specified dataset.
-        ///
-        /// Returns null if the details record does not exist.
-        ///
-        /// The detail is loaded for the dataset specified in the first argument
-        /// (detailFor) from the dataset specified in the second argument (loadFrom).
-        /// </summary>
-        public DataSetDetail GetDataSetDetailOrNull(TemporalId detailFor)
-        { 
-            if (detailFor == TemporalId.Empty)
-            {
-                // Root dataset does not have details
-                // as it has no parent where the details
-                // would be stored, and storing details
-                // in the dataset itself would subject
-                // them to their own settings.
-                //
-                // Accordingly, return null.
-                return null;
-            }
-            else if (dataSetDetailDict_.TryGetValue(detailFor, out DataSetDetail result))
-            {
-                // Check if already cached, return if found
-                return result;
-            }
-            else
-            {
-                // Get dataset parent from the dictionary.
-                // We should not get here unless the value
-                // is already cached.
-                var parentId = dataSetParentDict_[detailFor];
-
-                // Otherwise try loading from storage (this also updates the dictionaries)
-                var dataSetDetailKey = new DataSetDetailKey { DataSetId = detailFor };
-                result = this.LoadOrNull(dataSetDetailKey, parentId);
-
-                // Cache in dictionary even if null
-                dataSetDetailDict_[detailFor] = result;
-                return result;
-            }
-        }
-
-        /// <summary>
         /// Returns true if either dataset has NonTemporal flag set, or record type
         /// has NonTemporal attribute.
         ///
         /// Note that if data source has NonTemporal flag set, then dataset will
         /// also have NonTemporal flag set.
         /// </summary>
-        public bool IsNonTemporal<TRecord>(TemporalId dataSetId) where TRecord : Record
+        public bool IsNonTemporal<TRecord>() where TRecord : Record
         {
             // Check NonTemporal attribute for the data source, if set return true.
             if (NonTemporal) return true;
@@ -532,43 +465,8 @@ namespace DataCentric
             // Otherwise check NonTemporal attribute for the type, if set return true
             if (typeof(TRecord).GetCustomAttribute<NonTemporalAttribute>(true) != null) return true;
 
-            // Root dataset which cannot have NonTemporal flag.
-            // In this case return false
-            if (dataSetId == TemporalId.Empty) return false;
-
-            // In dataset other than root, check for NonTemporal flag of the dataset record.
-            // If not set, consider its value false.
-            var dataSetDetail = LoadOrNull<DataSet>(dataSetId);
-            if (dataSetDetail != null && dataSetDetail.NonTemporal) return true;
-            else return false;
-        }
-
-        /// <summary>
-        /// CutoffTime should only be used via this method which also takes into
-        /// account the CutoffTime set in dataset detail record, and never directly.
-        /// 
-        /// CutoffTime may be set in data source globally, or for a specific dataset
-        /// in its details record. If CutoffTime is set for both, this method will
-        /// return the earlier of the two values will be used.
-        /// 
-        /// Records with TemporalId that is greater than or equal to CutoffTime
-        /// will be ignored by load methods and queries, and the latest available
-        /// record where TemporalId is less than CutoffTime will be returned instead.
-        ///
-        /// CutoffTime applies to both the records stored in the dataset itself,
-        /// and the reports loaded through the Imports list.
-        /// </summary>
-        public TemporalId? GetCutoffTime(TemporalId dataSetId)
-        {
-            // Get imports cutoff time for the dataset detail record.
-            // If the record is not found, consider its CutoffTime null.
-            var dataSetDetail = GetDataSetDetailOrNull(dataSetId);
-            TemporalId? dataSetCutoffTime = dataSetDetail != null ? dataSetDetail.CutoffTime : null;
-
-            // If CutoffTime is set for both data source and dataset,
-            // this method returns the earlier of the two values.
-            var result = TemporalId.Min(CutoffTime, dataSetCutoffTime);
-            return result;
+            // Otherwise return false.
+            return false;
         }
 
         /// <summary>
@@ -590,12 +488,8 @@ namespace DataCentric
         /// </summary>
         public TemporalId? GetImportsCutoffTime(TemporalId dataSetId)
         {
-            // Get dataset detail record
-            var dataSetDetail = GetDataSetDetailOrNull(dataSetId);
-
-            // Return null if the record is not found
-            if (dataSetDetail != null) return dataSetDetail.ImportsCutoffTime;
-            else return null;
+            // TODO - implement when stored in dataset
+            return null;
         }
 
         //--- PRIVATE
@@ -773,8 +667,7 @@ namespace DataCentric
             dataSetRecord.Id.CheckHasValue();
             dataSetRecord.Key.CheckHasValue();
 
-            TemporalId? cutoffTime = GetCutoffTime(dataSetRecord.DataSet);
-            if (cutoffTime != null && dataSetRecord.Id >= cutoffTime.Value)
+            if (CutoffTime != null && dataSetRecord.Id >= CutoffTime.Value)
             {
                 // Do not add if revision time constraint is set and is before this dataset.
                 // In this case the import datasets should not be added either, even if they
@@ -807,36 +700,6 @@ namespace DataCentric
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Error message if one of the following is the case:
-        ///
-        /// * ReadOnly is set for the data source
-        /// * ReadOnly is set for the dataset
-        /// * CutoffTime is set for the data source
-        /// * CutoffTime is set for the dataset
-        /// </summary>
-        private void CheckNotReadOnly(TemporalId dataSetId)
-        {
-            if (ReadOnly)
-                throw new Exception(
-                    $"Attempting write operation for data source {DataSourceName} where ReadOnly flag is set.");
-
-            var dataSetDetail = GetDataSetDetailOrNull(dataSetId);
-            if (dataSetDetail != null && dataSetDetail.ReadOnly)
-                throw new Exception(
-                    $"Attempting write operation for dataset {dataSetId} where ReadOnly flag is set.");
-
-            if (CutoffTime != null)
-                throw new Exception(
-                    $"Attempting write operation for data source {DataSourceName} where " +
-                    $"CutoffTime is set. Historical view of the data cannot be written to.");
-
-            if (dataSetDetail != null && dataSetDetail.CutoffTime != null)
-                throw new Exception(
-                    $"Attempting write operation for the dataset {dataSetId} where " +
-                    $"CutoffTime is set. Historical view of the data cannot be written to.");
         }
     }
 }

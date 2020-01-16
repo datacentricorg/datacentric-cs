@@ -51,34 +51,23 @@ namespace DataCentric
         public string DataSetName { get; set; }
 
         /// <summary>
-        /// Flag indicating that the dataset is non-temporal even if the
-        /// data source supports temporal data.
+        /// Used to freeze Imports as of the specified ImportsCutoffTime,
+        /// isolating this dataset from changes to the data in imported
+        /// datasets that occur after that time.
         ///
-        /// For the data stored in datasets where NonTemporal == false, a
-        /// temporal data source keeps permanent history of changes to each
-        /// record within the dataset, and provides the ability to access
-        /// the record as of the specified TemporalId, where TemporalId serves
-        /// as a timeline (records created later have greater TemporalId than
-        /// records created earlier).
-        ///
-        /// For the data stored in datasets where NonTemporal == true, the
-        /// data source keeps only the latest version of the record. All
-        /// child datasets of a non-temporal dataset must also be non-temporal.
-        ///
-        /// In a non-temporal data source, this flag is ignored as all
-        /// datasets in such data source are non-temporal.
+        /// This setting only affects records loaded through the Imports
+        /// list. It does not affect records stored in the dataset itself.
         /// </summary>
-        public bool NonTemporal { get; set; }
+        public TemporalId? ImportsCutoffTime { get; set; }
 
         /// <summary>
         /// List of datasets where records are looked up if they are
         /// not found in the current dataset.
         ///
-        /// The specific lookup rules are specific to the data source
-        /// type and described in detail in the data source documentation.
-        ///
-        /// The parent dataset is not included in the list of Imports by
-        /// default and must be included in the list of Imports explicitly.
+        /// If ImportsCutoffTime is set, the records in Imports will be
+        /// returned the way they were as of the ImportsCutoffTime,
+        /// isolating this dataset from changes to the data in imported
+        /// datasets that occur after that time.
         /// </summary>
         public List<TemporalId> Imports { get; set; }
 

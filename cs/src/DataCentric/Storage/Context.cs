@@ -487,16 +487,6 @@ namespace DataCentric
         }
 
         /// <summary>
-        /// Return TemporalId of the latest Common dataset.
-        ///
-        /// Common dataset is always stored in root dataset.
-        /// </summary>
-        public static TemporalId GetCommon(this Context obj)
-        {
-            return obj.DataSource.GetCommon();
-        }
-
-        /// <summary>
         /// Get TemporalId of the dataset with the specified name.
         ///
         /// This overload of the GetDataSet method does not
@@ -512,22 +502,7 @@ namespace DataCentric
         /// </summary>
         public static TemporalId GetDataSet(this Context obj, string dataSetName)
         {
-            return obj.DataSource.GetDataSet(dataSetName, obj.DataSet);
-        }
-
-        /// <summary>
-        /// Get TemporalId of the dataset with the specified name.
-        ///
-        /// All of the previously requested dataSetIds are cached by
-        /// the data source. To load the latest version of the dataset
-        /// written by a separate process, clear the cache first by
-        /// calling DataSource.ClearDataSetCache() method.
-        ///
-        /// Error message if not found.
-        /// </summary>
-        public static TemporalId GetDataSet(this Context obj, string dataSetName, TemporalId loadFrom)
-        {
-            return obj.DataSource.GetDataSet(dataSetName, loadFrom);
+            return obj.DataSource.GetDataSet(dataSetName);
         }
 
         /// <summary>
@@ -546,62 +521,7 @@ namespace DataCentric
         /// </summary>
         public static TemporalId? GetDataSetOrNull(this Context obj, string dataSetName)
         {
-            return obj.DataSource.GetDataSetOrNull(dataSetName, obj.DataSet);
-        }
-
-        /// <summary>
-        /// Get TemporalId of the dataset with the specified name.
-        ///
-        /// All of the previously requested dataSetIds are cached by
-        /// the data source. To load the latest version of the dataset
-        /// written by a separate process, clear the cache first by
-        /// calling DataSource.ClearDataSetCache() method.
-        ///
-        /// Returns null if not found.
-        /// </summary>
-        public static TemporalId? GetDataSetOrNull(this Context obj, string dataSetName, TemporalId loadFrom)
-        {
-            return obj.DataSource.GetDataSetOrNull(dataSetName, loadFrom);
-        }
-
-        /// <summary>
-        /// Create Common dataset with default flags.
-        ///
-        /// By convention, the Common dataset contains reference and
-        /// configuration data and is included as import in all other
-        /// datasets.
-        ///
-        /// The Common dataset is always stored in root dataset.
-        ///
-        /// This method updates in-memory dataset cache to include
-        /// the created dataset.
-        /// </summary>
-        public static TemporalId CreateCommon(this Context obj)
-        {
-            return obj.DataSource.CreateCommon();
-        }
-
-        /// <summary>
-        /// Create Common dataset with the specified flags.
-        ///
-        /// The flags may be used, among other things, to specify
-        /// that the created dataset will be NonTemporal even if the
-        /// data source is itself temporal. This setting is typically
-        /// used to prevent the accumulation of data where history is
-        /// not needed.
-        ///
-        /// By convention, the Common dataset contains reference and
-        /// configuration data and is included as import in all other
-        /// datasets.
-        ///
-        /// The Common dataset is always stored in root dataset.
-        ///
-        /// This method updates in-memory dataset cache to include
-        /// the created dataset.
-        /// </summary>
-        public static TemporalId CreateCommon(this Context obj, DataSetFlags flags)
-        {
-            return obj.DataSource.CreateCommon(flags);
+            return obj.DataSource.GetDataSetOrNull(dataSetName);
         }
 
         /// <summary>
@@ -613,19 +533,7 @@ namespace DataCentric
         /// </summary>
         public static TemporalId CreateDataSet(this Context obj, string dataSetName)
         {
-            return obj.DataSource.CreateDataSet(dataSetName, obj.DataSet);
-        }
-
-        /// <summary>
-        /// Create dataset with the specified dataSetName and default flags
-        /// in parentDataSet, and make context.DataSet its sole import.
-        ///
-        /// This method updates in-memory dataset cache to include
-        /// the created dataset.
-        /// </summary>
-        public static TemporalId CreateDataSet(this Context obj, string dataSetName, TemporalId parentDataSet)
-        {
-            return obj.DataSource.CreateDataSet(dataSetName, parentDataSet);
+            return obj.DataSource.CreateDataSet(dataSetName);
         }
 
         /// <summary>
@@ -637,91 +545,7 @@ namespace DataCentric
         /// </summary>
         public static TemporalId CreateDataSet(this Context obj, string dataSetName, IEnumerable<TemporalId> imports)
         {
-            return obj.DataSource.CreateDataSet(dataSetName, imports, obj.DataSet);
-        }
-
-        /// <summary>
-        /// Create dataset with the specified dataSetName, specified
-        /// imports, and default flags in parentDataSet.
-        ///
-        /// This method updates in-memory dataset cache to include
-        /// the created dataset.
-        /// </summary>
-        public static TemporalId CreateDataSet(this Context obj, string dataSetName, IEnumerable<TemporalId> imports, TemporalId parentDataSet)
-        {
-            return obj.DataSource.CreateDataSet(dataSetName, imports, parentDataSet);
-        }
-
-        /// <summary>
-        /// Create dataset with the specified dataSetName and flags
-        /// in context.DataSet, and make context.DataSet its sole import.
-        ///
-        /// The flags may be used, among other things, to specify
-        /// that the created dataset will be NonTemporal even if the
-        /// data source is itself temporal. This setting is typically
-        /// used to prevent the accumulation of data where history is
-        /// not needed.
-        ///
-        /// This method updates in-memory dataset cache to include
-        /// the created dataset.
-        /// </summary>
-        public static TemporalId CreateDataSet(this Context obj, string dataSetName, DataSetFlags flags)
-        {
-            return obj.DataSource.CreateDataSet(dataSetName, flags, obj.DataSet);
-        }
-
-        /// <summary>
-        /// Create dataset with the specified dataSetName and flags
-        /// in parentDataSet, and make parentDataSet its sole import.
-        ///
-        /// The flags may be used, among other things, to specify
-        /// that the created dataset will be NonTemporal even if the
-        /// data source is itself temporal. This setting is typically
-        /// used to prevent the accumulation of data where history is
-        /// not needed.
-        ///
-        /// This method updates in-memory dataset cache to include
-        /// the created dataset.
-        /// </summary>
-        public static TemporalId CreateDataSet(this Context obj, string dataSetName, DataSetFlags flags, TemporalId parentDataSet)
-        {
-            return obj.DataSource.CreateDataSet(dataSetName, flags, parentDataSet);
-        }
-
-        /// <summary>
-        /// Create dataset with the specified dataSetName, imports,
-        /// and flags in context.DataSet.
-        ///
-        /// The flags may be used, among other things, to specify
-        /// that the created dataset will be NonTemporal even if the
-        /// data source is itself temporal. This setting is typically
-        /// used to prevent the accumulation of data where history is
-        /// not needed.
-        ///
-        /// This method updates in-memory dataset cache to include
-        /// the created dataset.
-        /// </summary>
-        public static TemporalId CreateDataSet(this Context obj, string dataSetName, IEnumerable<TemporalId> imports, DataSetFlags flags)
-        {
-            return obj.DataSource.CreateDataSet(dataSetName, imports, flags, obj.DataSet);
-        }
-
-        /// <summary>
-        /// Create dataset with the specified dataSetName, imports,
-        /// and flags in parentDataSet.
-        ///
-        /// The flags may be used, among other things, to specify
-        /// that the created dataset will be NonTemporal even if the
-        /// data source is itself temporal. This setting is typically
-        /// used to prevent the accumulation of data where history is
-        /// not needed.
-        ///
-        /// This method updates in-memory dataset cache to include
-        /// the created dataset.
-        /// </summary>
-        public static TemporalId CreateDataSet(this Context obj, string dataSetName, IEnumerable<TemporalId> imports, DataSetFlags flags, TemporalId parentDataSet)
-        {
-            return obj.DataSource.CreateDataSet(dataSetName, imports, flags, parentDataSet);
+            return obj.DataSource.CreateDataSet(dataSetName, imports);
         }
 
         /// <summary>
@@ -732,18 +556,7 @@ namespace DataCentric
         /// </summary>
         public static void SaveDataSet(this Context obj, DataSet dataSetRecord)
         {
-            obj.DataSource.SaveDataSet(dataSetRecord, obj.DataSet);
-        }
-
-        /// <summary>
-        /// Save the specified dataset record in parentDataSet.
-        ///
-        /// This method updates in-memory dataset cache to include
-        /// the saved dataset.
-        /// </summary>
-        public static void SaveDataSet(this Context obj, DataSet dataSetRecord, TemporalId parentDataSet)
-        {
-            obj.DataSource.SaveDataSet(dataSetRecord, parentDataSet);
+            obj.DataSource.SaveDataSet(dataSetRecord);
         }
 
         /// <summary>

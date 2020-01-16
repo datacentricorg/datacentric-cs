@@ -43,12 +43,12 @@ namespace DataCentric.Cli
 
             Context context = new Context();
             context.DataSource = dataSource;
-            context.DataSet = dataSource.CreateCommon();
+            context.DataSet = TemporalId.Empty;
 
             // Process all directories inside given folder
             foreach (var dir in Directory.GetDirectories(CsvPath))
             {
-                ProcessDirectory(context, dir, context.GetCommon());
+                ProcessDirectory(context, dir, TemporalId.Empty);
             }
         }
 
@@ -58,7 +58,7 @@ namespace DataCentric.Cli
 
             // Do not create dataset for Common
             var currentDataset = dirName != "Common"
-                                     ? context.CreateDataSet(dirName, context.DataSet)
+                                     ? context.CreateDataSet(dirName)
                                      : parentDataset;
 
             foreach (var csvFile in Directory.GetFiles(path, "*.csv"))

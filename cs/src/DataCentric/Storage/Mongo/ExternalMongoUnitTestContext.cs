@@ -64,8 +64,8 @@ namespace DataCentric
 
             DataSource = dataSource;
 
-            // Common dataset should already exist in data source, if not then create.
-            DataSet = dataSource.GetDataSetOrNull("Common", TemporalId.Empty) ?? dataSource.CreateCommon();
+            // Select root dataset
+            DataSet = TemporalId.Empty;
         }
     }
 }

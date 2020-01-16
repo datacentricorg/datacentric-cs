@@ -37,8 +37,8 @@ namespace DataCentric.Test
                 SaveBasicData(context);
 
                 // Get dataset identifiers
-                var dataSet0 = context.GetDataSet("DataSet0", context.DataSet);
-                var dataSet1 = context.GetDataSet("DataSet1", context.DataSet);
+                var dataSet0 = context.GetDataSet("DataSet0");
+                var dataSet1 = context.GetDataSet("DataSet1");
 
                 // Create keys
                 var keyA0 = new BaseSampleKey()
@@ -67,7 +67,7 @@ namespace DataCentric.Test
             using (var context = CreateMethodContext())
             {
                 // Begin from DataSet0
-                var dataSet0 = context.CreateDataSet("DataSet0", context.DataSet);
+                var dataSet0 = context.CreateDataSet("DataSet0");
 
                 // Create initial version of the records
                 SaveMinimalRecord(context, "DataSet0", "A", 0, 0);
@@ -88,7 +88,7 @@ namespace DataCentric.Test
                 SaveMinimalRecord(context, "DataSet0", "B", 3, 2);
 
                 // Same in DataSet1
-                var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] { dataSet0 }, context.DataSet);
+                var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] { dataSet0 });
 
                 // Create initial version of the records
                 SaveMinimalRecord(context, "DataSet1", "A", 4, 0);
@@ -103,12 +103,12 @@ namespace DataCentric.Test
                 SaveMinimalRecord(context, "DataSet1", "B", 7, 1);
 
                 // Next in DataSet2
-                var dataSet2 = context.CreateDataSet("DataSet2", new TemporalId[] { dataSet0 }, context.DataSet);
+                var dataSet2 = context.CreateDataSet("DataSet2", new TemporalId[] { dataSet0 });
                 SaveMinimalRecord(context, "DataSet2", "A", 8, 0);
                 SaveMinimalRecord(context, "DataSet2", "B", 9, 0);
 
                 // Next in DataSet3
-                var dataSet3 = context.CreateDataSet("DataSet3", new TemporalId[] { dataSet0, dataSet1, dataSet2 }, context.DataSet);
+                var dataSet3 = context.CreateDataSet("DataSet3", new TemporalId[] { dataSet0, dataSet1, dataSet2 });
                 SaveMinimalRecord(context, "DataSet3", "A", 10, 0);
                 SaveMinimalRecord(context, "DataSet3", "B", 11, 0);
 
@@ -153,8 +153,8 @@ namespace DataCentric.Test
                 SaveBasicData(context);
 
                 // Get dataset identifiers
-                var dataSet0 = context.GetDataSet("DataSet0", context.DataSet);
-                var dataSet1 = context.GetDataSet("DataSet1", context.DataSet);
+                var dataSet0 = context.GetDataSet("DataSet0");
+                var dataSet1 = context.GetDataSet("DataSet1");
 
                 // Create keys
                 var keyA0 = new BaseSampleKey()
@@ -228,10 +228,10 @@ namespace DataCentric.Test
             {
                 // Create records with minimal data
 
-                var dataSet0 = context.CreateDataSet("DataSet0", context.DataSet);
+                var dataSet0 = context.CreateDataSet("DataSet0");
                 SaveDerivedRecord(context, "DataSet0", "A", 0);
 
-                var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] { dataSet0 }, context.DataSet);
+                var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] { dataSet0 });
                 SaveDerivedFromDerivedRecord(context, "DataSet1", "B", 0);
 
                 // Create keys
@@ -300,7 +300,7 @@ namespace DataCentric.Test
                 SaveCompleteData(context);
 
                 // Look in B dataset
-                var dataSet1 = context.GetDataSet("DataSet1", context.DataSet);
+                var dataSet1 = context.GetDataSet("DataSet1");
                 var testQuery = context.GetQuery<DerivedSample>(dataSet1)
                     .Where(p => p.DataElementList[0].DoubleElement3 == 1.0)
                     .Where(p => p.DataElementList[0].StringElement3 == "A0")
@@ -337,7 +337,7 @@ namespace DataCentric.Test
                 SaveCompleteData(context);
 
                 // Look in B dataset
-                var dataSet3 = context.GetDataSet("DataSet3", context.DataSet);
+                var dataSet3 = context.GetDataSet("DataSet3");
 
                 // Load record of derived types by base
                 context.Log.Verify("Load all records by key as MongoTestData.");
@@ -406,7 +406,7 @@ namespace DataCentric.Test
                 SaveCompleteData(context);
 
                 // Look in B dataset
-                var dataSet3 = context.GetDataSet("DataSet3", context.DataSet);
+                var dataSet3 = context.GetDataSet("DataSet3");
 
                 context.Log.Verify("Query by MongoTestData, sort by RecordIndex descending, then by DoubleElement ascending");
                 var baseQuery = context.GetQuery<BaseSample>(dataSet3)
@@ -428,12 +428,12 @@ namespace DataCentric.Test
             using (var context = CreateMethodContext())
             {
                 // Create two versions in DataSet0
-                var dataSet0 = context.CreateDataSet("DataSet0", context.DataSet);
+                var dataSet0 = context.CreateDataSet("DataSet0");
                 TemporalId objA0 = SaveMinimalRecord(context, "DataSet0", "A", 0, 0);
                 TemporalId objA1 = SaveMinimalRecord(context, "DataSet0", "A", 0, 1);
 
                 // Create two versions in DataSet1
-                var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] { dataSet0 }, context.DataSet);
+                var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] { dataSet0 });
                 TemporalId objB0 = SaveMinimalRecord(context, "DataSet1", "B", 0, 0);
                 TemporalId objB1 = SaveMinimalRecord(context, "DataSet1", "B", 0, 1);
 
@@ -532,7 +532,7 @@ namespace DataCentric.Test
             using (var context = CreateMethodContext())
             {
                 // Create datasets
-                var dataSet0 = context.CreateDataSet("DataSet0", context.DataSet);
+                var dataSet0 = context.CreateDataSet("DataSet0");
 
                 // Create initial version of the records
                 context.Log.Verify("Write A;0 record to A dataset");
@@ -603,7 +603,7 @@ namespace DataCentric.Test
             where TRecord : TypedRecord<TKey, TRecord>
         {
             // Get dataset and try loading the record
-            var dataSet = context.GetDataSet(dataSetName, context.DataSet);
+            var dataSet = context.GetDataSet(dataSetName);
             TRecord record = context.LoadOrNull(key, dataSet);
 
             if (record == null)
@@ -628,7 +628,7 @@ namespace DataCentric.Test
             where TRecord : Record
         {
             // Get dataset and query
-            var dataSet = context.GetDataSet(dataSetName, context.DataSet);
+            var dataSet = context.GetDataSet(dataSetName);
             var query = context.GetQuery<TRecord>(dataSet);
 
             // Iterate over records
@@ -644,11 +644,11 @@ namespace DataCentric.Test
         private void SaveBasicData(Context context)
         {
             // Create first dataset and record
-            var dataSet0 = context.CreateDataSet("DataSet0", context.DataSet);
+            var dataSet0 = context.CreateDataSet("DataSet0");
             SaveBaseRecord(context, "DataSet0", "A", 0);
 
             // Create second dataset and record, first record will be visible in both
-            var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] {dataSet0}, context.DataSet);
+            var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] {dataSet0});
             SaveDerivedRecord(context, "DataSet1", "B", 0);
         }
 
@@ -657,25 +657,25 @@ namespace DataCentric.Test
         {
             // Create records with minimal data
 
-            var dataSet0 = context.CreateDataSet("DataSet0", context.DataSet);
+            var dataSet0 = context.CreateDataSet("DataSet0");
             SaveBaseRecord(context, "DataSet0", "A", 0);
             SaveBaseRecord(context, "DataSet0", "A", 1);
             SaveBaseRecord(context, "DataSet0", "A", 2);
             SaveBaseRecord(context, "DataSet0", "A", 3);
 
-            var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] { dataSet0 }, context.DataSet);
+            var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] { dataSet0 });
             SaveDerivedRecord(context, "DataSet1", "B", 0);
             SaveDerivedRecord(context, "DataSet1", "B", 1);
             SaveDerivedRecord(context, "DataSet1", "B", 2);
             SaveDerivedRecord(context, "DataSet1", "B", 3);
 
-            var dataSet2 = context.CreateDataSet("DataSet2", new TemporalId[] { dataSet0 }, context.DataSet);
+            var dataSet2 = context.CreateDataSet("DataSet2", new TemporalId[] { dataSet0 });
             SaveOtherDerivedRecord(context, "DataSet2", "C", 0);
             SaveOtherDerivedRecord(context, "DataSet2", "C", 1);
             SaveOtherDerivedRecord(context, "DataSet2", "C", 2);
             SaveOtherDerivedRecord(context, "DataSet2", "C", 3);
 
-            var dataSet3 = context.CreateDataSet("DataSet3", new TemporalId[] { dataSet0, dataSet1, dataSet2 }, context.DataSet);
+            var dataSet3 = context.CreateDataSet("DataSet3", new TemporalId[] { dataSet0, dataSet1, dataSet2 });
             SaveDerivedFromDerivedRecord(context, "DataSet3", "D", 0);
             SaveDerivedFromDerivedRecord(context, "DataSet3", "D", 1);
             SaveDerivedFromDerivedRecord(context, "DataSet3", "D", 2);
@@ -686,10 +686,10 @@ namespace DataCentric.Test
         private void SaveMultiDataSetData(Context context)
         {
             // Create datasets
-            var dataSet0 = context.CreateDataSet("DataSet0", context.DataSet);
-            var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] {dataSet0}, context.DataSet);
-            var dataSet2 = context.CreateDataSet("DataSet2", new TemporalId[] {dataSet0}, context.DataSet);
-            var dataSet3 = context.CreateDataSet("DataSet3", new TemporalId[] {dataSet0, dataSet1, dataSet2}, context.DataSet);
+            var dataSet0 = context.CreateDataSet("DataSet0");
+            var dataSet1 = context.CreateDataSet("DataSet1", new TemporalId[] {dataSet0});
+            var dataSet2 = context.CreateDataSet("DataSet2", new TemporalId[] {dataSet0});
+            var dataSet3 = context.CreateDataSet("DataSet3", new TemporalId[] {dataSet0, dataSet1, dataSet2});
 
             // Create records
             SaveMinimalRecord(context, "DataSet0", "A", 0);
@@ -710,7 +710,7 @@ namespace DataCentric.Test
             rec.RecordIndex = recordIndex;
             rec.Version = version;
 
-            var dataSet = context.GetDataSet(dataSetName, context.DataSet);
+            var dataSet = context.GetDataSet(dataSetName);
             context.SaveOne(rec, dataSet);
 
             return rec.Id;
@@ -730,7 +730,7 @@ namespace DataCentric.Test
             rec.InstantElement = new LocalDateTime(2003, 5, 1, 10, 15).ToInstant(DateTimeZone.Utc); // 2003-05-01T10:15:00
             rec.EnumValue = SampleEnum.EnumValue2;
 
-            var dataSet = context.GetDataSet(dataSetName, context.DataSet);
+            var dataSet = context.GetDataSet(dataSetName);
             context.SaveOne(rec, dataSet);
             return rec.Id;
         }
@@ -794,7 +794,7 @@ namespace DataCentric.Test
             keyList1.RecordIndex = 4;
             rec.KeyElementList.Add(keyList1);
 
-            var dataSet = context.GetDataSet(dataSetName, context.DataSet);
+            var dataSet = context.GetDataSet(dataSetName);
             context.SaveOne(rec, dataSet);
             return rec.Id;
         }
@@ -814,7 +814,7 @@ namespace DataCentric.Test
             rec.OtherStringElement2 = String.Empty; // Test how empty value is recorded
             rec.OtherDoubleElement2 = 200.0;
 
-            var dataSet = context.GetDataSet(dataSetName, context.DataSet);
+            var dataSet = context.GetDataSet(dataSetName);
             context.SaveOne(rec, dataSet);
             return rec.Id;
         }
@@ -834,7 +834,7 @@ namespace DataCentric.Test
             rec.OtherStringElement3 = String.Empty; // Test how empty value is recorded
             rec.OtherDoubleElement3 = 200.0;
 
-            var dataSet = context.GetDataSet(dataSetName, context.DataSet);
+            var dataSet = context.GetDataSet(dataSetName);
             context.SaveOne(rec, dataSet);
             return rec.Id;
         }
