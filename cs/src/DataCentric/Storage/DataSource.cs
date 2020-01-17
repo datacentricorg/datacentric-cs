@@ -353,32 +353,31 @@ namespace DataCentric
         }
 
         /// <summary>
-        /// Create dataset with the specified dataSetName and default flags
-        /// in parentDataSet.
+        /// Create dataset with the specified dataSetName and no imports.
         ///
         /// This method updates in-memory dataset cache to include
         /// the created dataset.
         /// </summary>
         public static TemporalId CreateDataSet(this DataSource obj, string dataSetName)
         {
-            // If imports are not specified, define with parentDataSet as the only import
-            var imports = new TemporalId[] { };
-
-            // Create with default flags in parentDataSet
-            return obj.CreateDataSet(dataSetName, imports);
+            // Create with no imports
+            return obj.CreateDataSet(dataSetName, null);
         }
 
         /// <summary>
-        /// Create dataset with the specified dataSetName, specified
-        /// imports, and default flags in parentDataSet.
+        /// Create dataset with the specified dataSetName and imports.
         ///
         /// This method updates in-memory dataset cache to include
         /// the created dataset.
         /// </summary>
         public static TemporalId CreateDataSet(this DataSource obj, string dataSetName, IEnumerable<TemporalId> imports)
         {
+            // Make null if enumerable is either null or empty
+            var importsList = imports != null ? imports.ToList() : null;
+            if (importsList != null && importsList.Count == 0) importsList = null;
+
             // Create dataset record with the specified name and import
-            var result = new DataSet() { DataSetName = dataSetName, Imports = imports.ToList() };
+            var result = new DataSet() { DataSetName = dataSetName, Imports = importsList };
 
             // Save in parentDataSet (this also updates the dictionaries)
             obj.SaveDataSet(result);

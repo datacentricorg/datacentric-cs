@@ -525,8 +525,7 @@ namespace DataCentric
         }
 
         /// <summary>
-        /// Create dataset with the specified dataSetName and default flags
-        /// in context.DataSet, and make context.DataSet its sole import.
+        /// Create dataset with the specified dataSetName and no imports.
         ///
         /// This method updates in-memory dataset cache to include
         /// the created dataset.
@@ -537,8 +536,7 @@ namespace DataCentric
         }
 
         /// <summary>
-        /// Create dataset with the specified dataSetName, specified imports,
-        /// and default flags in context.DataSet.
+        /// Create dataset with the specified dataSetNam and imports.
         ///
         /// This method updates in-memory dataset cache to include
         /// the created dataset.
