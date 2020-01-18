@@ -99,13 +99,13 @@ namespace DataCentric
         //--- PROPERTIES
 
         /// <summary>
-        /// Execution context provides access to key resources including:
+        /// Context provides platform-independent APIs for:
         ///
+        /// * Databases and distributed cache
         /// * Logging and error reporting
-        /// * Cloud calculation service
-        /// * Data sources
-        /// * Filesystem
+        /// * Local or remote handler execution
         /// * Progress reporting
+        /// * Virtualized filesystem
         /// </summary>
         public Context Context { get => collection_.DataSource.Context; }
 
