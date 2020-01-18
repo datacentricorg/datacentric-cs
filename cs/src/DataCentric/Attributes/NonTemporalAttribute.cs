@@ -27,8 +27,8 @@ namespace DataCentric
     /// Root data type is the type derived directly from TypedRecord.
     ///
     /// For the data type marked by NonTemporal attribute, the data source
-    /// keeps only the latest version of the record irrespective of whether
-    /// or not NonTemporal flag is set for the data source and/or dataset.
+    /// keeps only the latest version of the record per dataset irrespective
+    /// of whether or not NonTemporal flag is set for the data source.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public sealed class NonTemporalAttribute : Attribute

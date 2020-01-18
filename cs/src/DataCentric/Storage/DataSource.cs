@@ -74,19 +74,8 @@ namespace DataCentric
         /// <summary>
         /// Flag indicating that the data source is non-temporal.
         ///
-        /// For the data stored in data sources where NonTemporal == false,
-        /// the data source keeps permanent history of changes to each
-        /// record (except where dataset or record are marked as NonTemporal),
-        /// and provides the ability to access the record as of the specified
-        /// TemporalId, where TemporalId serves as a timeline (records created
-        /// later have greater TemporalId than records created earlier).
-        ///
-        /// For the data stored in data source where NonTemporal == true,
-        /// the data source keeps only the latest version of the record. All
-        /// datasets created by a NonTemporal data source must also be non-temporal.
-        ///
-        /// In a non-temporal data source, this flag is ignored as all
-        /// datasets in such data source are non-temporal.
+        /// If true, the data source stores only the latest version of
+        /// the record per dataset.
         /// </summary>
         public bool NonTemporal { get; set; }
 

@@ -228,6 +228,9 @@ namespace DataCentric
         /// </summary>
         public override void SaveMany<TRecord>(IEnumerable<TRecord> records, TemporalId saveTo)
         {
+            // Error message if data source is readonly or has cutoff time set
+            CheckNotReadOnly(saveTo);
+
             // Get collection
             var collection = GetOrCreateCollection<TRecord>();
 
@@ -290,6 +293,9 @@ namespace DataCentric
         /// </summary>
         public override void Delete<TKey, TRecord>(TypedKey<TKey, TRecord> key, TemporalId deleteIn)
         {
+            // Error message if data source is readonly or has CutoffTime set
+            CheckNotReadOnly(deleteIn);
+
             // Create DeletedRecord with the specified key
             var record = new DeletedRecord {Key = key.Value};
 
@@ -453,9 +459,6 @@ namespace DataCentric
         /// <summary>
         /// Returns true if either dataset has NonTemporal flag set, or record type
         /// has NonTemporal attribute.
-        ///
-        /// Note that if data source has NonTemporal flag set, then dataset will
-        /// also have NonTemporal flag set.
         /// </summary>
         public bool IsNonTemporal<TRecord>() where TRecord : Record
         {
@@ -700,6 +703,22 @@ namespace DataCentric
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Error message if either ReadOnly flag or CutoffTime is set
+        /// for the data source.
+        /// </summary>
+        private void CheckNotReadOnly(TemporalId dataSetId)
+        {
+            if (ReadOnly)
+                throw new Exception(
+                    $"Attempting write operation for data source {DataSourceName} where ReadOnly flag is set.");
+
+            if (CutoffTime != null)
+                throw new Exception(
+                    $"Attempting write operation for data source {DataSourceName} where " +
+                    $"CutoffTime is set. Historical view of the data cannot be written to.");
         }
     }
 }
