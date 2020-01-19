@@ -36,7 +36,6 @@ namespace DataCentric
             typeof(Data),
             typeof(Key),
             typeof(Record),
-            typeof(RootRecord<,>),
             typeof(TypedRecord<,>),
             typeof(TypedKey<,>),
             typeof(DeletedRecord),

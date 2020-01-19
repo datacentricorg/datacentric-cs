@@ -42,6 +42,7 @@ namespace DataCentric
     /// or its own DataSet record. It is always last in the dataset
     /// lookup sequence. The root dataset cannot have Imports.
     /// </summary>
+    [Pinned]
     public class DataSet : TypedRecord<DataSetKey, DataSet>
     {
         /// <summary>

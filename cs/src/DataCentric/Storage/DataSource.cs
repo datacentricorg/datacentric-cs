@@ -35,7 +35,8 @@ namespace DataCentric
     ///
     /// This record is stored in root dataset.
     /// </summary>
-    public abstract class DataSource : RootRecord<DataSourceKey, DataSource>, IDisposable
+    [Pinned]
+    public abstract class DataSource : TypedRecord<DataSourceKey, DataSource>, IDisposable
     {
         /// <summary>Unique data source name.</summary>
         [BsonRequired]

@@ -141,6 +141,9 @@ namespace DataCentric
         /// </summary>
         public override TRecord LoadOrNull<TKey, TRecord>(TypedKey<TKey, TRecord> key, TemporalId loadFrom)
         {
+            // For pinned records, load from root dataset irrespective of the value of loadFrom
+            if (IsPinned<TRecord>()) loadFrom = TemporalId.Empty;
+
             // String value of the key in semicolon delimited format for use in the query
             string keyValue = key.ToString();
 
@@ -207,6 +210,9 @@ namespace DataCentric
         /// </summary>
         public override IQuery<TRecord> GetQuery<TRecord>(TemporalId loadFrom)
         {
+            // For pinned records, load from root dataset irrespective of the value of loadFrom
+            if (IsPinned<TRecord>()) loadFrom = TemporalId.Empty;
+
             // Get or create collection, then create query from collection
             var collection = GetOrCreateCollection<TRecord>();
             return new TemporalMongoQuery<TRecord>(collection, loadFrom);
@@ -230,6 +236,9 @@ namespace DataCentric
         {
             // Error message if data source is readonly or has cutoff time set
             CheckNotReadOnly(saveTo);
+
+            // For pinned records, save to root dataset irrespective of the value of saveTo
+            if (IsPinned<TRecord>()) saveTo = TemporalId.Empty;
 
             // Get collection
             var collection = GetOrCreateCollection<TRecord>();
@@ -296,6 +305,9 @@ namespace DataCentric
             // Error message if data source is readonly or has CutoffTime set
             CheckNotReadOnly(deleteIn);
 
+            // For pinned records, delete in root dataset irrespective of the value of saveTo
+            if (IsPinned<TRecord>()) deleteIn = TemporalId.Empty;
+
             // Create DeletedRecord with the specified key
             var record = new DeletedRecord {Key = key.Value};
 
@@ -326,6 +338,9 @@ namespace DataCentric
         public IQueryable<TRecord> ApplyFinalConstraints<TRecord>(IQueryable<TRecord> queryable, TemporalId loadFrom)
             where TRecord : Record
         {
+            // For pinned records, load from root dataset irrespective of the value of loadFrom
+            if (IsPinned<TRecord>()) loadFrom = TemporalId.Empty;
+
             // Get lookup list by expanding the list of imports to arbitrary
             // depth with duplicates and cyclic references removed.
             //
@@ -423,18 +438,18 @@ namespace DataCentric
         /// CutoffTime if specified, or their imports (including
         /// even those imports that are earlier than the constraint).
         /// </summary>
-        public IEnumerable<TemporalId> GetDataSetLookupList(TemporalId loadFrom)
+        public IEnumerable<TemporalId> GetDataSetLookupList(TemporalId dataSetId)
         {
             // Root dataset has no imports (there is not even a record
             // where these imports can be specified).
             //
             // Return list containing only the root dataset (TemporalId.Empty) and exit
-            if (loadFrom == TemporalId.Empty)
+            if (dataSetId == TemporalId.Empty)
             {
                 return new TemporalId[] { TemporalId.Empty };
             }
 
-            if (importDict_.TryGetValue(loadFrom, out HashSet<TemporalId> result))
+            if (importDict_.TryGetValue(dataSetId, out HashSet<TemporalId> result))
             {
                 // Check if the lookup list is already cached, return if yes
                 return result;
@@ -442,31 +457,43 @@ namespace DataCentric
             else
             {
                 // Otherwise load from storage (returns null if not found)
-                DataSet dataSetRecord = LoadOrNull<DataSet>(loadFrom);
+                DataSet dataSetRecord = LoadOrNull<DataSet>(dataSetId);
 
-                if (dataSetRecord == null) throw new Exception($"Dataset with TemporalId={loadFrom} is not found.");
-                if (dataSetRecord.DataSet != TemporalId.Empty) throw new Exception($"Dataset with TemporalId={loadFrom} is not stored in root dataset.");
+                if (dataSetRecord == null) throw new Exception($"Dataset with TemporalId={dataSetId} is not found.");
+                if (dataSetRecord.DataSet != TemporalId.Empty) throw new Exception($"Dataset with TemporalId={dataSetId} is not stored in root dataset.");
 
                 // Build the lookup list
                 result = BuildDataSetLookupList(dataSetRecord);
 
                 // Add to dictionary and return
-                importDict_.Add(loadFrom, result);
+                importDict_.Add(dataSetId, result);
                 return result;
             }
         }
 
         /// <summary>
-        /// Returns true if either dataset has NonTemporal flag set, or record type
-        /// has NonTemporal attribute.
+        /// Returns true if either data source has NonTemporal flag set,
+        /// or record type has NonTemporal attribute.
         /// </summary>
-        public bool IsNonTemporal<TRecord>() where TRecord : Record
+        private bool IsNonTemporal<TRecord>() where TRecord : Record
         {
             // Check NonTemporal attribute for the data source, if set return true.
             if (NonTemporal) return true;
 
             // Otherwise check NonTemporal attribute for the type, if set return true
             if (typeof(TRecord).GetCustomAttribute<NonTemporalAttribute>(true) != null) return true;
+
+            // Otherwise return false.
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the record has Pinned attribute.
+        /// </summary>
+        private bool IsPinned<TRecord>() where TRecord : Record
+        {
+            // Check for Pinned attribute for the type, if set return true
+            if (typeof(TRecord).GetCustomAttribute<PinnedAttribute>(true) != null) return true;
 
             // Otherwise return false.
             return false;

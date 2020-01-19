@@ -15,8 +15,6 @@ limitations under the License.
 */
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace DataCentric
 {
@@ -26,7 +24,7 @@ namespace DataCentric
     /// the Save method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public sealed class NonTemporalAttribute : Attribute
+    public sealed class PinnedAttribute : Attribute
     {
     }
 }

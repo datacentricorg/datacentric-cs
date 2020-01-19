@@ -170,7 +170,7 @@ namespace DataCentric
         }
 
         /// <summary>
-        /// Checks if given type is any of Data, Record&lt;,&gt;, RootRecord&lt;,&gt;
+        /// Checks if given type is any of Data, Record, TypedKey, or TypedRecord
         /// </summary>
         private static bool IsRoot(System.Type type)
         {
@@ -180,8 +180,7 @@ namespace DataCentric
             if (type.IsGenericType)
             {
                 System.Type genericType = type.GetGenericTypeDefinition();
-                return genericType == typeof(RootRecord<,>) ||
-                       genericType == typeof(TypedRecord<,>) ||
+                return genericType == typeof(TypedRecord<,>) ||
                        genericType == typeof(TypedKey<,>);
             }
 
@@ -266,8 +265,7 @@ namespace DataCentric
         private static List<PropertyInfo> GetKeyProperties(this System.Type type)
         {
             var baseType = type.BaseType;
-            if (baseType.IsGenericType && (baseType.GetGenericTypeDefinition() == typeof(TypedRecord<,>) ||
-                                           baseType.GetGenericTypeDefinition() == typeof(RootRecord<,>)))
+            if (baseType.IsGenericType && (baseType.GetGenericTypeDefinition() == typeof(TypedRecord<,>)))
             {
                 var keyType = baseType.GenericTypeArguments[0];
                 return keyType.GetProperties(PublicInstanceDeclaredFlags).Where(IsPublicGetSet).ToList();
