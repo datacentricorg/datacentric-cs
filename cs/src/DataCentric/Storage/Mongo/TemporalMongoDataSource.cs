@@ -277,17 +277,22 @@ namespace DataCentric
                 record.Init(Context);
             }
 
-            if (IsNonTemporal<TRecord>())
+            var versioningMethod = GetVersioningMethod<TRecord>();
+            switch (versioningMethod)
             {
-                // Replace the record if exists, or insert if it does not 
-                collection.TypedCollection.InsertMany(recordsList); // TODO - replace by Upsert
-            }
-            else
-            {
-                // Always insert, previous version will remain in the database
-                // but will not be found except through loading by TemporalId,
-                // or CutoffTime/ImportsCutoffTime customization
-                collection.TypedCollection.InsertMany(recordsList);
+                case DataCentric.VersioningMethod.Temporal:
+                    // Always insert, previous version will remain in the database
+                    // but will not be found except through loading by TemporalId,
+                    // or CutoffTime/ImportsCutoffTime customization
+                    collection.TypedCollection.InsertMany(recordsList);
+                    break;
+                case DataCentric.VersioningMethod.NonTemporal:
+                case DataCentric.VersioningMethod.NonOverriding:
+                    // Replace the record if exists, or insert if it does not 
+                    collection.TypedCollection.InsertMany(recordsList); // TODO - replace by Upsert
+                    break;
+                default:
+                    throw new Exception($"Unknown versioning method {versioningMethod}.");
             }
         }
 
@@ -472,19 +477,19 @@ namespace DataCentric
         }
 
         /// <summary>
-        /// Returns true if either data source has NonTemporal flag set,
-        /// or record type has NonTemporal attribute.
+        /// Gets the method of record or dataset versioning.
+        ///
+        /// Versioning method is a required field for the data source. Its
+        /// value can be overridden for specific record types via an attribute.
         /// </summary>
-        private bool IsNonTemporal<TRecord>() where TRecord : Record
+        private VersioningMethod GetVersioningMethod<TRecord>() where TRecord : Record
         {
-            // Check NonTemporal attribute for the data source, if set return true.
-            if (NonTemporal) return true;
+            // Check Versioning attribute for the type, if set return this attribute
+            var versioningAttribute = typeof(TRecord).GetCustomAttribute<VersioningAttribute>(true);
+            if (versioningAttribute != null) return versioningAttribute.VersioningMethod;
 
-            // Otherwise check NonTemporal attribute for the type, if set return true
-            if (typeof(TRecord).GetCustomAttribute<NonTemporalAttribute>(true) != null) return true;
-
-            // Otherwise return false.
-            return false;
+            // Otherwise return the value for the data source
+            return VersioningMethod.Value;
         }
 
         /// <summary>

@@ -47,6 +47,7 @@ namespace DataCentric
         ///
         /// Some API functions are restricted based on the environment type.
         /// </summary>
+        [BsonRequired]
         public EnvType EnvType { get; set; }
 
         /// <summary>
@@ -60,6 +61,7 @@ namespace DataCentric
         /// * For TEST environment type, environment group is the name of
         ///   the unit test class (test fixture).
         /// </summary>
+        [BsonRequired]
         public string EnvGroup { get; set; }
 
         /// <summary>
@@ -70,15 +72,18 @@ namespace DataCentric
         ///
         /// * For TEST environment type, it is the test method name.
         /// </summary>
+        [BsonRequired]
         public string EnvName { get; set; }
 
         /// <summary>
-        /// Flag indicating that the data source is non-temporal.
+        /// Specifies the default method of record or dataset
+        /// versioning.
         ///
-        /// If true, the data source stores only the latest version of
-        /// the record per dataset.
+        /// This value can be overridden for specific record types
+        /// via an attribute.
         /// </summary>
-        public bool NonTemporal { get; set; }
+        [BsonRequired]
+        public VersioningMethod? VersioningMethod { get; set; }
 
         /// <summary>
         /// Use this flag to mark data source as readonly.

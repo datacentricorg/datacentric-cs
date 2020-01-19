@@ -34,7 +34,7 @@ namespace DataCentric
     /// as a side effect of a handler method, by the record's Init
     /// method, or even by a method of an unrelated data type.
     /// </summary>
-    [NonTemporal]
+    [Versioning(VersioningMethod.NonOverriding)]
     public abstract class View : TypedRecord<ViewKey, View>
     {
         /// <summary>

@@ -21,12 +21,25 @@ using System.Reflection;
 namespace DataCentric
 {
     /// <summary>
-    /// Records marked by Pinned attribute are always stored
-    /// in root dataset, irrespective of the dataset specified in
-    /// the Save method.
+    /// Specifies the method of record or dataset versioning.
+    ///
+    /// Versioning method is a required field for the data source. Its
+    /// value can be overridden for specific record types via this attribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public sealed class NonTemporalAttribute : Attribute
+    public sealed class VersioningAttribute : Attribute
     {
+        /// <summary>
+        /// Create from enumeration for the versioning method.
+        /// </summary>
+        public VersioningAttribute(VersioningMethod versioningMethod)
+        {
+            VersioningMethod = versioningMethod;
+        }
+
+        /// <summary>
+        /// Enumeration for the versioning method.
+        /// </summary>
+        public VersioningMethod VersioningMethod { get; }
     }
 }

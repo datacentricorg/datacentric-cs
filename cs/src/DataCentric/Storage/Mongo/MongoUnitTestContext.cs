@@ -73,6 +73,7 @@ namespace DataCentric
                 EnvType = EnvType.Test,
                 EnvGroup = TestClassName,
                 EnvName = TestMethodName,
+                VersioningMethod = VersioningMethod.Temporal,
                 MongoServer = mongoServerKey
             };
 

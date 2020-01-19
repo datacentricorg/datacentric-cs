@@ -43,6 +43,7 @@ namespace DataCentric
     /// lookup sequence. The root dataset cannot have Imports.
     /// </summary>
     [Pinned]
+    [Versioning(VersioningMethod.Temporal)]
     public class DataSet : TypedRecord<DataSetKey, DataSet>
     {
         /// <summary>
