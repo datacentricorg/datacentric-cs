@@ -221,7 +221,7 @@ namespace DataCentric
         /// </summary>
         public override void DeleteDb()
         {
-            if (ReadOnly)
+            if (ReadOnly != null && ReadOnly.Value)
                 throw new Exception(
                     $"Attempting to drop (delete) database for the data source {DataSourceName} where ReadOnly flag is set.");
 

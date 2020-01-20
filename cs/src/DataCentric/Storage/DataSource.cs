@@ -90,7 +90,7 @@ namespace DataCentric
         ///
         /// Data source may also be readonly because CutoffTime is set.
         /// </summary>
-        public bool ReadOnly { get; set; }
+        public bool? ReadOnly { get; set; }
 
         //--- METHODS
 

@@ -743,7 +743,7 @@ namespace DataCentric
         /// </summary>
         private void CheckNotReadOnly(TemporalId dataSetId)
         {
-            if (ReadOnly)
+            if (ReadOnly != null && ReadOnly.Value)
                 throw new Exception(
                     $"Attempting write operation for data source {DataSourceName} where ReadOnly flag is set.");
 
