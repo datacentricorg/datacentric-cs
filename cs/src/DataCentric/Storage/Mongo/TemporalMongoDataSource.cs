@@ -559,24 +559,13 @@ namespace DataCentric
                 return cachedResult;
             }
 
-            // Check that scalar discriminator convention is set for TRecord
+            // Check that hierarchical discriminator convention is set for TRecord
             var discriminatorConvention = BsonSerializer.LookupDiscriminatorConvention(typeof(TRecord));
-            if (useScalarDiscriminatorConvention_)
-            {
-                if (!discriminatorConvention.Is<ScalarDiscriminatorConvention>())
-                    throw new Exception(
-                        $"Scalar discriminator convention is not set for type {typeof(TRecord).Name}. " +
-                        $"The convention should have been set set in the static constructor of " +
-                        $"MongoDataSource");
-            }
-            else
-            {
-                if (!discriminatorConvention.Is<HierarchicalDiscriminatorConvention>())
-                    throw new Exception(
-                        $"Hierarchical discriminator convention is not set for type {typeof(TRecord).Name}. " +
-                        $"The convention should have been set set in the static constructor of " +
-                        $"MongoDataSource");
-            }
+            if (!discriminatorConvention.Is<HierarchicalDiscriminatorConvention>())
+                throw new Exception(
+                    $"Hierarchical discriminator convention is not set for type {typeof(TRecord).Name}. " +
+                    $"The convention should have been set set in the static constructor of " +
+                    $"MongoDataSource");
 
             // Collection name is root class name of the record without prefix
             string collectionName = DataTypeInfo.GetOrCreate<TRecord>().GetCollectionName();

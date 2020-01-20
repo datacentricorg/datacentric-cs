@@ -35,7 +35,6 @@ namespace DataCentric
     /// </summary>
     public abstract class MongoDataSource : DataSource
     {
-        protected const bool useScalarDiscriminatorConvention_ = false;
         static readonly char[] prohibitedDbNameSymbols_ = new char[] { '/', '\\', '.', ' ', '"', '$', '*', '<', '>', ':', '|', '?' };
         static int maxDbNameLength_ = 64;
         private EnvType envType_;
@@ -70,23 +69,13 @@ namespace DataCentric
         /// </summary>
         static MongoDataSource()
         {
-            if (useScalarDiscriminatorConvention_)
-            {
-                // Set discriminator convention to scalar. For this convention,
-                // BSON element _t is a single string value equal to GetType().Name,
-                // rather than the list of names for the entire inheritance chain.
-                BsonSerializer.RegisterDiscriminatorConvention(typeof(Data), new ScalarDiscriminatorConvention("_t"));
-            }
-            else
-            {
-                // Set discriminator convention to hierarchical. For this convention,
-                // BSON element _t is either an array of GetType().Name values for ell
-                // types in the inheritance chain, or a single string value for a chain
-                // of length 1.
-                //
-                // Choosing root type to be Record ensures that _t is always an array.
-                BsonSerializer.RegisterDiscriminatorConvention(typeof(Data), new HierarchicalDiscriminatorConvention("_t"));
-            }
+            // Set discriminator convention to hierarchical. For this convention,
+            // BSON element _t is either an array of GetType().Name values for ell
+            // types in the inheritance chain, or a single string value for a chain
+            // of length 1.
+            //
+            // Choosing root type to be Record ensures that _t is always an array.
+            BsonSerializer.RegisterDiscriminatorConvention(typeof(Data), new HierarchicalDiscriminatorConvention("_t"));
         }
 
         //--- METHODS
